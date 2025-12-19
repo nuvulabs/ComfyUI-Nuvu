@@ -1,0 +1,912 @@
+:root {
+    --nuvu-bg-900: #050505;
+    --nuvu-bg-800: #0b0b0b;
+    --nuvu-bg-700: #121212;
+    --nuvu-bg-600: #181818;
+    --nuvu-border: #272727;
+    --nuvu-border-light: #2f2f2f;
+    --nuvu-border-strong: #3a3a3a;
+    --nuvu-white: #f5f5f5;
+    --nuvu-white-strong: #ffffff;
+    --nuvu-muted: #bdbdbd;
+    --nuvu-muted-strong: #d7d7d7;
+}
+
+.nuvu-main-button,
+.nuvu-btn,
+.nuvu-btn-primary {
+    background: var(--nuvu-bg-800) !important;
+    color: var(--nuvu-white-strong) !important;
+    border: 1px solid var(--nuvu-white-strong) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+
+.nuvu-btn-update-available {
+    background: #1f8c4a !important;
+    border-color: #1f8c4a !important;
+    color: #ffffff !important;
+}
+
+.nuvu-btn-update-available:hover:not(:disabled) {
+    background: #1b7a41 !important;
+    transform: translateY(-1px) !important;
+}
+
+.nuvu-main-button:hover,
+.nuvu-btn-primary:hover:not(:disabled) {
+    background: var(--nuvu-bg-700) !important;
+    transform: translateY(-1px) !important;
+}
+
+.nuvu-btn-secondary {
+    background: var(--nuvu-white-strong) !important;
+    color: var(--nuvu-bg-900) !important;
+    border: 1px solid var(--nuvu-bg-900) !important;
+    box-shadow: none !important;
+}
+
+.nuvu-btn-secondary:hover {
+    background: var(--nuvu-muted-strong) !important;
+    color: var(--nuvu-bg-900) !important;
+}
+
+.nuvu-package-btn {
+    border-radius: 8px !important;
+    background: var(--nuvu-bg-800) !important;
+    color: var(--nuvu-white-strong) !important;
+    border: 1px solid var(--nuvu-white-strong) !important;
+    box-shadow: none !important;
+    padding: 16px 20px !important;
+    font-size: 1.1em !important;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.nuvu-btn-danger,
+.nuvu-btn-success {
+    background: var(--nuvu-bg-800) !important;
+    color: var(--nuvu-white-strong) !important;
+    border: 1px solid var(--nuvu-white-strong) !important;
+}
+
+.nuvu-btn:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+@keyframes button-glow-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.3);
+    }
+}
+
+@keyframes nuvu-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.nuvu-login-form .nuvu-btn.nuvu-btn-primary.nuvu-btn-large {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3) !important;
+    font-weight: 600 !important;
+    animation: button-glow-pulse 2.5s ease-in-out infinite !important;
+}
+
+.nuvu-login-form .nuvu-btn.nuvu-btn-primary.nuvu-btn-large:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+    transform: translateY(-2px) !important;
+    animation: button-glow-pulse 2.5s ease-in-out infinite !important;
+}
+
+.nuvu-input,
+.nuvu-splash-dialog input[type="text"],
+.nuvu-splash-dialog input[type="password"],
+.nuvu-input-small {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--nuvu-border) !important;
+    border-radius: 8px;
+    background: var(--nuvu-bg-700);
+    color: var(--nuvu-white-strong);
+    font-size: 14px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.nuvu-input:focus,
+.nuvu-splash-dialog input[type="text"]:focus,
+.nuvu-splash-dialog input[type="password"]:focus {
+    outline: none;
+    border-color: var(--nuvu-white-strong) !important;
+    background: var(--nuvu-bg-600);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.nuvu-help-input,
+.nuvu-splash-dialog .nuvu-help-input,
+input.nuvu-help-input[type="text"],
+input.nuvu-help-input[type="email"],
+input.nuvu-help-input[type="tel"],
+select.nuvu-help-input,
+textarea.nuvu-help-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(160, 187, 196, 0.35) !important;
+    background: #1a1a1a !important;
+    color: #f0f0f0 !important;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nuvu-help-input:focus,
+.nuvu-splash-dialog .nuvu-help-input:focus,
+input.nuvu-help-input[type="text"]:focus,
+input.nuvu-help-input[type="email"]:focus,
+input.nuvu-help-input[type="tel"]:focus,
+select.nuvu-help-input:focus,
+textarea.nuvu-help-input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.85) !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) !important;
+    background: #141414 !important;
+}
+
+.nuvu-centered-placeholder {
+    text-align: center;
+    padding: 20px;
+    color: var(--comfy-input-text, #f5f5f5);
+    width: 100%;
+    display: block;
+    grid-column: 1 / -1;
+    justify-self: center;
+}
+
+#nuvu-workflow-search,
+#nuvu-model-search,
+#nuvu-model-folder-filter {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+    border-radius: 10px !important;
+    font-family: var(--comfy-font-family, var(--nuvu-white));
+    font-size: 14px;
+    box-shadow: none !important;
+}
+
+#nuvu-workflow-search::placeholder,
+#nuvu-model-search::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nuvu-models-table-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 12px;
+    border: 1px solid var(--nuvu-border);
+    border-radius: 12px;
+    background: var(--nuvu-bg-800);
+    display: flex;
+    flex-direction: column;
+}
+
+.nuvu-models-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--nuvu-white);
+    font-size: 14px;
+    table-layout: fixed;
+}
+
+.nuvu-models-table th,
+.nuvu-models-table td {
+    overflow: hidden;
+    position: relative;
+}
+
+.nuvu-models-table thead th {
+    text-align: left;
+    font-weight: 600;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--nuvu-border);
+    background: var(--nuvu-bg-900);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--nuvu-muted-strong);
+}
+
+.nuvu-model-header-label {
+    pointer-events: none;
+}
+
+.nuvu-models-table tbody tr {
+    border-bottom: 1px solid var(--nuvu-border);
+    transition: background 0.15s ease;
+    cursor: pointer;
+}
+
+.nuvu-models-table tbody tr:hover {
+    background: rgba(209, 78, 114, 0.08);
+}
+
+.nuvu-model-row-disabled,
+.nuvu-model-row-disabled:hover {
+    cursor: not-allowed;
+    opacity: 0.55;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.nuvu-model-cell {
+    padding: 16px;
+    vertical-align: top;
+}
+
+.nuvu-model-checkbox-cell {
+    width: 48px;
+    text-align: center;
+}
+
+.nuvu-model-name {
+    font-weight: 600;
+    color: var(--nuvu-white-strong);
+    font-size: 15px;
+}
+
+.nuvu-model-tags {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.nuvu-model-tag {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--nuvu-white);
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.nuvu-model-preview-note {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--nuvu-muted);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.nuvu-model-description-cell {
+    color: var(--nuvu-muted-strong);
+    line-height: 1.5;
+}
+
+.nuvu-column-resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    user-select: none;
+    touch-action: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.nuvu-models-table th:hover .nuvu-column-resize-handle,
+.nuvu-column-resize-handle.is-resizing {
+    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.nuvu-model-size-cell,
+.nuvu-model-folder-cell {
+    font-weight: 600;
+    color: var(--nuvu-white-strong);
+}
+
+.nuvu-splash-dialog input[type="checkbox"],
+.nuvu-checkbox {
+    accent-color: var(--nuvu-white-strong);
+}
+
+.nuvu-signup-link,
+.nuvu-purchase-link {
+    color: var(--nuvu-white-strong) !important;
+    border: 1px solid var(--nuvu-white-strong) !important;
+    background: transparent !important;
+    padding: 6px 12px !important;
+    border-radius: 6px;
+    text-decoration: none !important;
+    transition: background 0.2s ease !important;
+}
+
+.nuvu-signup-link:hover,
+.nuvu-purchase-link:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.workflow-media-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.workflow-media-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+.workflow-media-layer.workflow-media-layer,
+video.workflow-media-layer,
+img.workflow-media-layer {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+}
+
+.workflow-media-placeholder {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 0 0, #1f2937, transparent 45%), radial-gradient(circle at 100% 100%, #111827, transparent 55%), #000000;
+}
+
+.workflow-media-compare {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    cursor: ew-resize;
+    z-index: 1;
+}
+
+.workflow-media-layer.compare-overlay {
+    clip-path: inset(0 50% 0 0);
+    transition: clip-path 0.12s linear;
+}
+
+.workflow-media-slider-visual {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.workflow-card:hover .workflow-media-slider-visual {
+    opacity: 1;
+}
+
+.workflow-media-slider-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--slider-position, 50%);
+    width: 2px;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 25%, rgba(255,255,255,0.8) 75%, rgba(255,255,255,0) 100%);
+    transform: translateX(-50%);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.35);
+}
+
+.workflow-media-slider-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: ew-resize;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.workflow-media-slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.workflow-media-slider-input::-moz-range-thumb {
+    appearance: none;
+}
+
+.nuvu-notification {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.nuvu-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.nuvu-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.nuvu-login-form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    background: #000000;
+    color: var(--nuvu-white);
+}
+
+.nuvu-update-interface {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    overflow: hidden;
+    background: var(--nuvu-bg-900);
+    color: var(--nuvu-white);
+}
+
+@media (max-width: 600px) {
+    .nuvu-splash-dialog .nuvu-update-interface > div:first-child,
+    .nuvu-splash-dialog .nuvu-login-form > div:first-child {
+        min-width: 90vw;
+        max-width: 90vw;
+    }
+}
+
+.nuvu-status-success,
+.nuvu-status-error,
+.nuvu-status-warning,
+.nuvu-status-info {
+    background: var(--nuvu-bg-700) !important;
+    color: var(--nuvu-white-strong) !important;
+    border: 1px solid var(--nuvu-white-strong) !important;
+}
+
+.nuvu-card,
+.nuvu-card-bordered,
+.nuvu-list-container,
+.nuvu-modal,
+.nuvu-alert,
+.nuvu-list-item,
+.nuvu-bottom-section,
+.nuvu-sidebar,
+.nuvu-version-group,
+.nuvu-version-item {
+    background: var(--nuvu-bg-700) !important;
+    border: 1px solid var(--nuvu-border) !important;
+    border-radius: 8px !important;
+    color: var(--nuvu-white) !important;
+}
+
+.nuvu-card-bordered,
+.nuvu-version-group {
+    border-color: var(--nuvu-border-strong) !important;
+}
+
+.nuvu-list-item:hover,
+.nuvu-version-item:hover {
+    background: var(--nuvu-bg-600) !important;
+}
+
+.nuvu-tag {
+    background: var(--nuvu-white-strong);
+    color: var(--nuvu-bg-900);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.nuvu-tab {
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    color: var(--nuvu-white);
+    border: none;
+    border-bottom: 1px solid var(--nuvu-border);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.125em;
+    transition: background 0.2s ease, color 0.2s ease;
+    text-align: left;
+}
+
+.nuvu-tab:hover:not(.nuvu-tab-active) {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--nuvu-white-strong);
+}
+
+.nuvu-tab-active {
+    background: var(--nuvu-white-strong);
+    color: var(--nuvu-bg-900);
+    font-weight: 600;
+}
+
+.nuvu-deselect-btn {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--nuvu-white-strong);
+    border-radius: 4px;
+    color: var(--nuvu-white-strong);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.nuvu-deselect-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nuvu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--nuvu-white-strong);
+    background: var(--nuvu-bg-900);
+    border-radius: 16px 16px 0 0;
+    min-height: 60px;
+    gap: 16px;
+}
+
+.nuvu-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nuvu-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.nuvu-header-logo {
+    height: 32px;
+    width: auto;
+    display: block;
+}
+
+.nuvu-header-title {
+    margin: 0;
+    color: var(--nuvu-white-strong);
+    font-size: 1.6em;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.nuvu-header-subtitle {
+    display: none;
+}
+
+.nuvu-section-header {
+    margin: 0 0 16px 0;
+    color: var(--nuvu-white-strong);
+    font-size: 1.3em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.nuvu-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--nuvu-bg-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nuvu-white-strong);
+    font-weight: 600;
+}
+
+.nuvu-user-welcome {
+    color: var(--nuvu-white-strong);
+    margin: 0 0 4px 0;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.nuvu-user-name {
+    color: var(--nuvu-muted);
+    margin: 0;
+    font-size: 0.85em;
+}
+
+.nuvu-license-container {
+    margin: 12px 0;
+    font-size: 0.9em;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--nuvu-bg-700);
+    border: 1px solid var(--nuvu-border);
+    color: var(--nuvu-white);
+}
+
+.nuvu-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    min-width: 320px;
+    max-width: 320px;
+    background: var(--nuvu-bg-800);
+    border-right: 1px solid var(--nuvu-border);
+}
+
+.nuvu-user-section {
+    padding: 24px;
+    border-bottom: 1px solid var(--nuvu-border);
+    background: var(--nuvu-bg-800);
+}
+
+.nuvu-bottom-section {
+    padding: 12px;
+    border-top: 1px solid var(--nuvu-border);
+}
+
+.nuvu-hf-token-label,
+.nuvu-hf-token-help,
+.nuvu-list-item-title,
+.nuvu-list-item-description,
+.nuvu-list-item-meta,
+.nuvu-modal-title,
+.nuvu-modal-subtitle,
+.nuvu-alert-content {
+    color: var(--nuvu-white);
+}
+
+.nuvu-modal {
+    padding: 0;
+    background: var(--nuvu-bg-800) !important;
+    border: 1px solid var(--nuvu-white-strong) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+    min-width: 320px;
+    width: 100%;
+}
+
+.nuvu-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 24px 0 24px;
+}
+
+.nuvu-modal-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nuvu-modal-body {
+    padding: 20px 24px 28px 24px;
+}
+
+.nuvu-modal-title {
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+.nuvu-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--nuvu-white-strong);
+    font-size: 2em;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    transition: background 0.2s ease;
+    border-radius: 4px;
+}
+
+.nuvu-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nuvu-modal-message {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--nuvu-white);
+    margin-bottom: 16px;
+}
+
+.nuvu-modal-subtext {
+    font-size: 0.9rem;
+    color: var(--nuvu-muted);
+    line-height: 1.4;
+    margin-top: 8px;
+}
+
+.nuvu-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.nuvu-modal-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.nuvu-modal-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px;
+    border: 1px solid var(--nuvu-border);
+    border-radius: 8px;
+    background: var(--nuvu-bg-800);
+}
+
+.nuvu-modal-step-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--nuvu-white-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--nuvu-white-strong);
+    flex-shrink: 0;
+}
+
+.nuvu-modal-step-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nuvu-modal-step-title {
+    font-weight: 600;
+    color: var(--nuvu-white-strong);
+    margin: 0;
+}
+
+.nuvu-modal-step-text {
+    color: var(--nuvu-muted);
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.nuvu-modal .nuvu-btn {
+    font-size: 0.95rem !important;
+    padding: 12px 22px !important;
+    min-width: 130px;
+}
+
+.nuvu-btn-large {
+    font-size: 1.05rem !important;
+    padding: 14px 26px !important;
+}
+
+.nuvu-alert,
+.nuvu-alert-info,
+.nuvu-alert-warning,
+.nuvu-alert-success,
+.nuvu-alert-error {
+    background: var(--nuvu-bg-700) !important;
+    border: 1px solid var(--nuvu-border) !important;
+    color: var(--nuvu-white) !important;
+}
+
+.nuvu-alert-title {
+    color: var(--nuvu-white-strong);
+}
+
+.nuvu-version-status-success,
+.nuvu-version-status-warning,
+.nuvu-alert-warning .nuvu-alert-title,
+.nuvu-alert-success .nuvu-alert-title,
+.nuvu-alert-error .nuvu-alert-title,
+.nuvu-alert-info .nuvu-alert-title {
+    color: var(--nuvu-white-strong);
+}
+
+.nuvu-button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.nuvu-text-center { text-align: center; }
+.nuvu-flex { display: flex; }
+.nuvu-flex-column { flex-direction: column; }
+.nuvu-gap-24 { gap: 24px; }
+.nuvu-gap-12 { gap: 12px; }
+.nuvu-padding-40 { padding: 40px 20px; }
+
+.nuvu-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Legacy inline style overrides (monochrome palette) */
+[style*="#D14E72"],
+[style*="#B73E56"],
+[style*="#A0BBC4"],
+[style*="#202C39"] {
+    background: var(--nuvu-bg-800) !important;
+    color: var(--nuvu-white-strong) !important;
+    border-color: var(--nuvu-white-strong) !important;
+    box-shadow: none !important;
+}
+
+[style*="rgba(209, 78, 114"],
+[style*="rgba(160, 187, 196"] {
+    border-color: var(--nuvu-white-strong) !important;
+    color: var(--nuvu-muted) !important;
+    background: transparent !important;
+}
+
+[style*="#4ade80"],
+[style*="#3b82f6"],
+[style*="#ef4444"],
+[style*="#fbbf24"] {
+    color: var(--nuvu-white-strong) !important;
+}
+
+

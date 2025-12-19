@@ -1,0 +1,6 @@
+requests>=2.31.0
+huggingface_hub[hf_transfer]
+hf_xet
+keyring>=24.3.0
+
+comfyui-nuvu==0.0.2
