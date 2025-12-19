@@ -9,6 +9,7 @@ type nul > "%INSTALL_LOG%"
 
 set "COMFY_DIR=%ROOT_DIR%ComfyUI"
 set "RUN_SCRIPT_NAME=run_comfy.bat"
+set "COMFY_PORT=8188"
 set "nuvu_COMPILED_REPO=https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
 echo.
@@ -124,7 +125,8 @@ echo === Creating helper launcher: %RUN_SCRIPT_NAME% ===
     echo setlocal EnableExtensions
     echo cd /d "%%~dp0"
     echo call "%%~dp0venv\Scripts\activate.bat"
-    echo python main.py --use-sage-attention --preview-method auto
+    echo start http://127.0.0.1:%COMFY_PORT%
+    echo python main.py --port %COMFY_PORT% --use-sage-attention --preview-method auto
 )
 if errorlevel 1 (
     echo Failed to create "%RUN_SCRIPT_NAME%".
