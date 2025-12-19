@@ -1,20 +1,32 @@
 [
   {
+    "hash": "4f49af9",
+    "tag": "0.0.8",
+    "date": "4 minutes ago",
+    "message": "Refactor version detection in nuvu_server.py to streamline fallback logic for backend version retrieval. Ensure accurate detection of installed versions using pip commands and improve error handling. Remove redundant checks and enhance clarity in version assignment for both backend and frontend components."
+  },
+  {
+    "hash": "c0100b1",
+    "tag": null,
+    "date": "12 minutes ago",
+    "message": "Refactor version detection logic in nuvu_server.py to improve accuracy. Implement checks for installed backend version and fallback mechanisms using pip and changelog.json. Enhance frontend version retrieval by detecting git tags and reading from changelog.json if necessary. Update handling of version defaults for better reliability."
+  },
+  {
     "hash": "8497a22",
     "tag": "0.0.7",
-    "date": "4 minutes ago",
+    "date": "22 minutes ago",
     "message": "Implement changelog generation in CI workflow and integrate changelog modal in the dashboard. Add API endpoint to fetch changelog data from changelog.json or git log. Update frontend components to display changelog links and modal for Nuvu and ComfyUI updates."
   },
   {
     "hash": "26fb88f",
     "tag": "0.0.6",
-    "date": "38 minutes ago",
+    "date": "57 minutes ago",
     "message": "Enhance Windows installation script by adding a configurable port for ComfyUI and updating the helper launcher to use this port. Standardize capitalization of 'Nuvu' across various frontend components and backend logging for consistency. Remove obsolete JavaScript files from the Vue directory."
   },
   {
     "hash": "359b893",
     "tag": "0.0.5",
-    "date": "7 hours ago",
+    "date": "8 hours ago",
     "message": "Update batch scripts to include '--no-warn-script-location' flag for pip installations, enhancing compatibility and reducing warnings. Standardize capitalization of 'Nuvu' in various components for consistency across the application."
   },
   {
@@ -38,31 +50,31 @@
   {
     "hash": "15d004f",
     "tag": "0.0.3",
-    "date": "8 hours ago",
+    "date": "9 hours ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "e1e2182",
     "tag": null,
-    "date": "8 hours ago",
+    "date": "9 hours ago",
     "message": "Standardize method names in dialog.js for Nuvu app integration, changing 'isnuvuAppMounted', 'mountnuvuApp', and 'setnuvuView' to 'isNuvuAppMounted', 'mountNuvuApp', and 'setNuvuView' for consistency."
   },
   {
     "hash": "05bd561",
     "tag": null,
-    "date": "8 hours ago",
+    "date": "9 hours ago",
     "message": "Update import path in nuvu.js to reflect changes in main.js, switching from 'main-DEw3n8uv.js' to 'main-CAKph1xX.js' for consistency with recent refactoring."
   },
   {
     "hash": "2c73579",
     "tag": null,
-    "date": "8 hours ago",
+    "date": "9 hours ago",
     "message": "Standardize method name in main.js by changing 'setnuvuAuthenticated' to 'setNuvuAuthenticated' for consistency with Nuvu app integration naming conventions."
   },
   {
     "hash": "8d57e5d",
     "tag": null,
-    "date": "8 hours ago",
+    "date": "9 hours ago",
     "message": "Standardize method names in main.js and dialog.js for Nuvu app integration, changing 'mountnuvuApp', 'unmountnuvuApp', 'isnuvuAppMounted', 'getnuvuAppRef', and 'setnuvuView' to 'mountNuvuApp', 'unmountNuvuApp', 'isNuvuAppMounted', 'getNuvuAppRef', and 'setNuvuView', respectively. Update import statements in nuvu.js to reflect these changes."
   },
   {
