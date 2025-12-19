@@ -280,16 +280,16 @@ export async function updateDialogForAuthenticated() {
 
     const vueApp = await loadVueApp();
     if (vueApp) {
-        if (!vueApp.isnuvuAppMounted || !vueApp.isnuvuAppMounted()) {
-            vueApp.mountnuvuApp('#nuvu-vue-app', {
+        if (!vueApp.isNuvuAppMounted || !vueApp.isNuvuAppMounted()) {
+            vueApp.mountNuvuApp('#nuvu-vue-app', {
                 view: 'dashboard',
                 user: state.currentUser,
                 licenseStatus: state.currentLicenseStatus
             });
         } else {
             // Keep app mounted; just ensure we're on the dashboard; do not reset app state.
-            if (vueApp.setnuvuView) {
-                vueApp.setnuvuView('dashboard');
+            if (vueApp.setNuvuView) {
+                vueApp.setNuvuView('dashboard');
             }
         }
         setupVueCloseHandler();
