@@ -107,7 +107,7 @@ cd /d "%COMFY_DIR%\custom_nodes"
 echo.
 echo === Installing core custom nodes, some may take a few minutes to install ===
 call :clone_and_install "ComfyUI-Manager" "https://github.com/Comfy-Org/ComfyUI-Manager.git"
-call :clone_and_install "nuvu-Compiled" "%nuvu_COMPILED_REPO%"
+call :clone_and_install "ComfyUI-Nuvu" "%nuvu_COMPILED_REPO%"
 call :clone_and_install "rgthree-comfy" "https://github.com/rgthree/rgthree-comfy.git"
 call :clone_and_install "ComfyUI-VideoHelperSuite" "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git"
 call :clone_and_install "RES4LYF" "https://github.com/ClownsharkBatwing/RES4LYF.git"
