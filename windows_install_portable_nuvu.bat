@@ -140,7 +140,7 @@ REM Install dependency requirements if present
 if exist "%NODE_DIR%\requirements.txt" (
     echo Installing requirements for %NODE_DIR%...
     pushd "%NODE_DIR%"
-    "%PYTHON_EXE%" -s -m pip install -q -r requirements.txt
+    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r requirements.txt
     if errorlevel 1 (
         echo [WARNING] Failed to install requirements.txt for %NODE_DIR%.
     )
@@ -148,7 +148,7 @@ if exist "%NODE_DIR%\requirements.txt" (
 ) else if exist "%NODE_DIR%\req.txt" (
     echo Installing req.txt for %NODE_DIR%...
     pushd "%NODE_DIR%"
-    "%PYTHON_EXE%" -s -m pip install -q -r req.txt
+    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r req.txt
     if errorlevel 1 (
         echo [WARNING] Failed to install req.txt for %NODE_DIR%.
     )

@@ -66,7 +66,7 @@ if errorlevel 1 (
 
 echo.
 echo === Upgrading pip ===
-python -m pip install -q --upgrade pip >> "%INSTALL_LOG%" 2>&1
+python -m pip install -q --no-warn-script-location --upgrade pip >> "%INSTALL_LOG%" 2>&1
 if errorlevel 1 (
     echo Failed to upgrade pip.
     exit /b 1
@@ -74,7 +74,7 @@ if errorlevel 1 (
 
 echo.
 echo === Installing PyTorch 2.8.0 stack, this will take up to 10 minutes ===
-python -m pip install -q torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128 >> "%INSTALL_LOG%" 2>&1
+python -m pip install -q --no-warn-script-location torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128 >> "%INSTALL_LOG%" 2>&1
 if errorlevel 1 (
     echo Failed to install PyTorch 2.8.0 stack.
     exit /b 1
@@ -82,19 +82,19 @@ if errorlevel 1 (
 
 echo.
 echo === Installing core ComfyUI dependencies ===
-python -m pip install -q -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128 >> "%INSTALL_LOG%" 2>&1
+python -m pip install -q --no-warn-script-location -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128 >> "%INSTALL_LOG%" 2>&1
 if errorlevel 1 (
     echo Failed to install ComfyUI requirements.
     exit /b 1
 )
 
-python -m pip install -q -U "triton-windows<3.5" >> "%INSTALL_LOG%" 2>&1
+python -m pip install -q --no-warn-script-location -U "triton-windows<3.5" >> "%INSTALL_LOG%" 2>&1
 if errorlevel 1 (
     echo Failed to install Triton Windows build.
     exit /b 1
 )
 
-python -m pip install -q https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post2/sageattention-2.2.0+cu128torch2.8.0.post2-cp39-abi3-win_amd64.whl >> "%INSTALL_LOG%" 2>&1
+python -m pip install -q --no-warn-script-location https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post2/sageattention-2.2.0+cu128torch2.8.0.post2-cp39-abi3-win_amd64.whl >> "%INSTALL_LOG%" 2>&1
 if errorlevel 1 (
     echo Failed to install SageAttention wheel.
     exit /b 1
@@ -154,7 +154,7 @@ if not exist "%NODE_DIR%" (
 REM Install dependency requirements if present
 if exist "%NODE_DIR%\requirements.txt" (
     pushd "%NODE_DIR%"
-    python -m pip install -q -r requirements.txt >> "%INSTALL_LOG%" 2>&1
+    python -m pip install -q --no-warn-script-location -r requirements.txt >> "%INSTALL_LOG%" 2>&1
     if errorlevel 1 (
         echo Failed to install requirements.txt for %NODE_DIR%.
         popd
@@ -163,7 +163,7 @@ if exist "%NODE_DIR%\requirements.txt" (
     popd
 ) else if exist "%NODE_DIR%\req.txt" (
     pushd "%NODE_DIR%"
-    python -m pip install -q -r req.txt >> "%INSTALL_LOG%" 2>&1
+    python -m pip install -q --no-warn-script-location -r req.txt >> "%INSTALL_LOG%" 2>&1
     if errorlevel 1 (
         echo Failed to install req.txt for %NODE_DIR%.
         popd
