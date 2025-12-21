@@ -1,0 +1,300 @@
+
+[2025-12-19T23:54:45.466322+00:00] pip install -r (nuvu) stdout
+Looking in indexes: https://pypi.org/simple, https://pypi.ngc.nvidia.com
+Requirement already satisfied: requests>=2.31.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 1)) (2.32.5)
+Requirement already satisfied: hf_xet in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 3)) (1.2.0)
+Requirement already satisfied: keyring>=24.3.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 4)) (25.7.0)
+Collecting comfyui-nuvu==0.0.8 (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 6))
+  Downloading comfyui_nuvu-0.0.8-cp39-abi3-win_amd64.whl.metadata (10 kB)
+Requirement already satisfied: huggingface_hub[hf_transfer] in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (0.36.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 1)) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 1)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 1)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 1)) (2025.11.12)
+Requirement already satisfied: filelock in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (3.20.0)
+Requirement already satisfied: fsspec>=2023.5.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (2025.10.0)
+Requirement already satisfied: packaging>=20.9 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (25.0)
+Requirement already satisfied: pyyaml>=5.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: tqdm>=4.42.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (4.67.1)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (4.15.0)
+Requirement already satisfied: hf-transfer>=0.1.4 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (0.1.9)
+Requirement already satisfied: pywin32-ctypes>=0.2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 4)) (0.2.3)
+Requirement already satisfied: jaraco.classes in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 4)) (3.4.0)
+Requirement already satisfied: jaraco.functools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 4)) (4.3.0)
+Requirement already satisfied: jaraco.context in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 4)) (6.0.1)
+Requirement already satisfied: colorama in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from tqdm>=4.42.1->huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: more-itertools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from jaraco.classes->keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-nuvu\requirements.txt (line 4)) (10.8.0)
+Downloading comfyui_nuvu-0.0.8-cp39-abi3-win_amd64.whl (1.2 MB)
+   ---------------------------------------- 1.2/1.2 MB 28.3 MB/s  0:00:00
+Installing collected packages: comfyui-nuvu
+  Attempting uninstall: comfyui-nuvu
+    Found existing installation: comfyui-nuvu 0.0.4
+    Uninstalling comfyui-nuvu-0.0.4:
+      Successfully uninstalled comfyui-nuvu-0.0.4
+Successfully installed comfyui-nuvu-0.0.8
+
+[2025-12-19T23:54:45.466322+00:00] pip install -r (nuvu) stderr
+  WARNING: Failed to remove contents in a temporary directory 'C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\venv\Lib\site-packages\~omfyui_nuvu'.
+  You can safely remove it manually.
+
+[2025-12-20T02:05:24.575591+00:00] pip install -r (nuvu) stdout
+Looking in indexes: https://pypi.org/simple, https://pypi.ngc.nvidia.com
+Requirement already satisfied: requests>=2.31.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.32.5)
+Requirement already satisfied: hf_xet in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 3)) (1.2.0)
+Requirement already satisfied: keyring>=24.3.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (25.7.0)
+Collecting comfyui-nuvu==0.0.9 (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 6))
+  Downloading comfyui_nuvu-0.0.9-cp39-abi3-win_amd64.whl.metadata (10 kB)
+Requirement already satisfied: huggingface_hub[hf_transfer] in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.36.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2025.11.12)
+Requirement already satisfied: filelock in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (3.20.0)
+Requirement already satisfied: fsspec>=2023.5.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (2025.10.0)
+Requirement already satisfied: packaging>=20.9 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (25.0)
+Requirement already satisfied: pyyaml>=5.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: tqdm>=4.42.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.67.1)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.15.0)
+Requirement already satisfied: hf-transfer>=0.1.4 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.1.9)
+Requirement already satisfied: pywin32-ctypes>=0.2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (0.2.3)
+Requirement already satisfied: jaraco.classes in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (3.4.0)
+Requirement already satisfied: jaraco.functools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (4.3.0)
+Requirement already satisfied: jaraco.context in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (6.0.1)
+Requirement already satisfied: colorama in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from tqdm>=4.42.1->huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: more-itertools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from jaraco.classes->keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (10.8.0)
+Downloading comfyui_nuvu-0.0.9-cp39-abi3-win_amd64.whl (1.2 MB)
+   ---------------------------------------- 1.2/1.2 MB 28.4 MB/s  0:00:00
+Installing collected packages: comfyui-nuvu
+  Attempting uninstall: comfyui-nuvu
+    Found existing installation: comfyui-nuvu 0.0.8
+    Uninstalling comfyui-nuvu-0.0.8:
+      Successfully uninstalled comfyui-nuvu-0.0.8
+Successfully installed comfyui-nuvu-0.0.9
+
+[2025-12-20T02:05:24.575591+00:00] pip install -r (nuvu) stderr
+  WARNING: Failed to remove contents in a temporary directory 'C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\venv\Lib\site-packages\~omfyui_nuvu'.
+  You can safely remove it manually.
+
+[2025-12-20T02:06:44.311281+00:00] pip install -r requirements.txt stdout
+Looking in indexes: https://pypi.org/simple, https://pypi.ngc.nvidia.com
+Collecting comfyui-frontend-package==1.34.9 (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 1))
+  Downloading comfyui_frontend_package-1.34.9-py3-none-any.whl.metadata (117 bytes)
+Collecting comfyui-workflow-templates==0.7.60 (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 2))
+  Downloading comfyui_workflow_templates-0.7.60-py3-none-any.whl.metadata (18 kB)
+Requirement already satisfied: comfyui-embedded-docs==0.3.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 3)) (0.3.1)
+Requirement already satisfied: torch in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (2.8.0+cu128)
+Requirement already satisfied: torchsde in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 5)) (0.2.6)
+Requirement already satisfied: torchvision in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 6)) (0.23.0+cu128)
+Requirement already satisfied: torchaudio in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 7)) (2.8.0+cu128)
+Requirement already satisfied: numpy>=1.25.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 8)) (2.2.6)
+Requirement already satisfied: einops in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 9)) (0.8.1)
+Requirement already satisfied: transformers>=4.50.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (4.57.3)
+Requirement already satisfied: tokenizers>=0.13.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 11)) (0.22.1)
+Requirement already satisfied: sentencepiece in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 12)) (0.2.1)
+Requirement already satisfied: safetensors>=0.4.2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 13)) (0.7.0)
+Requirement already satisfied: aiohttp>=3.11.8 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 14)) (3.13.2)
+Requirement already satisfied: yarl>=1.18.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 15)) (1.22.0)
+Requirement already satisfied: pyyaml in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 16)) (6.0.3)
+Requirement already satisfied: Pillow in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 17)) (12.0.0)
+Requirement already satisfied: scipy in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 18)) (1.16.3)
+Requirement already satisfied: tqdm in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 19)) (4.67.1)
+Requirement already satisfied: psutil in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 20)) (7.1.3)
+Requirement already satisfied: alembic in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 21)) (1.17.2)
+Requirement already satisfied: SQLAlchemy in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 22)) (2.0.44)
+Requirement already satisfied: av>=14.2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 23)) (16.0.1)
+Requirement already satisfied: kornia>=0.7.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 26)) (0.8.2)
+Requirement already satisfied: spandrel in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 27)) (0.4.1)
+Requirement already satisfied: pydantic~=2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 28)) (2.12.5)
+Requirement already satisfied: pydantic-settings~=2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 29)) (2.12.0)
+Collecting comfyui-workflow-templates-core==0.3.46 (from comfyui-workflow-templates==0.7.60->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 2))
+  Downloading comfyui_workflow_templates_core-0.3.46-py3-none-any.whl.metadata (259 bytes)
+Collecting comfyui-workflow-templates-media-api==0.3.23 (from comfyui-workflow-templates==0.7.60->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 2))
+  Downloading comfyui_workflow_templates_media_api-0.3.23-py3-none-any.whl.metadata (290 bytes)
+Requirement already satisfied: comfyui-workflow-templates-media-video==0.3.19 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from comfyui-workflow-templates==0.7.60->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 2)) (0.3.19)
+Collecting comfyui-workflow-templates-media-image==0.3.38 (from comfyui-workflow-templates==0.7.60->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 2))
+  Downloading comfyui_workflow_templates_media_image-0.3.38-py3-none-any.whl.metadata (282 bytes)
+Collecting comfyui-workflow-templates-media-other==0.3.50 (from comfyui-workflow-templates==0.7.60->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 2))
+  Downloading comfyui_workflow_templates_media_other-0.3.50-py3-none-any.whl.metadata (305 bytes)
+Requirement already satisfied: annotated-types>=0.6.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from pydantic~=2.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 28)) (0.7.0)
+Requirement already satisfied: pydantic-core==2.41.5 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from pydantic~=2.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 28)) (2.41.5)
+Requirement already satisfied: typing-extensions>=4.14.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from pydantic~=2.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 28)) (4.15.0)
+Requirement already satisfied: typing-inspection>=0.4.2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from pydantic~=2.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 28)) (0.4.2)
+Requirement already satisfied: python-dotenv>=0.21.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from pydantic-settings~=2.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 29)) (1.2.1)
+Requirement already satisfied: filelock in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (3.20.0)
+Requirement already satisfied: sympy>=1.13.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (1.14.0)
+Requirement already satisfied: networkx in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (3.6)
+Requirement already satisfied: jinja2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (3.1.6)
+Requirement already satisfied: fsspec in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (2025.10.0)
+Requirement already satisfied: setuptools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (80.9.0)
+Requirement already satisfied: trampoline>=0.1.2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from torchsde->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 5)) (0.1.2)
+Requirement already satisfied: huggingface-hub<1.0,>=0.34.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from transformers>=4.50.3->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (0.36.0)
+Requirement already satisfied: packaging>=20.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from transformers>=4.50.3->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (25.0)
+Requirement already satisfied: regex!=2019.12.17 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from transformers>=4.50.3->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (2025.11.3)
+Requirement already satisfied: requests in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from transformers>=4.50.3->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (2.32.5)
+Requirement already satisfied: aiohappyeyeballs>=2.5.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from aiohttp>=3.11.8->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 14)) (2.6.1)
+Requirement already satisfied: aiosignal>=1.4.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from aiohttp>=3.11.8->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 14)) (1.4.0)
+Requirement already satisfied: attrs>=17.3.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from aiohttp>=3.11.8->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 14)) (25.4.0)
+Requirement already satisfied: frozenlist>=1.1.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from aiohttp>=3.11.8->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 14)) (1.8.0)
+Requirement already satisfied: multidict<7.0,>=4.5 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from aiohttp>=3.11.8->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 14)) (6.7.0)
+Requirement already satisfied: propcache>=0.2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from aiohttp>=3.11.8->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 14)) (0.4.1)
+Requirement already satisfied: idna>=2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from yarl>=1.18.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 15)) (3.11)
+Requirement already satisfied: colorama in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from tqdm->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 19)) (0.4.6)
+Requirement already satisfied: Mako in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from alembic->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 21)) (1.3.10)
+Requirement already satisfied: greenlet>=1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from SQLAlchemy->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 22)) (3.2.4)
+Requirement already satisfied: kornia_rs>=0.1.9 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from kornia>=0.7.1->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 26)) (0.1.10)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from sympy>=1.13.3->torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (1.3.0)
+Requirement already satisfied: MarkupSafe>=2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from jinja2->torch->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 4)) (3.0.3)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests->transformers>=4.50.3->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (3.4.4)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests->transformers>=4.50.3->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests->transformers>=4.50.3->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\requirements.txt (line 10)) (2025.11.12)
+Downloading comfyui_frontend_package-1.34.9-py3-none-any.whl (19.0 MB)
+   ---------------------------------------- 19.0/19.0 MB 85.4 MB/s  0:00:00
+Downloading comfyui_workflow_templates-0.7.60-py3-none-any.whl (8.8 kB)
+Downloading comfyui_workflow_templates_core-0.3.46-py3-none-any.whl (28 kB)
+Downloading comfyui_workflow_templates_media_api-0.3.23-py3-none-any.whl (51.8 MB)
+   ---------------------------------------- 51.8/51.8 MB 94.2 MB/s  0:00:00
+Downloading comfyui_workflow_templates_media_image-0.3.38-py3-none-any.whl (8.9 MB)
+   ---------------------------------------- 8.9/8.9 MB 91.7 MB/s  0:00:00
+Downloading comfyui_workflow_templates_media_other-0.3.50-py3-none-any.whl (11.1 MB)
+   ---------------------------------------- 11.1/11.1 MB 98.1 MB/s  0:00:00
+Installing collected packages: comfyui-workflow-templates-media-other, comfyui-workflow-templates-media-image, comfyui-workflow-templates-media-api, comfyui-workflow-templates-core, comfyui-frontend-package, comfyui-workflow-templates
+  Attempting uninstall: comfyui-workflow-templates-media-other
+    Found existing installation: comfyui-workflow-templates-media-other 0.3.47
+    Uninstalling comfyui-workflow-templates-media-other-0.3.47:
+      Successfully uninstalled comfyui-workflow-templates-media-other-0.3.47
+  Attempting uninstall: comfyui-workflow-templates-media-image
+    Found existing installation: comfyui-workflow-templates-media-image 0.3.36
+    Uninstalling comfyui-workflow-templates-media-image-0.3.36:
+      Successfully uninstalled comfyui-workflow-templates-media-image-0.3.36
+  Attempting uninstall: comfyui-workflow-templates-media-api
+    Found existing installation: comfyui-workflow-templates-media-api 0.3.22
+    Uninstalling comfyui-workflow-templates-media-api-0.3.22:
+      Successfully uninstalled comfyui-workflow-templates-media-api-0.3.22
+  Attempting uninstall: comfyui-workflow-templates-core
+    Found existing installation: comfyui-workflow-templates-core 0.3.43
+    Uninstalling comfyui-workflow-templates-core-0.3.43:
+      Successfully uninstalled comfyui-workflow-templates-core-0.3.43
+  Attempting uninstall: comfyui-frontend-package
+    Found existing installation: comfyui_frontend_package 1.34.8
+    Uninstalling comfyui_frontend_package-1.34.8:
+      Successfully uninstalled comfyui_frontend_package-1.34.8
+  Attempting uninstall: comfyui-workflow-templates
+    Found existing installation: comfyui_workflow_templates 0.7.59
+    Uninstalling comfyui_workflow_templates-0.7.59:
+      Successfully uninstalled comfyui_workflow_templates-0.7.59
+
+Successfully installed comfyui-frontend-package-1.34.9 comfyui-workflow-templates-0.7.60 comfyui-workflow-templates-core-0.3.46 comfyui-workflow-templates-media-api-0.3.23 comfyui-workflow-templates-media-image-0.3.38 comfyui-workflow-templates-media-other-0.3.50
+
+[2025-12-21T01:33:29.763569+00:00] pip install -r (nuvu) stdout
+Looking in indexes: https://pypi.org/simple, https://pypi.ngc.nvidia.com
+Requirement already satisfied: requests>=2.31.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.32.5)
+Requirement already satisfied: hf_xet in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 3)) (1.2.0)
+Requirement already satisfied: keyring>=24.3.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (25.7.0)
+Collecting comfyui-nuvu==0.0.10 (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 6))
+  Downloading comfyui_nuvu-0.0.10-cp39-abi3-win_amd64.whl.metadata (10 kB)
+Requirement already satisfied: huggingface_hub[hf_transfer] in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.36.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2025.11.12)
+Requirement already satisfied: filelock in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (3.20.0)
+Requirement already satisfied: fsspec>=2023.5.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (2025.10.0)
+Requirement already satisfied: packaging>=20.9 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (25.0)
+Requirement already satisfied: pyyaml>=5.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: tqdm>=4.42.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.67.1)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.15.0)
+Requirement already satisfied: hf-transfer>=0.1.4 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.1.9)
+Requirement already satisfied: pywin32-ctypes>=0.2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (0.2.3)
+Requirement already satisfied: jaraco.classes in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (3.4.0)
+Requirement already satisfied: jaraco.functools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (4.3.0)
+Requirement already satisfied: jaraco.context in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (6.0.1)
+Requirement already satisfied: colorama in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from tqdm>=4.42.1->huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: more-itertools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from jaraco.classes->keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (10.8.0)
+Downloading comfyui_nuvu-0.0.10-cp39-abi3-win_amd64.whl (1.2 MB)
+   ---------------------------------------- 1.2/1.2 MB 8.3 MB/s  0:00:00
+Installing collected packages: comfyui-nuvu
+  Attempting uninstall: comfyui-nuvu
+    Found existing installation: comfyui-nuvu 0.0.9
+    Uninstalling comfyui-nuvu-0.0.9:
+      Successfully uninstalled comfyui-nuvu-0.0.9
+Successfully installed comfyui-nuvu-0.0.10
+
+[2025-12-21T01:33:29.763569+00:00] pip install -r (nuvu) stderr
+  WARNING: Failed to remove contents in a temporary directory 'C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\venv\Lib\site-packages\~omfyui_nuvu'.
+  You can safely remove it manually.
+
+[2025-12-21T03:23:07.627594+00:00] pip install -r (nuvu) stdout
+Looking in indexes: https://pypi.org/simple, https://pypi.ngc.nvidia.com
+Requirement already satisfied: requests>=2.31.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.32.5)
+Requirement already satisfied: hf_xet in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 3)) (1.2.0)
+Requirement already satisfied: keyring>=24.3.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (25.7.0)
+Collecting comfyui-nuvu==0.0.12 (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 6))
+  Downloading comfyui_nuvu-0.0.12-cp39-abi3-win_amd64.whl.metadata (10 kB)
+Requirement already satisfied: huggingface_hub[hf_transfer] in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.36.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2025.11.12)
+Requirement already satisfied: filelock in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (3.20.0)
+Requirement already satisfied: fsspec>=2023.5.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (2025.10.0)
+Requirement already satisfied: packaging>=20.9 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (25.0)
+Requirement already satisfied: pyyaml>=5.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: tqdm>=4.42.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.67.1)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.15.0)
+Requirement already satisfied: hf-transfer>=0.1.4 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.1.9)
+Requirement already satisfied: pywin32-ctypes>=0.2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (0.2.3)
+Requirement already satisfied: jaraco.classes in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (3.4.0)
+Requirement already satisfied: jaraco.functools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (4.3.0)
+Requirement already satisfied: jaraco.context in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (6.0.1)
+Requirement already satisfied: colorama in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from tqdm>=4.42.1->huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: more-itertools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from jaraco.classes->keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (10.8.0)
+Downloading comfyui_nuvu-0.0.12-cp39-abi3-win_amd64.whl (1.2 MB)
+   ---------------------------------------- 1.2/1.2 MB 57.2 MB/s  0:00:00
+Installing collected packages: comfyui-nuvu
+  Attempting uninstall: comfyui-nuvu
+    Found existing installation: comfyui-nuvu 0.0.10
+    Uninstalling comfyui-nuvu-0.0.10:
+      Successfully uninstalled comfyui-nuvu-0.0.10
+Successfully installed comfyui-nuvu-0.0.12
+
+[2025-12-21T03:23:07.627594+00:00] pip install -r (nuvu) stderr
+  WARNING: Failed to remove contents in a temporary directory 'C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\venv\Lib\site-packages\~omfyui_nuvu'.
+  You can safely remove it manually.
+
+[2025-12-21T04:55:49.714021+00:00] pip install -r (nuvu) stdout
+Looking in indexes: https://pypi.org/simple, https://pypi.ngc.nvidia.com
+Requirement already satisfied: requests>=2.31.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.32.5)
+Requirement already satisfied: hf_xet in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 3)) (1.2.0)
+Requirement already satisfied: keyring>=24.3.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (25.7.0)
+Collecting comfyui-nuvu==0.0.14 (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 6))
+  Downloading comfyui_nuvu-0.0.14-cp39-abi3-win_amd64.whl.metadata (10 kB)
+Requirement already satisfied: huggingface_hub[hf_transfer] in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from -r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.36.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from requests>=2.31.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 1)) (2025.11.12)
+Requirement already satisfied: filelock in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (3.20.0)
+Requirement already satisfied: fsspec>=2023.5.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (2025.10.0)
+Requirement already satisfied: packaging>=20.9 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (25.0)
+Requirement already satisfied: pyyaml>=5.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: tqdm>=4.42.1 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.67.1)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (4.15.0)
+Requirement already satisfied: hf-transfer>=0.1.4 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.1.9)
+Requirement already satisfied: pywin32-ctypes>=0.2.0 in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (0.2.3)
+Requirement already satisfied: jaraco.classes in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (3.4.0)
+Requirement already satisfied: jaraco.functools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (4.3.0)
+Requirement already satisfied: jaraco.context in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (6.0.1)
+Requirement already satisfied: colorama in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from tqdm>=4.42.1->huggingface_hub[hf_transfer]->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 2)) (0.4.6)
+Requirement already satisfied: more-itertools in c:\users\thear\documents\artofficialteaching\comfyui\venv\lib\site-packages (from jaraco.classes->keyring>=24.3.0->-r C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\custom_nodes\ComfyUI-Nuvu\requirements.txt (line 4)) (10.8.0)
+Downloading comfyui_nuvu-0.0.14-cp39-abi3-win_amd64.whl (1.2 MB)
+   ---------------------------------------- 1.2/1.2 MB 57.2 MB/s  0:00:00
+Installing collected packages: comfyui-nuvu
+  Attempting uninstall: comfyui-nuvu
+    Found existing installation: comfyui-nuvu 0.0.13
+    Uninstalling comfyui-nuvu-0.0.13:
+      Successfully uninstalled comfyui-nuvu-0.0.13
+Successfully installed comfyui-nuvu-0.0.14
+
+[2025-12-21T04:55:49.714021+00:00] pip install -r (nuvu) stderr
+  WARNING: Failed to remove contents in a temporary directory 'C:\Users\thear\Documents\ArtOfficialTeaching\ComfyUI\venv\Lib\site-packages\~omfyui_nuvu'.
+  You can safely remove it manually.
