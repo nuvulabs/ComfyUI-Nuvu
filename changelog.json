@@ -1,20 +1,26 @@
 [
   {
+    "hash": "99f03aa",
+    "tag": "0.0.17",
+    "date": "6 minutes ago",
+    "message": "Improve messaging when user's device is not registered, and allow analyzing a new workflow without having to refresh the page"
+  },
+  {
     "hash": "9c7cedc",
     "tag": "0.0.16",
-    "date": "3 minutes ago",
+    "date": "61 minutes ago",
     "message": "Adjust logo paths to avoid unrendered logos"
   },
   {
     "hash": "db37708",
     "tag": "0.0.15",
-    "date": "11 hours ago",
+    "date": "12 hours ago",
     "message": "Update .gitignore to exclude log files and enhance GitHub Actions workflow to prevent log files from being uploaded. Clean up potential log files during build process for improved artifact management."
   },
   {
     "hash": "b71d6ab",
     "tag": "0.0.14",
-    "date": "11 hours ago",
+    "date": "12 hours ago",
     "message": "Merge: Accept incoming changes - restructure to src-frontend"
   },
   {
@@ -26,19 +32,19 @@
   {
     "hash": "c9cbc03",
     "tag": "0.0.12",
-    "date": "13 hours ago",
+    "date": "14 hours ago",
     "message": "Update Vite configuration to improve build output structure and reserved names. Change output directory to 'dist' and adjust library entry points for better organization. Enhance reserved strings and names for ComfyUI integration. Update GitHub Actions workflow to reflect changes in build process and output paths. Modify extension path handling in JavaScript files to ensure compatibility with Vite's ignore feature."
   },
   {
     "hash": "7739b9e",
     "tag": "0.0.11",
-    "date": "14 hours ago",
+    "date": "15 hours ago",
     "message": "Update README.md to replace logo image with a new design. Enhance changelog retrieval by implementing separate handling for Nuvu and ComfyUI repositories, improving error handling, and adding remote fetching capabilities for commit history. This update streamlines the process of obtaining the latest commit information for both repository types."
   },
   {
     "hash": "4603c61",
     "tag": "0.0.10",
-    "date": "15 hours ago",
+    "date": "16 hours ago",
     "message": "Refactor OptimizerPanel.vue and Sidebar.vue for improved button structure and update website URL. Clean up ChangelogModal.vue by removing unnecessary whitespace. Enhance version detection in nuvu_server.py with better error handling and formatting. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   },
   {
