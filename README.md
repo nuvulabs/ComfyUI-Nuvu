@@ -58,7 +58,7 @@ nuvu Labs offers a variety of ways to install the nuvu Plug-in into ComfyUI for 
 
 ### Auto-Installers
 
-Download the applicable script for your system, which can be found [at this link](https://github.com/nuvulabs/nuvu-Compiled/releases).
+Download the applicable script for your system, which can be found [at this link](https://github.com/nuvulabs/ComfyUI-Nuvu/releases).
 
 #### Windows Install
 Place the .bat file in the folder location on windows that you want to install ComfyUI-nuvu in. Double click on the .bat file, and it will start to install ComfyUI with nuvu.

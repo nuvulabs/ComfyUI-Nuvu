@@ -134,7 +134,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo All done! Use "%COMFY_DIR%\%RUN_SCRIPT_NAME%" to launch ComfyUI with nuvu-Compiled.
+echo All done! Use "%COMFY_DIR%\%RUN_SCRIPT_NAME%" to launch ComfyUI with ComfyUI-Nuvu.
 echo If you run into issues, check: "%INSTALL_LOG%"
 pause
 exit /b 0

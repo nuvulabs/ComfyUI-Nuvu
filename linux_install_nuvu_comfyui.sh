@@ -41,7 +41,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMFY_DIR="$SCRIPT_DIR/ComfyUI"
 RUN_SCRIPT_NAME="run_comfy.sh"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
-nuvu_COMPILED_REPO="https://github.com/nuvulabs/nuvu-Compiled.git"
+nuvu_COMPILED_REPO="https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
 ensure_cmd git
 
@@ -139,7 +139,7 @@ mkdir -p "$COMFY_DIR/custom_nodes"
 cd "$COMFY_DIR/custom_nodes"
 
 clone_and_install "ComfyUI-Manager" "https://github.com/Comfy-Org/ComfyUI-Manager.git"
-clone_and_install "nuvu-Compiled" "$nuvu_COMPILED_REPO"
+clone_and_install "ComfyUI-Nuvu" "$nuvu_COMPILED_REPO"
 clone_and_install "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
 clone_and_install "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git"
 clone_and_install "rgthree-comfy" "https://github.com/rgthree/rgthree-comfy.git"
@@ -162,7 +162,7 @@ EOF
 chmod +x "$RUN_SCRIPT_NAME"
 
 log "All done!"
-echo "Use $COMFY_DIR/$RUN_SCRIPT_NAME to launch ComfyUI with nuvu-Compiled."
+echo "Use $COMFY_DIR/$RUN_SCRIPT_NAME to launch ComfyUI with ComfyUI-Nuvu."
 echo "If you run into issues, check: $INSTALL_LOG"
 exit 0
 

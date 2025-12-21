@@ -32,7 +32,7 @@ install_python312() {
 
 COMFY_DIR=${COMFY_DIR:-/workspace}
 TORCH_INDEX_URL=${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
-nuvu_REPO=${nuvu_REPO:-https://github.com/TheArtOfficial/nuvu-Compiled.git}
+nuvu_REPO=${nuvu_REPO:-https://github.com/nuvulabs/ComfyUI-Nuvu.git}
 nuvu_BRANCH=${nuvu_BRANCH:-}
 MANAGER_REPO=${MANAGER_REPO:-https://github.com/Comfy-Org/ComfyUI-Manager.git}
 SAGE_REPO=${SAGE_REPO:-https://github.com/thu-ml/SageAttention.git}
@@ -92,7 +92,7 @@ if [ ! -x "$VENV_PY" ]; then
 fi
 
 CUSTOM_NODES_DIR="$APP_DIR/custom_nodes"
-CUSTOM_NODE_DIR="$CUSTOM_NODES_DIR/nuvu-Compiled"
+CUSTOM_NODE_DIR="$CUSTOM_NODES_DIR/ComfyUI-Nuvu"
 MANAGER_DIR="$CUSTOM_NODES_DIR/ComfyUI-Manager"
 
 mkdir -p "$CUSTOM_NODES_DIR"
@@ -110,18 +110,18 @@ else
   log "ComfyUI-Manager already present, skipping clone"
 fi
 
-log "Ensuring nuvu-Compiled custom node"
+log "Ensuring ComfyUI-Nuvu custom node"
 if [ ! -d "$CUSTOM_NODE_DIR/.git" ]; then
   git clone "$nuvu_REPO" "$CUSTOM_NODE_DIR"
 else
-  log "nuvu-Compiled already present, skipping clone"
+  log "ComfyUI-Nuvu already present, skipping clone"
 fi
 if [ -n "$nuvu_BRANCH" ]; then
-  log "Checking out nuvu-Compiled branch: $nuvu_BRANCH"
+  log "Checking out ComfyUI-Nuvu branch: $nuvu_BRANCH"
   git -C "$CUSTOM_NODE_DIR" fetch origin "$nuvu_BRANCH" || true
   git -C "$CUSTOM_NODE_DIR" checkout "$nuvu_BRANCH"
 else
-  log "Using nuvu-Compiled repository default branch"
+  log "Using ComfyUI-Nuvu repository default branch"
 fi
 
 # Install additional custom nodes
@@ -164,17 +164,17 @@ if [ -f "$MANAGER_DIR/requirements.txt" ]; then
   "$VENV_PIP" install -r "$MANAGER_DIR/requirements.txt"
 fi
 
-# Install nuvu-Compiled requirements (pulls comfyui-nuvu from PyPI)
+# Install ComfyUI-Nuvu requirements (pulls comfyui-nuvu from PyPI)
 CUSTOM_REQS="$CUSTOM_NODE_DIR/requirements.txt"
 CUSTOM_REQS_ALT="$CUSTOM_NODE_DIR/req.txt"
 if [ -f "$CUSTOM_REQS" ]; then
-  log "Installing nuvu-Compiled requirements.txt"
+  log "Installing ComfyUI-Nuvu requirements.txt"
   "$VENV_PIP" install -r "$CUSTOM_REQS"
 elif [ -f "$CUSTOM_REQS_ALT" ]; then
-  log "Installing nuvu-Compiled req.txt"
+  log "Installing ComfyUI-Nuvu req.txt"
   "$VENV_PIP" install -r "$CUSTOM_REQS_ALT"
 else
-  echo "nuvu-Compiled requirements file not found at $CUSTOM_REQS (or $CUSTOM_REQS_ALT)" >&2
+  echo "ComfyUI-Nuvu requirements file not found at $CUSTOM_REQS (or $CUSTOM_REQS_ALT)" >&2
   exit 1
 fi
 
