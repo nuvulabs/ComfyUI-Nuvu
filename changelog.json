@@ -1,44 +1,50 @@
 [
   {
+    "hash": "a712092",
+    "tag": "0.0.13",
+    "date": "3 minutes ago",
+    "message": "Enhance Vite configuration to suppress specific warnings related to import.meta.url and adjust asset file naming for CSS. Update dialog.js to ensure correct base URL handling after bundling, and modify nuvu.js to reflect changes in module structure. Remove obsolete JavaScript files to streamline the codebase."
+  },
+  {
     "hash": "c9cbc03",
     "tag": "0.0.12",
-    "date": "3 minutes ago",
+    "date": "57 minutes ago",
     "message": "Update Vite configuration to improve build output structure and reserved names. Change output directory to 'dist' and adjust library entry points for better organization. Enhance reserved strings and names for ComfyUI integration. Update GitHub Actions workflow to reflect changes in build process and output paths. Modify extension path handling in JavaScript files to ensure compatibility with Vite's ignore feature."
   },
   {
     "hash": "7739b9e",
     "tag": "0.0.11",
-    "date": "51 minutes ago",
+    "date": "2 hours ago",
     "message": "Update README.md to replace logo image with a new design. Enhance changelog retrieval by implementing separate handling for Nuvu and ComfyUI repositories, improving error handling, and adding remote fetching capabilities for commit history. This update streamlines the process of obtaining the latest commit information for both repository types."
   },
   {
     "hash": "4603c61",
     "tag": "0.0.10",
-    "date": "86 minutes ago",
+    "date": "2 hours ago",
     "message": "Refactor OptimizerPanel.vue and Sidebar.vue for improved button structure and update website URL. Clean up ChangelogModal.vue by removing unnecessary whitespace. Enhance version detection in nuvu_server.py with better error handling and formatting. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   },
   {
     "hash": "5a6d612",
     "tag": null,
-    "date": "2 hours ago",
+    "date": "3 hours ago",
     "message": "Update installation scripts and documentation to reflect repository name change from nuvu-Compiled to ComfyUI-Nuvu. Modify relevant paths and messages in linux_install_nuvu_comfyui.sh, windows_install_nuvu_comfyui.bat, and README.md for consistency. Adjust Docker entrypoint script to use the new repository name and ensure proper installation of custom nodes."
   },
   {
     "hash": "e9d64d8",
     "tag": "0.0.9",
-    "date": "26 hours ago",
+    "date": "27 hours ago",
     "message": "Enhance changelog retrieval in nuvu_server.py by detecting the current git branch before fetching commit history. Update command to prioritize remote tracking branches, improving version detection accuracy. This change streamlines the process of obtaining the latest commit information for better frontend integration."
   },
   {
     "hash": "3d8737c",
     "tag": null,
-    "date": "26 hours ago",
+    "date": "27 hours ago",
     "message": "Enhance version tracking in OptimizerPanel.vue and ChangelogModal.vue by adding hash information for Nuvu and ComfyUI components. Update changelog links to prioritize hash values for better accuracy. Modify nuvu_server.py to retrieve and store commit hashes alongside tags for improved version detection. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   },
   {
     "hash": "8f87b08",
     "tag": null,
-    "date": "26 hours ago",
+    "date": "27 hours ago",
     "message": "Remove obsolete JavaScript files: auth-pil8uz3l.js and main-BYFDc9sq.js. Update import paths in nuvu.js to reflect changes in module structure."
   },
   {
@@ -50,31 +56,31 @@
   {
     "hash": "e686a07",
     "tag": null,
-    "date": "27 hours ago",
+    "date": "28 hours ago",
     "message": "Update changelog retrieval logic in nuvu_server.py to fetch the last 100 commits and improve version detection in the frontend. Enhance OptimizerPanel.vue and ChangelogModal.vue to display current version indicators and update changelog links. Remove obsolete JavaScript files and ensure consistent styling in the changelog modal."
   },
   {
     "hash": "4f49af9",
     "tag": "0.0.8",
-    "date": "27 hours ago",
+    "date": "28 hours ago",
     "message": "Refactor version detection in nuvu_server.py to streamline fallback logic for backend version retrieval. Ensure accurate detection of installed versions using pip commands and improve error handling. Remove redundant checks and enhance clarity in version assignment for both backend and frontend components."
   },
   {
     "hash": "c0100b1",
     "tag": null,
-    "date": "27 hours ago",
+    "date": "28 hours ago",
     "message": "Refactor version detection logic in nuvu_server.py to improve accuracy. Implement checks for installed backend version and fallback mechanisms using pip and changelog.json. Enhance frontend version retrieval by detecting git tags and reading from changelog.json if necessary. Update handling of version defaults for better reliability."
   },
   {
     "hash": "8497a22",
     "tag": "0.0.7",
-    "date": "27 hours ago",
+    "date": "28 hours ago",
     "message": "Implement changelog generation in CI workflow and integrate changelog modal in the dashboard. Add API endpoint to fetch changelog data from changelog.json or git log. Update frontend components to display changelog links and modal for Nuvu and ComfyUI updates."
   },
   {
     "hash": "26fb88f",
     "tag": "0.0.6",
-    "date": "28 hours ago",
+    "date": "29 hours ago",
     "message": "Enhance Windows installation script by adding a configurable port for ComfyUI and updating the helper launcher to use this port. Standardize capitalization of 'Nuvu' across various frontend components and backend logging for consistency. Remove obsolete JavaScript files from the Vue directory."
   },
   {
@@ -86,19 +92,19 @@
   {
     "hash": "ab3b724",
     "tag": null,
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Standardize capitalization of 'Nuvu' across various components and files, including loading messages and system info displays. Update references in the backend to ensure consistency in directory naming and logging. Handle user cancellation in installation processes gracefully."
   },
   {
     "hash": "c569550",
     "tag": "0.0.4",
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "f57caca",
     "tag": null,
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Update batch script and CI workflow to reflect renaming of 'nuvu-Compiled' to 'ComfyUI-Nuvu' and include 'windows_install_portable_nuvu.bat' in the build process."
   },
   {
