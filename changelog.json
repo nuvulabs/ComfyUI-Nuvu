@@ -1,14 +1,20 @@
 [
   {
+    "hash": "7739b9e",
+    "tag": "0.0.11",
+    "date": "4 minutes ago",
+    "message": "Update README.md to replace logo image with a new design. Enhance changelog retrieval by implementing separate handling for Nuvu and ComfyUI repositories, improving error handling, and adding remote fetching capabilities for commit history. This update streamlines the process of obtaining the latest commit information for both repository types."
+  },
+  {
     "hash": "4603c61",
     "tag": "0.0.10",
-    "date": "5 minutes ago",
+    "date": "40 minutes ago",
     "message": "Refactor OptimizerPanel.vue and Sidebar.vue for improved button structure and update website URL. Clean up ChangelogModal.vue by removing unnecessary whitespace. Enhance version detection in nuvu_server.py with better error handling and formatting. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   },
   {
     "hash": "5a6d612",
     "tag": null,
-    "date": "47 minutes ago",
+    "date": "82 minutes ago",
     "message": "Update installation scripts and documentation to reflect repository name change from nuvu-Compiled to ComfyUI-Nuvu. Modify relevant paths and messages in linux_install_nuvu_comfyui.sh, windows_install_nuvu_comfyui.bat, and README.md for consistency. Adjust Docker entrypoint script to use the new repository name and ensure proper installation of custom nodes."
   },
   {
@@ -26,19 +32,19 @@
   {
     "hash": "8f87b08",
     "tag": null,
-    "date": "25 hours ago",
+    "date": "26 hours ago",
     "message": "Remove obsolete JavaScript files: auth-pil8uz3l.js and main-BYFDc9sq.js. Update import paths in nuvu.js to reflect changes in module structure."
   },
   {
     "hash": "7368dea",
     "tag": null,
-    "date": "25 hours ago",
+    "date": "26 hours ago",
     "message": "Refactor version detection logic in ChangelogModal.vue to improve accuracy. Enhance matching criteria for current version by prioritizing hash checks, followed by tag comparisons, and fallback to short hash checks. Clean up version strings for consistent comparison."
   },
   {
     "hash": "e686a07",
     "tag": null,
-    "date": "25 hours ago",
+    "date": "26 hours ago",
     "message": "Update changelog retrieval logic in nuvu_server.py to fetch the last 100 commits and improve version detection in the frontend. Enhance OptimizerPanel.vue and ChangelogModal.vue to display current version indicators and update changelog links. Remove obsolete JavaScript files and ensure consistent styling in the changelog modal."
   },
   {
@@ -56,7 +62,7 @@
   {
     "hash": "8497a22",
     "tag": "0.0.7",
-    "date": "26 hours ago",
+    "date": "27 hours ago",
     "message": "Implement changelog generation in CI workflow and integrate changelog modal in the dashboard. Add API endpoint to fetch changelog data from changelog.json or git log. Update frontend components to display changelog links and modal for Nuvu and ComfyUI updates."
   },
   {
@@ -68,61 +74,61 @@
   {
     "hash": "359b893",
     "tag": "0.0.5",
-    "date": "33 hours ago",
+    "date": "34 hours ago",
     "message": "Update batch scripts to include '--no-warn-script-location' flag for pip installations, enhancing compatibility and reducing warnings. Standardize capitalization of 'Nuvu' in various components for consistency across the application."
   },
   {
     "hash": "ab3b724",
     "tag": null,
-    "date": "33 hours ago",
+    "date": "34 hours ago",
     "message": "Standardize capitalization of 'Nuvu' across various components and files, including loading messages and system info displays. Update references in the backend to ensure consistency in directory naming and logging. Handle user cancellation in installation processes gracefully."
   },
   {
     "hash": "c569550",
     "tag": "0.0.4",
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "f57caca",
     "tag": null,
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Update batch script and CI workflow to reflect renaming of 'nuvu-Compiled' to 'ComfyUI-Nuvu' and include 'windows_install_portable_nuvu.bat' in the build process."
   },
   {
     "hash": "15d004f",
     "tag": "0.0.3",
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "e1e2182",
     "tag": null,
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Standardize method names in dialog.js for Nuvu app integration, changing 'isnuvuAppMounted', 'mountnuvuApp', and 'setnuvuView' to 'isNuvuAppMounted', 'mountNuvuApp', and 'setNuvuView' for consistency."
   },
   {
     "hash": "05bd561",
     "tag": null,
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Update import path in nuvu.js to reflect changes in main.js, switching from 'main-DEw3n8uv.js' to 'main-CAKph1xX.js' for consistency with recent refactoring."
   },
   {
     "hash": "2c73579",
     "tag": null,
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Standardize method name in main.js by changing 'setnuvuAuthenticated' to 'setNuvuAuthenticated' for consistency with Nuvu app integration naming conventions."
   },
   {
     "hash": "8d57e5d",
     "tag": null,
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Standardize method names in main.js and dialog.js for Nuvu app integration, changing 'mountnuvuApp', 'unmountnuvuApp', 'isnuvuAppMounted', 'getnuvuAppRef', and 'setnuvuView' to 'mountNuvuApp', 'unmountNuvuApp', 'isNuvuAppMounted', 'getNuvuAppRef', and 'setNuvuView', respectively. Update import statements in nuvu.js to reflect these changes."
   },
   {
     "hash": "433d4de",
     "tag": "0.0.2",
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Update repository references from TheArtOfficial to nuvulabs across all files, including installation scripts, documentation, and Docker configurations."
   },
   {

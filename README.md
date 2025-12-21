@@ -1,4 +1,4 @@
-<img width="960" height="544" alt="nuvuNoOutline" src="https://github.com/user-attachments/assets/cedba9aa-5f63-4836-beda-a59c9e0fec94" />
+![nuvu-logo](docs/images/NodeWhiteBack.png)
 
 > **Usage License:** nuvu Labs grants you a limited license to run the nuvu plugin inside ComfyUI for its intended functionality in commercial or non-commercial workflows. Any other commercial use—including copying, modifying, sublicensing, or redistributing this code or derivative works—requires prior written consent from nuvu Labs.
 
