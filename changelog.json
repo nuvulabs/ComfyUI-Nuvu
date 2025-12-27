@@ -1,33 +1,9 @@
 [
   {
-    "hash": "d1dab79",
-    "tag": "0.0.19",
-    "date": "5 minutes ago",
-    "message": "Merge branch 'dev' of https://github.com/nuvulabs/ComfyUI-Nuvu-Packager into dev"
-  },
-  {
-    "hash": "d688fde",
-    "tag": null,
-    "date": "18 hours ago",
-    "message": "Optimization to improve user experience. Should be transparent to usability"
-  },
-  {
-    "hash": "50cebaa",
-    "tag": null,
-    "date": "17 minutes ago",
-    "message": "Merge branch 'dev' into stg"
-  },
-  {
     "hash": "4f6cb8b",
-    "tag": null,
-    "date": "18 hours ago",
+    "tag": "0.0.20",
+    "date": "19 hours ago",
     "message": "Add system optimization for better user experience"
-  },
-  {
-    "hash": "e30060b",
-    "tag": null,
-    "date": "18 hours ago",
-    "message": "Add download tracking for models, workflows, and custom nodes"
   },
   {
     "hash": "48c67a1",
