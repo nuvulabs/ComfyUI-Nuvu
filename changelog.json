@@ -1,8 +1,14 @@
 [
   {
+    "hash": "d19ff21",
+    "tag": "0.0.21",
+    "date": "5 minutes ago",
+    "message": "Refactor build_cython.py and setup.py to dynamically discover Python files for compilation, excluding __init__.py files. This improves maintainability by automating file management."
+  },
+  {
     "hash": "4f6cb8b",
     "tag": "0.0.20",
-    "date": "19 hours ago",
+    "date": "23 hours ago",
     "message": "Add system optimization for better user experience"
   },
   {
@@ -200,7 +206,7 @@
   {
     "hash": "3213113",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Rename ComfyUI-Nitra to ComfyUI-Nuvu across all files and update related documentation. Remove obsolete Nitra files and adjust logging messages accordingly."
   },
   {
