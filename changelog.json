@@ -1,26 +1,44 @@
 [
   {
+    "hash": "d58bf2d",
+    "tag": "0.0.22",
+    "date": "5 minutes ago",
+    "message": "Increase reliability of system VRAM check for whether a workflow can be run on a user's machine."
+  },
+  {
+    "hash": "0f6ed82",
+    "tag": null,
+    "date": "16 minutes ago",
+    "message": "Add estimate of if user's hardware can run a workflow that they are installing."
+  },
+  {
+    "hash": "b485600",
+    "tag": null,
+    "date": "2 hours ago",
+    "message": "Ensure process finishes when downloading multiple models on \"Models\" tab."
+  },
+  {
     "hash": "d19ff21",
     "tag": "0.0.21",
-    "date": "5 minutes ago",
+    "date": "4 hours ago",
     "message": "Refactor build_cython.py and setup.py to dynamically discover Python files for compilation, excluding __init__.py files. This improves maintainability by automating file management."
   },
   {
     "hash": "4f6cb8b",
     "tag": "0.0.20",
-    "date": "23 hours ago",
+    "date": "27 hours ago",
     "message": "Add system optimization for better user experience"
   },
   {
     "hash": "48c67a1",
     "tag": "0.0.18",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "REAME syntax corrections, no Nuvu Plugin Chagnes."
   },
   {
     "hash": "9559a8c",
     "tag": null,
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "Cleanup model files on failed downloads to avoid corrupted files breaking workflows."
   },
   {
@@ -32,13 +50,13 @@
   {
     "hash": "99f03aa",
     "tag": "0.0.17",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Improve messaging when user's device is not registered, and allow analyzing a new workflow without having to refresh the page"
   },
   {
     "hash": "9c7cedc",
     "tag": "0.0.16",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Adjust logo paths to avoid unrendered logos"
   },
   {
@@ -140,67 +158,67 @@
   {
     "hash": "359b893",
     "tag": "0.0.5",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Update batch scripts to include '--no-warn-script-location' flag for pip installations, enhancing compatibility and reducing warnings. Standardize capitalization of 'Nuvu' in various components for consistency across the application."
   },
   {
     "hash": "ab3b724",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Standardize capitalization of 'Nuvu' across various components and files, including loading messages and system info displays. Update references in the backend to ensure consistency in directory naming and logging. Handle user cancellation in installation processes gracefully."
   },
   {
     "hash": "c569550",
     "tag": "0.0.4",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "f57caca",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Update batch script and CI workflow to reflect renaming of 'nuvu-Compiled' to 'ComfyUI-Nuvu' and include 'windows_install_portable_nuvu.bat' in the build process."
   },
   {
     "hash": "15d004f",
     "tag": "0.0.3",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "e1e2182",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Standardize method names in dialog.js for Nuvu app integration, changing 'isnuvuAppMounted', 'mountnuvuApp', and 'setnuvuView' to 'isNuvuAppMounted', 'mountNuvuApp', and 'setNuvuView' for consistency."
   },
   {
     "hash": "05bd561",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Update import path in nuvu.js to reflect changes in main.js, switching from 'main-DEw3n8uv.js' to 'main-CAKph1xX.js' for consistency with recent refactoring."
   },
   {
     "hash": "2c73579",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Standardize method name in main.js by changing 'setnuvuAuthenticated' to 'setNuvuAuthenticated' for consistency with Nuvu app integration naming conventions."
   },
   {
     "hash": "8d57e5d",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Standardize method names in main.js and dialog.js for Nuvu app integration, changing 'mountnuvuApp', 'unmountnuvuApp', 'isnuvuAppMounted', 'getnuvuAppRef', and 'setnuvuView' to 'mountNuvuApp', 'unmountNuvuApp', 'isNuvuAppMounted', 'getNuvuAppRef', and 'setNuvuView', respectively. Update import statements in nuvu.js to reflect these changes."
   },
   {
     "hash": "433d4de",
     "tag": "0.0.2",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Update repository references from TheArtOfficial to nuvulabs across all files, including installation scripts, documentation, and Docker configurations."
   },
   {
     "hash": "a97faa1",
     "tag": "0.0.1",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Refactor dialog.js to standardize method names for Nuvu app integration, changing 'isNuvuAppMounted' and 'mountNuvuApp' to 'isnuvuAppMounted' and 'mountnuvuApp', respectively."
   },
   {
