@@ -156,13 +156,57 @@ set -euo pipefail
 export PYTHON_KEYRING_BACKEND=keyrings.alt.file.PlaintextKeyring
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/venv/bin/activate"
-python "$SCRIPT_DIR/main.py" --use-sage-attention --preview-method auto
+python "$SCRIPT_DIR/main.py" --use-sage-attention --preview-method auto --auto-launch
 EOF
 
 chmod +x "$RUN_SCRIPT_NAME"
 
+log "Copying icon file"
+ICON_SRC="$SCRIPT_DIR/web/images/NuvuLogo.png"
+ICON_DEST="$COMFY_DIR/nuvu.png"
+if [ -f "$ICON_SRC" ]; then
+  cp "$ICON_SRC" "$ICON_DEST" >> "$INSTALL_LOG" 2>&1
+else
+  echo "Icon file not found at $ICON_SRC. Skipping icon copy." >> "$INSTALL_LOG" 2>&1
+fi
+
+log "Creating shortcuts"
+DESKTOP_ENTRY_CONTENT="[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Nuvu-ComfyUI
+Comment=Launch Nuvu-ComfyUI
+Exec=$COMFY_DIR/$RUN_SCRIPT_NAME
+Icon=$ICON_DEST
+Terminal=true
+Categories=Graphics;"
+
+# Create application menu entry
+APP_DIR="$HOME/.local/share/applications"
+mkdir -p "$APP_DIR"
+echo "$DESKTOP_ENTRY_CONTENT" > "$APP_DIR/nuvu-comfyui.desktop"
+chmod +x "$APP_DIR/nuvu-comfyui.desktop"
+
+# Create desktop shortcut
+DESKTOP_DIR="$HOME/Desktop"
+if [ -d "$DESKTOP_DIR" ]; then
+  echo "$DESKTOP_ENTRY_CONTENT" > "$DESKTOP_DIR/Nuvu-ComfyUI.desktop"
+  chmod +x "$DESKTOP_DIR/Nuvu-ComfyUI.desktop"
+  # Mark as trusted on GNOME-based systems
+  if command -v gio >/dev/null 2>&1; then
+    gio set "$DESKTOP_DIR/Nuvu-ComfyUI.desktop" metadata::trusted true >> "$INSTALL_LOG" 2>&1 || true
+  fi
+  echo "Created desktop shortcut: $DESKTOP_DIR/Nuvu-ComfyUI.desktop"
+fi
+
+# Update desktop database if available
+if command -v update-desktop-database >/dev/null 2>&1; then
+  update-desktop-database "$APP_DIR" >> "$INSTALL_LOG" 2>&1 || true
+fi
+
 log "All done!"
 echo "Use $COMFY_DIR/$RUN_SCRIPT_NAME to launch ComfyUI with ComfyUI-Nuvu."
+echo "You can also find 'Nuvu-ComfyUI' in your application menu and on your Desktop."
 echo "If you run into issues, check: $INSTALL_LOG"
 exit 0
 

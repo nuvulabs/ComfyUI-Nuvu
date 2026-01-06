@@ -105,15 +105,75 @@ call :clone_and_install "comfyui_controlnet_aux" "https://github.com/Fannovel16/
 call :clone_and_install "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git"
 
 
+cd /d "%ROOT_DIR%"
+
+set "PORTABLE_DIR=%ROOT_DIR%%EXTRACT_DIR%"
+set "RUN_SCRIPT=%PORTABLE_DIR%\run_nvidia_gpu.bat"
+
+echo.
+echo === Updating launcher with Nuvu options ===
+> "%RUN_SCRIPT%" (
+    echo .\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --use-sage-attention --preview-method auto --auto-launch
+    echo pause
+)
+
+echo.
+echo === Copying icon file ===
+set "ICON_SRC=%ROOT_DIR%web\images\favicon.ico"
+set "ICON_DEST=%PORTABLE_DIR%\nuvu.ico"
+if exist "%ICON_SRC%" (
+    copy /Y "%ICON_SRC%" "%ICON_DEST%"
+) else (
+    echo Icon file not found at "%ICON_SRC%". Skipping icon copy.
+)
+
+echo.
+echo === Creating shortcuts ===
+set "SHORTCUT_NAME=Nuvu-ComfyUI"
+set "START_MENU=%APPDATA%\Microsoft\Windows\Start Menu\Programs"
+set "DESKTOP=%USERPROFILE%\Desktop"
+
+REM Create Start Menu shortcut
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$ws = New-Object -ComObject WScript.Shell; ^
+    $s = $ws.CreateShortcut('%START_MENU%\%SHORTCUT_NAME%.lnk'); ^
+    $s.TargetPath = '%RUN_SCRIPT%'; ^
+    $s.WorkingDirectory = '%PORTABLE_DIR%'; ^
+    $s.IconLocation = '%ICON_DEST%,0'; ^
+    $s.Description = 'Launch Nuvu-ComfyUI'; ^
+    $s.Save()"
+if errorlevel 1 (
+    echo Failed to create Start Menu shortcut.
+) else (
+    echo Created Start Menu shortcut: "%START_MENU%\%SHORTCUT_NAME%.lnk"
+)
+
+REM Create Desktop shortcut
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$ws = New-Object -ComObject WScript.Shell; ^
+    $s = $ws.CreateShortcut('%DESKTOP%\%SHORTCUT_NAME%.lnk'); ^
+    $s.TargetPath = '%RUN_SCRIPT%'; ^
+    $s.WorkingDirectory = '%PORTABLE_DIR%'; ^
+    $s.IconLocation = '%ICON_DEST%,0'; ^
+    $s.Description = 'Launch Nuvu-ComfyUI'; ^
+    $s.Save()"
+if errorlevel 1 (
+    echo Failed to create Desktop shortcut.
+) else (
+    echo Created Desktop shortcut: "%DESKTOP%\%SHORTCUT_NAME%.lnk"
+)
+
 echo.
 echo ========================================================
 echo   Installation Complete!
 echo ========================================================
 echo.
 echo You can now run ComfyUI by opening the folder:
-echo "%ROOT_DIR%%EXTRACT_DIR%"
+echo "%PORTABLE_DIR%"
 echo.
 echo And running: run_nvidia_gpu.bat
+echo.
+echo You can also find "Nuvu-ComfyUI" in your Start Menu and on your Desktop.
 echo.
 pause
 exit /b 0

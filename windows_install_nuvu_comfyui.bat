@@ -125,8 +125,7 @@ echo === Creating helper launcher: %RUN_SCRIPT_NAME% ===
     echo setlocal EnableExtensions
     echo cd /d "%%~dp0"
     echo call "%%~dp0venv\Scripts\activate.bat"
-    echo start http://127.0.0.1:%COMFY_PORT%
-    echo python main.py --port %COMFY_PORT% --use-sage-attention --preview-method auto
+    echo python main.py --port %COMFY_PORT% --use-sage-attention --preview-method auto --auto-launch
 )
 if errorlevel 1 (
     echo Failed to create "%RUN_SCRIPT_NAME%".
@@ -134,7 +133,54 @@ if errorlevel 1 (
 )
 
 echo.
+echo === Copying icon file ===
+set "ICON_SRC=%ROOT_DIR%web\images\favicon.ico"
+set "ICON_DEST=%COMFY_DIR%\nuvu.ico"
+if exist "%ICON_SRC%" (
+    copy /Y "%ICON_SRC%" "%ICON_DEST%" >> "%INSTALL_LOG%" 2>&1
+) else (
+    echo Icon file not found at "%ICON_SRC%". Skipping icon copy. >> "%INSTALL_LOG%" 2>&1
+)
+
+echo.
+echo === Creating shortcuts ===
+set "SHORTCUT_NAME=Nuvu-ComfyUI"
+set "START_MENU=%APPDATA%\Microsoft\Windows\Start Menu\Programs"
+set "DESKTOP=%USERPROFILE%\Desktop"
+
+REM Create Start Menu shortcut
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$ws = New-Object -ComObject WScript.Shell; ^
+    $s = $ws.CreateShortcut('%START_MENU%\%SHORTCUT_NAME%.lnk'); ^
+    $s.TargetPath = '%COMFY_DIR%\%RUN_SCRIPT_NAME%'; ^
+    $s.WorkingDirectory = '%COMFY_DIR%'; ^
+    $s.IconLocation = '%ICON_DEST%,0'; ^
+    $s.Description = 'Launch Nuvu-ComfyUI'; ^
+    $s.Save()" >> "%INSTALL_LOG%" 2>&1
+if errorlevel 1 (
+    echo Failed to create Start Menu shortcut. >> "%INSTALL_LOG%" 2>&1
+) else (
+    echo Created Start Menu shortcut: "%START_MENU%\%SHORTCUT_NAME%.lnk"
+)
+
+REM Create Desktop shortcut
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$ws = New-Object -ComObject WScript.Shell; ^
+    $s = $ws.CreateShortcut('%DESKTOP%\%SHORTCUT_NAME%.lnk'); ^
+    $s.TargetPath = '%COMFY_DIR%\%RUN_SCRIPT_NAME%'; ^
+    $s.WorkingDirectory = '%COMFY_DIR%'; ^
+    $s.IconLocation = '%ICON_DEST%,0'; ^
+    $s.Description = 'Launch Nuvu-ComfyUI'; ^
+    $s.Save()" >> "%INSTALL_LOG%" 2>&1
+if errorlevel 1 (
+    echo Failed to create Desktop shortcut. >> "%INSTALL_LOG%" 2>&1
+) else (
+    echo Created Desktop shortcut: "%DESKTOP%\%SHORTCUT_NAME%.lnk"
+)
+
+echo.
 echo All done! Use "%COMFY_DIR%\%RUN_SCRIPT_NAME%" to launch ComfyUI with ComfyUI-Nuvu.
+echo You can also find "Nuvu-ComfyUI" in your Start Menu and on your Desktop.
 echo If you run into issues, check: "%INSTALL_LOG%"
 pause
 exit /b 0
