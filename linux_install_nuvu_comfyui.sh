@@ -162,7 +162,7 @@ EOF
 chmod +x "$RUN_SCRIPT_NAME"
 
 log "Copying icon file"
-ICON_SRC="$SCRIPT_DIR/web/images/NuvuLogo.png"
+ICON_SRC="$COMFY_DIR/custom_nodes/ComfyUI-Nuvu/web/images/NuvuLogo.png"
 ICON_DEST="$COMFY_DIR/nuvu.png"
 if [ -f "$ICON_SRC" ]; then
   cp "$ICON_SRC" "$ICON_DEST" >> "$INSTALL_LOG" 2>&1

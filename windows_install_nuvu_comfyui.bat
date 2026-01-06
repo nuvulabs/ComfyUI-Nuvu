@@ -134,7 +134,7 @@ if errorlevel 1 (
 
 echo.
 echo === Copying icon file ===
-set "ICON_SRC=%ROOT_DIR%web\images\favicon.ico"
+set "ICON_SRC=%COMFY_DIR%\custom_nodes\ComfyUI-Nuvu\web\images\favicon.ico"
 set "ICON_DEST=%COMFY_DIR%\nuvu.ico"
 if exist "%ICON_SRC%" (
     copy /Y "%ICON_SRC%" "%ICON_DEST%" >> "%INSTALL_LOG%" 2>&1
@@ -149,14 +149,7 @@ set "START_MENU=%APPDATA%\Microsoft\Windows\Start Menu\Programs"
 set "DESKTOP=%USERPROFILE%\Desktop"
 
 REM Create Start Menu shortcut
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$ws = New-Object -ComObject WScript.Shell; ^
-    $s = $ws.CreateShortcut('%START_MENU%\%SHORTCUT_NAME%.lnk'); ^
-    $s.TargetPath = '%COMFY_DIR%\%RUN_SCRIPT_NAME%'; ^
-    $s.WorkingDirectory = '%COMFY_DIR%'; ^
-    $s.IconLocation = '%ICON_DEST%,0'; ^
-    $s.Description = 'Launch Nuvu-ComfyUI'; ^
-    $s.Save()" >> "%INSTALL_LOG%" 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('%START_MENU%\%SHORTCUT_NAME%.lnk'); $s.TargetPath = '%COMFY_DIR%\%RUN_SCRIPT_NAME%'; $s.WorkingDirectory = '%COMFY_DIR%'; $s.IconLocation = '%ICON_DEST%,0'; $s.Description = 'Launch Nuvu-ComfyUI'; $s.Save()" >> "%INSTALL_LOG%" 2>&1
 if errorlevel 1 (
     echo Failed to create Start Menu shortcut. >> "%INSTALL_LOG%" 2>&1
 ) else (
@@ -164,14 +157,7 @@ if errorlevel 1 (
 )
 
 REM Create Desktop shortcut
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$ws = New-Object -ComObject WScript.Shell; ^
-    $s = $ws.CreateShortcut('%DESKTOP%\%SHORTCUT_NAME%.lnk'); ^
-    $s.TargetPath = '%COMFY_DIR%\%RUN_SCRIPT_NAME%'; ^
-    $s.WorkingDirectory = '%COMFY_DIR%'; ^
-    $s.IconLocation = '%ICON_DEST%,0'; ^
-    $s.Description = 'Launch Nuvu-ComfyUI'; ^
-    $s.Save()" >> "%INSTALL_LOG%" 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('%DESKTOP%\%SHORTCUT_NAME%.lnk'); $s.TargetPath = '%COMFY_DIR%\%RUN_SCRIPT_NAME%'; $s.WorkingDirectory = '%COMFY_DIR%'; $s.IconLocation = '%ICON_DEST%,0'; $s.Description = 'Launch Nuvu-ComfyUI'; $s.Save()" >> "%INSTALL_LOG%" 2>&1
 if errorlevel 1 (
     echo Failed to create Desktop shortcut. >> "%INSTALL_LOG%" 2>&1
 ) else (

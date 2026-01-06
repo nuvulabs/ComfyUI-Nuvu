@@ -1,20 +1,26 @@
 [
   {
+    "hash": "78757ec",
+    "tag": "0.0.25",
+    "date": "6 minutes ago",
+    "message": "Correct Desktop & Start Menu Icon not showing correctly."
+  },
+  {
     "hash": "c7b15c8",
     "tag": "0.0.24",
-    "date": "4 minutes ago",
+    "date": "21 minutes ago",
     "message": "Fix strange git state"
   },
   {
     "hash": "7265609",
     "tag": null,
-    "date": "4 minutes ago",
+    "date": "22 minutes ago",
     "message": "Fix strange git state. No feature updates."
   },
   {
     "hash": "0dd5178",
     "tag": "0.0.23",
-    "date": "15 minutes ago",
+    "date": "33 minutes ago",
     "message": "Add desktop shortcuts and icon copying for Nuvu-ComfyUI installation scripts; remove VRAM checks from workflow components"
   },
   {
