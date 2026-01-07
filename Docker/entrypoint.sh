@@ -81,7 +81,7 @@ mkdir -p "$COMFY_DIR"
 
 log "Ensuring ComfyUI repository"
 if [ ! -d "$APP_DIR/.git" ]; then
-  git clone https://github.com/comfyanonymous/ComfyUI.git "$APP_DIR"
+  git clone https://github.com/Comfy-Org/ComfyUI.git "$APP_DIR"
 else
   log "ComfyUI already cloned, reusing existing copy"
 fi

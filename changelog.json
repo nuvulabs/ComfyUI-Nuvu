@@ -1,32 +1,38 @@
 [
   {
+    "hash": "4c6dc12",
+    "tag": "0.0.27",
+    "date": "4 minutes ago",
+    "message": "Update references to point to new ComfyUI Repo location"
+  },
+  {
     "hash": "bb603bb",
     "tag": "0.0.26",
-    "date": "6 minutes ago",
+    "date": "11 hours ago",
     "message": "Fix bug when installing custom node packages that require models to be downloaded from huggingface"
   },
   {
     "hash": "78757ec",
     "tag": "0.0.25",
-    "date": "24 hours ago",
+    "date": "35 hours ago",
     "message": "Correct Desktop & Start Menu Icon not showing correctly."
   },
   {
     "hash": "c7b15c8",
     "tag": "0.0.24",
-    "date": "24 hours ago",
+    "date": "35 hours ago",
     "message": "Fix strange git state"
   },
   {
     "hash": "7265609",
     "tag": null,
-    "date": "24 hours ago",
+    "date": "35 hours ago",
     "message": "Fix strange git state. No feature updates."
   },
   {
     "hash": "0dd5178",
     "tag": "0.0.23",
-    "date": "25 hours ago",
+    "date": "2 days ago",
     "message": "Add desktop shortcuts and icon copying for Nuvu-ComfyUI installation scripts; remove VRAM checks from workflow components"
   },
   {
@@ -50,13 +56,13 @@
   {
     "hash": "d19ff21",
     "tag": "0.0.21",
-    "date": "10 days ago",
+    "date": "11 days ago",
     "message": "Refactor build_cython.py and setup.py to dynamically discover Python files for compilation, excluding __init__.py files. This improves maintainability by automating file management."
   },
   {
     "hash": "4f6cb8b",
     "tag": "0.0.20",
-    "date": "11 days ago",
+    "date": "12 days ago",
     "message": "Add system optimization for better user experience"
   },
   {
@@ -110,25 +116,25 @@
   {
     "hash": "c9cbc03",
     "tag": "0.0.12",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Update Vite configuration to improve build output structure and reserved names. Change output directory to 'dist' and adjust library entry points for better organization. Enhance reserved strings and names for ComfyUI integration. Update GitHub Actions workflow to reflect changes in build process and output paths. Modify extension path handling in JavaScript files to ensure compatibility with Vite's ignore feature."
   },
   {
     "hash": "7739b9e",
     "tag": "0.0.11",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Update README.md to replace logo image with a new design. Enhance changelog retrieval by implementing separate handling for Nuvu and ComfyUI repositories, improving error handling, and adding remote fetching capabilities for commit history. This update streamlines the process of obtaining the latest commit information for both repository types."
   },
   {
     "hash": "4603c61",
     "tag": "0.0.10",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Refactor OptimizerPanel.vue and Sidebar.vue for improved button structure and update website URL. Clean up ChangelogModal.vue by removing unnecessary whitespace. Enhance version detection in nuvu_server.py with better error handling and formatting. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   },
   {
     "hash": "5a6d612",
     "tag": null,
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Update installation scripts and documentation to reflect repository name change from nuvu-Compiled to ComfyUI-Nuvu. Modify relevant paths and messages in linux_install_nuvu_comfyui.sh, windows_install_nuvu_comfyui.bat, and README.md for consistency. Adjust Docker entrypoint script to use the new repository name and ensure proper installation of custom nodes."
   },
   {

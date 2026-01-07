@@ -36,7 +36,7 @@ echo.
 echo === Preparing ComfyUI directory ===
 if not exist "%COMFY_DIR%" (
     echo Cloning ComfyUI...
-    git clone -q https://github.com/comfyanonymous/ComfyUI.git "%COMFY_DIR%" >> "%INSTALL_LOG%" 2>&1
+    git clone -q https://github.com/Comfy-Org/ComfyUI.git "%COMFY_DIR%" >> "%INSTALL_LOG%" 2>&1
     if errorlevel 1 (
         echo Failed to clone ComfyUI.
         exit /b 1

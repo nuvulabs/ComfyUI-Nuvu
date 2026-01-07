@@ -2,7 +2,7 @@
 setlocal EnableExtensions EnableDelayedExpansion
 
 set "ROOT_DIR=%~dp0"
-set "URL=https://github.com/comfyanonymous/ComfyUI/releases/latest/download/ComfyUI_windows_portable_nvidia.7z"
+set "URL=https://github.com/Comfy-Org/ComfyUI/releases/latest/download/ComfyUI_windows_portable_nvidia.7z"
 set "ARCHIVE_NAME=ComfyUI_windows_portable_nvidia.7z"
 set "EXTRACT_DIR=ComfyUI_windows_portable"
 set "NUVU_REPO=https://github.com/nuvulabs/ComfyUI-Nuvu.git"

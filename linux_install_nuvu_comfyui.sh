@@ -102,7 +102,7 @@ fi
 log "Preparing ComfyUI directory"
 if [ ! -d "$COMFY_DIR" ]; then
   echo "Cloning ComfyUI..."
-  git clone -q https://github.com/comfyanonymous/ComfyUI.git "$COMFY_DIR" >> "$INSTALL_LOG" 2>&1
+  git clone -q https://github.com/Comfy-Org/ComfyUI.git "$COMFY_DIR" >> "$INSTALL_LOG" 2>&1
 else
   echo "ComfyUI already exists at $COMFY_DIR; skipping clone." >> "$INSTALL_LOG" 2>&1
 fi
