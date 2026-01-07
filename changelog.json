@@ -1,8 +1,14 @@
 [
   {
+    "hash": "5e743cc",
+    "tag": "0.0.28",
+    "date": "4 minutes ago",
+    "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
+  },
+  {
     "hash": "4c6dc12",
     "tag": "0.0.27",
-    "date": "4 minutes ago",
+    "date": "10 minutes ago",
     "message": "Update references to point to new ComfyUI Repo location"
   },
   {
@@ -20,13 +26,13 @@
   {
     "hash": "c7b15c8",
     "tag": "0.0.24",
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Fix strange git state"
   },
   {
     "hash": "7265609",
     "tag": null,
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Fix strange git state. No feature updates."
   },
   {
@@ -50,7 +56,7 @@
   {
     "hash": "b485600",
     "tag": null,
-    "date": "10 days ago",
+    "date": "11 days ago",
     "message": "Ensure process finishes when downloading multiple models on \"Models\" tab."
   },
   {
