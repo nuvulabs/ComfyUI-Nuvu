@@ -118,23 +118,14 @@ echo === Updating launcher with Nuvu options ===
 )
 
 echo.
-echo === Copying icon file ===
-set "ICON_SRC=%PORTABLE_DIR%\ComfyUI\custom_nodes\ComfyUI-Nuvu\web\images\favicon.ico"
-set "ICON_DEST=%PORTABLE_DIR%\nuvu.ico"
-if exist "%ICON_SRC%" (
-    copy /Y "%ICON_SRC%" "%ICON_DEST%"
-) else (
-    echo Icon file not found at "%ICON_SRC%". Skipping icon copy.
-)
-
-echo.
 echo === Creating shortcuts ===
 set "SHORTCUT_NAME=Nuvu-ComfyUI"
+set "ICON_PATH=%PORTABLE_DIR%\ComfyUI\custom_nodes\ComfyUI-Nuvu\web\images\favicon.ico"
 set "START_MENU=%APPDATA%\Microsoft\Windows\Start Menu\Programs"
 set "DESKTOP=%USERPROFILE%\Desktop"
 
 REM Create Start Menu shortcut
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('%START_MENU%\%SHORTCUT_NAME%.lnk'); $s.TargetPath = '%RUN_SCRIPT%'; $s.WorkingDirectory = '%PORTABLE_DIR%'; $s.IconLocation = '%ICON_DEST%,0'; $s.Description = 'Launch Nuvu-ComfyUI'; $s.Save()"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('%START_MENU%\%SHORTCUT_NAME%.lnk'); $s.TargetPath = '%RUN_SCRIPT%'; $s.WorkingDirectory = '%PORTABLE_DIR%'; $s.IconLocation = '%ICON_PATH%,0'; $s.Description = 'Launch Nuvu-ComfyUI'; $s.Save()"
 if errorlevel 1 (
     echo Failed to create Start Menu shortcut.
 ) else (
@@ -142,7 +133,7 @@ if errorlevel 1 (
 )
 
 REM Create Desktop shortcut
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('%DESKTOP%\%SHORTCUT_NAME%.lnk'); $s.TargetPath = '%RUN_SCRIPT%'; $s.WorkingDirectory = '%PORTABLE_DIR%'; $s.IconLocation = '%ICON_DEST%,0'; $s.Description = 'Launch Nuvu-ComfyUI'; $s.Save()"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ws = New-Object -ComObject WScript.Shell; $s = $ws.CreateShortcut('%DESKTOP%\%SHORTCUT_NAME%.lnk'); $s.TargetPath = '%RUN_SCRIPT%'; $s.WorkingDirectory = '%PORTABLE_DIR%'; $s.IconLocation = '%ICON_PATH%,0'; $s.Description = 'Launch Nuvu-ComfyUI'; $s.Save()"
 if errorlevel 1 (
     echo Failed to create Desktop shortcut.
 ) else (

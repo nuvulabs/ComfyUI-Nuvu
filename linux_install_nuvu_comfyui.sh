@@ -161,23 +161,15 @@ EOF
 
 chmod +x "$RUN_SCRIPT_NAME"
 
-log "Copying icon file"
-ICON_SRC="$COMFY_DIR/custom_nodes/ComfyUI-Nuvu/web/images/NuvuLogo.png"
-ICON_DEST="$COMFY_DIR/nuvu.png"
-if [ -f "$ICON_SRC" ]; then
-  cp "$ICON_SRC" "$ICON_DEST" >> "$INSTALL_LOG" 2>&1
-else
-  echo "Icon file not found at $ICON_SRC. Skipping icon copy." >> "$INSTALL_LOG" 2>&1
-fi
-
 log "Creating shortcuts"
+ICON_PATH="$COMFY_DIR/custom_nodes/ComfyUI-Nuvu/web/images/NuvuLogo.png"
 DESKTOP_ENTRY_CONTENT="[Desktop Entry]
 Version=1.0
 Type=Application
 Name=Nuvu-ComfyUI
 Comment=Launch Nuvu-ComfyUI
 Exec=$COMFY_DIR/$RUN_SCRIPT_NAME
-Icon=$ICON_DEST
+Icon=$ICON_PATH
 Terminal=true
 Categories=Graphics;"
 
