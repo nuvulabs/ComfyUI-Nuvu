@@ -1,26 +1,32 @@
 [
   {
+    "hash": "91879d2",
+    "tag": "0.0.29",
+    "date": "6 minutes ago",
+    "message": "Improve workflow card readability"
+  },
+  {
     "hash": "5e743cc",
     "tag": "0.0.28",
-    "date": "4 minutes ago",
+    "date": "3 hours ago",
     "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
   },
   {
     "hash": "4c6dc12",
     "tag": "0.0.27",
-    "date": "10 minutes ago",
+    "date": "3 hours ago",
     "message": "Update references to point to new ComfyUI Repo location"
   },
   {
     "hash": "bb603bb",
     "tag": "0.0.26",
-    "date": "11 hours ago",
+    "date": "14 hours ago",
     "message": "Fix bug when installing custom node packages that require models to be downloaded from huggingface"
   },
   {
     "hash": "78757ec",
     "tag": "0.0.25",
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Correct Desktop & Start Menu Icon not showing correctly."
   },
   {
@@ -44,13 +50,13 @@
   {
     "hash": "d58bf2d",
     "tag": "0.0.22",
-    "date": "10 days ago",
+    "date": "11 days ago",
     "message": "Increase reliability of system VRAM check for whether a workflow can be run on a user's machine."
   },
   {
     "hash": "0f6ed82",
     "tag": null,
-    "date": "10 days ago",
+    "date": "11 days ago",
     "message": "Add estimate of if user's hardware can run a workflow that they are installing."
   },
   {
@@ -104,19 +110,19 @@
   {
     "hash": "db37708",
     "tag": "0.0.15",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Update .gitignore to exclude log files and enhance GitHub Actions workflow to prevent log files from being uploaded. Clean up potential log files during build process for improved artifact management."
   },
   {
     "hash": "b71d6ab",
     "tag": "0.0.14",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Merge: Accept incoming changes - restructure to src-frontend"
   },
   {
     "hash": "a712092",
     "tag": "0.0.13",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Enhance Vite configuration to suppress specific warnings related to import.meta.url and adjust asset file naming for CSS. Update dialog.js to ensure correct base URL handling after bundling, and modify nuvu.js to reflect changes in module structure. Remove obsolete JavaScript files to streamline the codebase."
   },
   {
