@@ -1,38 +1,50 @@
 [
   {
+    "hash": "544cea0",
+    "tag": "0.0.32",
+    "date": "4 minutes ago",
+    "message": "correct discord link"
+  },
+  {
+    "hash": "56e9ac7",
+    "tag": null,
+    "date": "10 minutes ago",
+    "message": "Update README with correct branding, update documentation tab, and add Discord link."
+  },
+  {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "4 minutes ago",
+    "date": "4 hours ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
     "hash": "45b4ff3",
     "tag": "0.0.30",
-    "date": "3 hours ago",
+    "date": "8 hours ago",
     "message": "Add 'Skip updates' option for installed custom nodes in Install Missing. Install missing no longer in beta."
   },
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "6 hours ago",
+    "date": "11 hours ago",
     "message": "Improve workflow card readability"
   },
   {
     "hash": "5e743cc",
     "tag": "0.0.28",
-    "date": "9 hours ago",
+    "date": "14 hours ago",
     "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
   },
   {
     "hash": "4c6dc12",
     "tag": "0.0.27",
-    "date": "10 hours ago",
+    "date": "14 hours ago",
     "message": "Update references to point to new ComfyUI Repo location"
   },
   {
     "hash": "bb603bb",
     "tag": "0.0.26",
-    "date": "21 hours ago",
+    "date": "25 hours ago",
     "message": "Fix bug when installing custom node packages that require models to be downloaded from huggingface"
   },
   {
@@ -116,7 +128,7 @@
   {
     "hash": "9c7cedc",
     "tag": "0.0.16",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Adjust logo paths to avoid unrendered logos"
   },
   {

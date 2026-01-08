@@ -67,14 +67,17 @@ Place the .bat file in the folder location on windows that you want to install C
 Inside the ComfyUI Folder, you will find a file called "run_comfy.bat". Double click this file to launch ComfyUI. Wait until the terminal stops producing text and then go to the next step.
 ![alt text](docs/images/batRunComfy.png)
 
-Navigate to [localhost:8188](localhost:8188) or [127.0.0.1:8188](127.0.0.1:8188) in your web browser of choice (Firefox or Google Chrome recommended).
+You will also find a shortcut on your desktop, and a link in your start menu
+![alt text](docs/images/desktop-start-menu.png)
+
+Your default browser should pop open when ComfyUI starts. You can slo navigate to [localhost:8188](localhost:8188) or [127.0.0.1:8188](127.0.0.1:8188) in your web browser of choice (Firefox or Google Chrome recommended).
 
 #### Linux Install
 Place the .sh file in the folder location that you want to install ComfyUI-Nuvu in. Open a shell and run:
 
 ```./linux_install_Nuvu_comfy.sh```
 
-This will clone ComfyUI into your current folder. Inside the ComfyUI Folder, you will find a file called "run_comfy.sh". Double click this file or open a shell and run it to launch ComfyUI. Wait until the terminal stops producing text and then go to the next step
+This will clone ComfyUI into your current folder. Inside the ComfyUI Folder, you will find a file called "run_comfy.sh". Double click this file or open a shell and run it to launch ComfyUI. Wait until the terminal stops producing text and then go to the next step. You should also see a Nuvu-ComfyUI icon on your desktop, which you can use to launch Nuvu.
 
 Navigate to [localhost:8188](localhost:8188) or [127.0.0.1:8188](127.0.0.1:8188) in your web browser of choice (Firefox or Google Chrome recommended).
 
@@ -89,7 +92,7 @@ Use our referral code to sign up for RunPod if you don't already have an account
 Nuvu Labs provides a RunPod template to quickly deploy ComfyUI from anywhere, even if you don't own a GPU yourself. You can find it [at this link](https://console.runpod.io/deploy?template=ntf53vsuqj&ref=rqu7tin8)
 
 When you click on the link and have a valid account created, you'll be prompted to start a pod.
-![RunPod select pod](docs/images/RunPodPods.png)
+![RunPod select pod](docs/images/nuvu-storage-runpod-pods.png)
 
 Nuvu Labs recommends setting up Network storage of 500gb minimum, preferably up to 1TB or more to handle the large size of the models. This will allow you to keep all your work and you won't have to restart all over again each time you start a new pod.
 
@@ -118,7 +121,7 @@ docker run -d \
   -p 8188:8188 \
   -p 8888:8888 \
   -v /path/to/workspace:/workspace \
-  Nuvulabs/comfyui-nuvu:latest
+  nitralabs/comfyui-nuvu:latest
 ```
 
 ## Create an Account
@@ -142,15 +145,19 @@ docker run -d \
 ### How to create a free account
 
 Once you have Nuvu installed into ComfyUI, click on the Nuvu button at the top of ComfyUI.
+
 ![alt text](docs/images/NuvuButton.png)
 
 Click the "Continue with Login" button on the dialog that pops up. All authentication is handled by Auth0 for optimal user security. The only personal data that Nuvu Labs stores are name and email address for account handling.
+
 ![alt text](docs/images/NuvuLogin.png)
 
 Authenticate the Auth0 form with either email/password, github, or google.
+
 ![alt text](docs/images/NuvuLoginForm.png)
 
 Once you've completed log-in, you should be re-directed back to ComfyUI, where you will see the Nuvu Dashboard appear.
+
 ![alt text](docs/images/NuvuDashboard.png)
 
 ### How to subscribe to Nuvu Premium
@@ -160,9 +167,11 @@ To purchase a license to access over 100 premium workflows and subgraphs, click 
 ![alt text](docs/images/PurchaseLicense.png)
 
 That will bring you to our Nuvu Account Dashboard, where you can Upgrade your account to the paid version.
+
 ![alt text](docs/images/UpgradeNuvuPremium.png)
 
 All purchases are handled securely through Stripe. Nuvu does not store any of your financial information, all financial transactions run through Stripe.
+
 ![alt text](docs/images/SubscribeButton.png)
 
 After subscribing, head back to ComfyUI, refresh your browser, and you should see your account upgraded to "Premium Subscription" on the left side.
@@ -171,20 +180,24 @@ After subscribing, head back to ComfyUI, refresh your browser, and you should se
 
 ## Using Nuvu
 
-### ComfyUI Optimizer
-
 ### Workflow Installer
 
 #### Subgraphs
 
+### Install Missing
+When Implemented, this will allow users to open any workflow in ComfyUI and Nuvu will attempt to find all custom nodes and models needed for that workflow, and install them for you. No more searching through the manager or scouring huggingface to find the correct model.
+
 ### Model Installer
 
-### Install Missing (Coming Soon!)
-When Implemented, this will allow users to open any workflow in ComfyUI and Nuvu will attempt to find all custom nodes and models needed for that workflow, and install them for you. No more searching through the manager or scouring huggingface to find the correct model.
+### ComfyUI Optimizer
 
 ### User Configuration
 
 ### How Can We Help?
+
+### Support
+
+### Documentation
 
 ### Logout
 
