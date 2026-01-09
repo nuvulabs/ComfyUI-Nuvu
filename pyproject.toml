@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "cython>=3.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "comfyui-nuvu"
+version = "1.0.0"
+description = "www.nuvulabs.ai | Production-ready workflows and subgraphs for film and VFX. Instant access to 100+ premium AI workflows with automatic model and dependency installation. Built for privacy and creative control."
+readme = "README.md"
+license = {text = "Proprietary"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Nuvu Labs"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "requests>=2.31.0",
+    "huggingface_hub[hf_transfer]",
+    "hf_xet",
+    "keyring>=24.3.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/nuvulabs/ComfyUI-Nuvu"
+Repository = "https://github.com/nuvulabs/ComfyUI-Nuvu"
+
+[tool.comfy]
+PublisherId = "nuvulabs"
+DisplayName = "Nuvu"
+Icon = "https://nuvulabs.ai/whiteNLogo.png"
+
+[tool.setuptools]
+packages = [
+    "comfyui_nuvu",
+    "comfyui_nuvu.web",
+    "comfyui_nuvu.web.installers",
+    "comfyui_nuvu.web.setup_modules",
+]
+include-package-data = true
+
+# Standard src/ layout - all package code under src/comfyui_nuvu/
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.package-data]
+# Only include compiled extensions - web assets are served from custom_nodes dir
+"comfyui_nuvu" = [
+    "*.pyd",
+    "*.so",
+    "web/**/*.pyd",
+    "web/**/*.so",
+]
+
+# Note: Source file stripping (.py, .c) is handled by build_wheel.py post-processing
+# We don't use exclude-package-data because it also excludes __init__.py which we need
+
+# Wheel configuration for ABI3 (backup to setup.cfg)
+# Note: The 'abi3' tag appears in the WHEEL FILENAME, not individual .pyd/.so filenames
+# Example wheel: comfyui_nuvu-1.0.0-cp39-abi3-win_amd64.whl
+[tool.wheel]
+py-limited-api = "cp39"
+
