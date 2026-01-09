@@ -1,38 +1,44 @@
 [
   {
+    "hash": "27929f6",
+    "tag": "1.0.6",
+    "date": "4 minutes ago",
+    "message": "Update README Documentation"
+  },
+  {
     "hash": "0fe9ec5",
     "tag": "1.0.5",
-    "date": "4 minutes ago",
+    "date": "45 minutes ago",
     "message": "tag push doesn't work, need to trigger a dispatch github action"
   },
   {
     "hash": "500e626",
     "tag": "1.0.4",
-    "date": "12 minutes ago",
+    "date": "53 minutes ago",
     "message": "Fix github workflow to deploy to Comfy Registry correctly."
   },
   {
     "hash": "bc9f1e3",
     "tag": "1.0.3",
-    "date": "26 minutes ago",
+    "date": "67 minutes ago",
     "message": "Fix version update in github workflow"
   },
   {
     "hash": "f32972f",
     "tag": null,
-    "date": "33 minutes ago",
+    "date": "74 minutes ago",
     "message": "Change Registry name from Nuvu to ComfyUI-Nuvu"
   },
   {
     "hash": "ed0c6a0",
     "tag": "1.0.1",
-    "date": "38 minutes ago",
+    "date": "79 minutes ago",
     "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
   },
   {
     "hash": "2e220d8",
     "tag": "1.0.0",
-    "date": "65 minutes ago",
+    "date": "2 hours ago",
     "message": "Add Nuvu to Comfy Manager Registry"
   },
   {
@@ -44,13 +50,13 @@
   {
     "hash": "56e9ac7",
     "tag": null,
-    "date": "24 hours ago",
+    "date": "25 hours ago",
     "message": "Update README with correct branding, update documentation tab, and add Discord link."
   },
   {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "28 hours ago",
+    "date": "29 hours ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
@@ -62,7 +68,7 @@
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "34 hours ago",
+    "date": "35 hours ago",
     "message": "Improve workflow card readability"
   },
   {

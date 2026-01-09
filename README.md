@@ -83,7 +83,18 @@ Navigate to [localhost:8188](localhost:8188) or [127.0.0.1:8188](127.0.0.1:8188)
 
 ### Comfy Manager
 
+Install and open the [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
+![Open Comfy Manager](docs/images/ComfyManagerOpen.png)
 
+
+Search for "Nuvu" and click the ComfyUI-Nuvu "Install" button.
+![Comfy Manager Nuvu Search](docs/images/ComfyManagerNuvu.png)
+
+Click "Restart" after the install completes, and then refresh your browser after ComfyUI comes back online.
+![Restart from Comfy Manager](docs/images/RestartComfyManager.png)
+
+After restarting, you should see the Nuvu button in your toolbar.
+![Nuvu Button After Manager Install](docs/images/NuvuButtonManagerInstall.png)
 
 ### RunPod Template
 
@@ -181,23 +192,44 @@ After subscribing, head back to ComfyUI, refresh your browser, and you should se
 ## Using Nuvu
 
 ### Workflow Installer
+![Workflow Installer Quick View](docs/images/WorkflowInstaller.png)
+
+Choose from over 100 optimized workflows to install directly into you ComfyUI environment. No need to worry about installing custom nodes or models, everything will install for you.
 
 #### Subgraphs
+![Subgraph Example](docs/images/SubgraphExample.png)
+
+When a workflow is installed, its subgraphs are also added to your library. Search for them like any other custom node, and chain them together for maximum productivity.
 
 ### Install Missing
-When Implemented, this will allow users to open any workflow in ComfyUI and Nuvu will attempt to find all custom nodes and models needed for that workflow, and install them for you. No more searching through the manager or scouring huggingface to find the correct model.
+
+![Install Missing Example](docs/images/InstallMissingExample.png)
+
+Allow users to open any workflow in ComfyUI and Nuvu will attempt to find all custom nodes and models needed for that workflow, and install them for you. No more searching through the manager or scouring huggingface to find the correct model. It is the user's responsiblity to verify all of the files and custom nodes are compatible with their environment. Nuvu does not guarantee stability through the Install Missing feature.
 
 ### Model Installer
+Choose from ~2000 models to install directly into your ComfyUI environment.
 
 ### ComfyUI Optimizer
+Ever had trouble installing SageAttention or Triton, or what about upgrading PyTorch? The ComfyUI Optimizer gives you this ability and more with just a few clicks.
 
 ### User Configuration
+Manage the devices that Nuvu is registered on, the huggingface token for downloading models, and the Extra Model Paths where models are downloaded and loaded from.
 
 ### How Can We Help?
+Do you work in a studio or just need help on a passion project? Nuvu has the experts to get you to the finish line more efficiently than ever before. Submit an inquiry on this tab to get in touch with us.
 
 ### Support
+If you're having issues with your account or any Nuvu functionality, submit an issue here. 
 
 ### Documentation
+Learn all there is to know about Nuvu Labs.
 
 ### Logout
+Log out of Nuvu. 
 
+### Restart ComfyUI
+Restart the ComfyUI server. Useful if a workflow is frozen or you need to dump VRAM quickly.
+
+### Refresh Page
+Refresh the browser tab. 
