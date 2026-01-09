@@ -1,0 +1,28 @@
+# This file is copied to the PUBLIC repo (nuvulabs/ComfyUI-Nuvu)
+# It runs when a tag is pushed to publish to the Comfy Registry
+name: Publish to Comfy Registry
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish-node:
+    name: Publish Custom Node to Registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Show version info
+        run: |
+          echo "=== Tag: ${{ github.ref_name }} ==="
+          echo "=== pyproject.toml version ==="
+          grep 'version' pyproject.toml | head -3
+      
+      - name: Publish Custom Node
+        uses: Comfy-Org/publish-node-action@main
+        with:
+          personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}

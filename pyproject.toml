@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "comfyui-nuvu"
-version = "1.0.3"
+version = "1.0.4"
 description = "www.nuvulabs.ai | Production-ready workflows and subgraphs for film and VFX. Instant access to 100+ premium AI workflows with automatic model and dependency installation. Built for privacy and creative control."
 readme = "README.md"
 license = {text = "Proprietary"}

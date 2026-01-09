@@ -1,32 +1,38 @@
 [
   {
+    "hash": "500e626",
+    "tag": "1.0.4",
+    "date": "5 minutes ago",
+    "message": "Fix github workflow to deploy to Comfy Registry correctly."
+  },
+  {
     "hash": "bc9f1e3",
     "tag": "1.0.3",
-    "date": "9 minutes ago",
+    "date": "19 minutes ago",
     "message": "Fix version update in github workflow"
   },
   {
     "hash": "f32972f",
     "tag": null,
-    "date": "15 minutes ago",
+    "date": "26 minutes ago",
     "message": "Change Registry name from Nuvu to ComfyUI-Nuvu"
   },
   {
     "hash": "ed0c6a0",
     "tag": "1.0.1",
-    "date": "20 minutes ago",
+    "date": "31 minutes ago",
     "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
   },
   {
     "hash": "2e220d8",
     "tag": "1.0.0",
-    "date": "48 minutes ago",
+    "date": "58 minutes ago",
     "message": "Add Nuvu to Comfy Manager Registry"
   },
   {
     "hash": "544cea0",
     "tag": "0.0.32",
-    "date": "23 hours ago",
+    "date": "24 hours ago",
     "message": "correct discord link"
   },
   {
