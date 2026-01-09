@@ -1,8 +1,14 @@
 [
   {
+    "hash": "ed0c6a0",
+    "tag": "1.0.1",
+    "date": "5 minutes ago",
+    "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
+  },
+  {
     "hash": "2e220d8",
     "tag": "1.0.0",
-    "date": "6 minutes ago",
+    "date": "32 minutes ago",
     "message": "Add Nuvu to Comfy Manager Registry"
   },
   {
@@ -20,7 +26,7 @@
   {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "27 hours ago",
+    "date": "28 hours ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
@@ -32,7 +38,7 @@
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "33 hours ago",
+    "date": "34 hours ago",
     "message": "Improve workflow card readability"
   },
   {
