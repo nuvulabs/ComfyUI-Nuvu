@@ -1,26 +1,35 @@
 # This file is copied to the PUBLIC repo (nuvulabs/ComfyUI-Nuvu)
-# It runs when a tag is pushed to publish to the Comfy Registry
+# It runs when dispatched from the private repo after a release
 name: Publish to Comfy Registry
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.4)'
+        required: true
 
 jobs:
   publish-node:
     name: Publish Custom Node to Registry
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      - name: Check out code at version tag
         uses: actions/checkout@v4
+        with:
+          ref: v${{ github.event.inputs.version }}
       
-      - name: Show version info
+      - name: Verify version
         run: |
-          echo "=== Tag: ${{ github.ref_name }} ==="
-          echo "=== pyproject.toml version ==="
+          echo "=== Publishing version: ${{ github.event.inputs.version }} ==="
+          echo "=== pyproject.toml ==="
           grep 'version' pyproject.toml | head -3
+          # Verify version matches
+          if ! grep -q 'version = "${{ github.event.inputs.version }}"' pyproject.toml; then
+            echo "ERROR: pyproject.toml version does not match!"
+            exit 1
+          fi
+          echo "Version verified!"
       
       - name: Publish Custom Node
         uses: Comfy-Org/publish-node-action@main
