@@ -1,14 +1,20 @@
 [
   {
+    "hash": "f32972f",
+    "tag": "1.0.2",
+    "date": "3 minutes ago",
+    "message": "Change Registry name from Nuvu to ComfyUI-Nuvu"
+  },
+  {
     "hash": "ed0c6a0",
     "tag": "1.0.1",
-    "date": "5 minutes ago",
+    "date": "8 minutes ago",
     "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
   },
   {
     "hash": "2e220d8",
     "tag": "1.0.0",
-    "date": "32 minutes ago",
+    "date": "36 minutes ago",
     "message": "Add Nuvu to Comfy Manager Registry"
   },
   {
