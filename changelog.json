@@ -1,158 +1,164 @@
 [
   {
+    "hash": "546a69c",
+    "tag": "1.0.7",
+    "date": "6 minutes ago",
+    "message": "Add uv installer for faster and more reliable custom node installation. Add screenshots for support tickets"
+  },
+  {
     "hash": "27929f6",
     "tag": "1.0.6",
-    "date": "4 minutes ago",
+    "date": "2 days ago",
     "message": "Update README Documentation"
   },
   {
     "hash": "0fe9ec5",
     "tag": "1.0.5",
-    "date": "45 minutes ago",
+    "date": "2 days ago",
     "message": "tag push doesn't work, need to trigger a dispatch github action"
   },
   {
     "hash": "500e626",
     "tag": "1.0.4",
-    "date": "53 minutes ago",
+    "date": "2 days ago",
     "message": "Fix github workflow to deploy to Comfy Registry correctly."
   },
   {
     "hash": "bc9f1e3",
     "tag": "1.0.3",
-    "date": "67 minutes ago",
+    "date": "2 days ago",
     "message": "Fix version update in github workflow"
   },
   {
     "hash": "f32972f",
     "tag": null,
-    "date": "74 minutes ago",
+    "date": "2 days ago",
     "message": "Change Registry name from Nuvu to ComfyUI-Nuvu"
   },
   {
     "hash": "ed0c6a0",
     "tag": "1.0.1",
-    "date": "79 minutes ago",
+    "date": "2 days ago",
     "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
   },
   {
     "hash": "2e220d8",
     "tag": "1.0.0",
-    "date": "2 hours ago",
+    "date": "2 days ago",
     "message": "Add Nuvu to Comfy Manager Registry"
   },
   {
     "hash": "544cea0",
     "tag": "0.0.32",
-    "date": "24 hours ago",
+    "date": "3 days ago",
     "message": "correct discord link"
   },
   {
     "hash": "56e9ac7",
     "tag": null,
-    "date": "25 hours ago",
+    "date": "3 days ago",
     "message": "Update README with correct branding, update documentation tab, and add Discord link."
   },
   {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "29 hours ago",
+    "date": "3 days ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
     "hash": "45b4ff3",
     "tag": "0.0.30",
-    "date": "32 hours ago",
+    "date": "3 days ago",
     "message": "Add 'Skip updates' option for installed custom nodes in Install Missing. Install missing no longer in beta."
   },
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "35 hours ago",
+    "date": "3 days ago",
     "message": "Improve workflow card readability"
   },
   {
     "hash": "5e743cc",
     "tag": "0.0.28",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
   },
   {
     "hash": "4c6dc12",
     "tag": "0.0.27",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Update references to point to new ComfyUI Repo location"
   },
   {
     "hash": "bb603bb",
     "tag": "0.0.26",
-    "date": "2 days ago",
+    "date": "4 days ago",
     "message": "Fix bug when installing custom node packages that require models to be downloaded from huggingface"
   },
   {
     "hash": "78757ec",
     "tag": "0.0.25",
-    "date": "3 days ago",
+    "date": "5 days ago",
     "message": "Correct Desktop & Start Menu Icon not showing correctly."
   },
   {
     "hash": "c7b15c8",
     "tag": "0.0.24",
-    "date": "3 days ago",
+    "date": "5 days ago",
     "message": "Fix strange git state"
   },
   {
     "hash": "7265609",
     "tag": null,
-    "date": "3 days ago",
+    "date": "5 days ago",
     "message": "Fix strange git state. No feature updates."
   },
   {
     "hash": "0dd5178",
     "tag": "0.0.23",
-    "date": "3 days ago",
+    "date": "5 days ago",
     "message": "Add desktop shortcuts and icon copying for Nuvu-ComfyUI installation scripts; remove VRAM checks from workflow components"
   },
   {
     "hash": "d58bf2d",
     "tag": "0.0.22",
-    "date": "12 days ago",
+    "date": "2 weeks ago",
     "message": "Increase reliability of system VRAM check for whether a workflow can be run on a user's machine."
   },
   {
     "hash": "0f6ed82",
     "tag": null,
-    "date": "12 days ago",
+    "date": "2 weeks ago",
     "message": "Add estimate of if user's hardware can run a workflow that they are installing."
   },
   {
     "hash": "b485600",
     "tag": null,
-    "date": "12 days ago",
+    "date": "2 weeks ago",
     "message": "Ensure process finishes when downloading multiple models on \"Models\" tab."
   },
   {
     "hash": "d19ff21",
     "tag": "0.0.21",
-    "date": "12 days ago",
+    "date": "2 weeks ago",
     "message": "Refactor build_cython.py and setup.py to dynamically discover Python files for compilation, excluding __init__.py files. This improves maintainability by automating file management."
   },
   {
     "hash": "4f6cb8b",
     "tag": "0.0.20",
-    "date": "13 days ago",
+    "date": "2 weeks ago",
     "message": "Add system optimization for better user experience"
   },
   {
     "hash": "48c67a1",
     "tag": "0.0.18",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "REAME syntax corrections, no Nuvu Plugin Chagnes."
   },
   {
     "hash": "9559a8c",
     "tag": null,
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Cleanup model files on failed downloads to avoid corrupted files breaking workflows."
   },
   {

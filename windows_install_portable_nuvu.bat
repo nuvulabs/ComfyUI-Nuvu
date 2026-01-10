@@ -7,6 +7,11 @@ set "ARCHIVE_NAME=ComfyUI_windows_portable_nvidia.7z"
 set "EXTRACT_DIR=ComfyUI_windows_portable"
 set "NUVU_REPO=https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
+REM UV install location (same as prestartup_script.py)
+set "UV_DIR=%LOCALAPPDATA%\nuvu\bin"
+set "UV_EXE=%UV_DIR%\uv.exe"
+set "USE_UV=0"
+
 echo ========================================================
 echo   ComfyUI Portable + Nuvu Auto-Installer
 echo ========================================================
@@ -89,6 +94,43 @@ if not exist "%PYTHON_EXE%" (
     echo %PYTHON_EXE%
     pause
     exit /b 1
+)
+
+echo.
+echo === Installing uv (fast package installer) ===
+if exist "%UV_EXE%" (
+    echo uv already installed at %UV_EXE%
+    set "USE_UV=1"
+) else (
+    echo Downloading uv...
+    if not exist "%UV_DIR%" mkdir "%UV_DIR%"
+    set "UV_ZIP=%TEMP%\uv-download.zip"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'" 2>nul
+    if errorlevel 1 (
+        echo Failed to download uv, will use pip instead.
+        goto :skip_uv_portable
+    )
+    echo Extracting uv...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()" 2>nul
+    if errorlevel 1 (
+        echo Failed to extract uv, will use pip instead.
+        goto :skip_uv_portable
+    )
+    del /q "!UV_ZIP!" 2>nul
+    if exist "%UV_EXE%" (
+        echo uv installed successfully to %UV_EXE%
+        set "USE_UV=1"
+    ) else (
+        echo uv installation failed, will use pip instead.
+    )
+)
+:skip_uv_portable
+
+REM Display which package manager will be used
+if "%USE_UV%"=="1" (
+    echo Using uv for fast package installation
+) else (
+    echo Using pip for package installation
 )
 
 cd /d "%CUSTOM_NODES_DIR%"
@@ -177,7 +219,7 @@ REM Install dependency requirements if present
 if exist "%NODE_DIR%\requirements.txt" (
     echo Installing requirements for %NODE_DIR%...
     pushd "%NODE_DIR%"
-    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r requirements.txt
+    call :pkg_install_req_portable requirements.txt
     if errorlevel 1 (
         echo [WARNING] Failed to install requirements.txt for %NODE_DIR%.
     )
@@ -185,7 +227,7 @@ if exist "%NODE_DIR%\requirements.txt" (
 ) else if exist "%NODE_DIR%\req.txt" (
     echo Installing req.txt for %NODE_DIR%...
     pushd "%NODE_DIR%"
-    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r req.txt
+    call :pkg_install_req_portable req.txt
     if errorlevel 1 (
         echo [WARNING] Failed to install req.txt for %NODE_DIR%.
     )
@@ -193,3 +235,28 @@ if exist "%NODE_DIR%\requirements.txt" (
 )
 
 exit /b 0
+
+REM ============================================================
+REM Package installation helpers for portable - use uv if available, else pip
+REM ============================================================
+
+:pkg_install_portable
+REM Install packages using uv (if available) or pip
+REM Usage: call :pkg_install_portable package1 package2 --extra-args
+if "%USE_UV%"=="1" (
+    "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet %*
+) else (
+    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location %*
+)
+exit /b %errorlevel%
+
+:pkg_install_req_portable
+REM Install from requirements file using uv (if available) or pip
+REM Usage: call :pkg_install_req_portable requirements.txt
+set "REQ_FILE=%~1"
+if "%USE_UV%"=="1" (
+    "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet -r "%REQ_FILE%"
+) else (
+    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r "%REQ_FILE%"
+)
+exit /b %errorlevel%

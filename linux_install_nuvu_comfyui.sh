@@ -43,6 +43,30 @@ RUN_SCRIPT_NAME="run_comfy.sh"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 nuvu_COMPILED_REPO="https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
+# UV install location (same as prestartup_script.py)
+UV_DIR="$HOME/.local/bin"
+UV_EXE="$UV_DIR/uv"
+USE_UV=0
+
+# Package installation helper - uses uv if available, falls back to pip
+pkg_install() {
+  if [ "$USE_UV" -eq 1 ]; then
+    "$UV_EXE" pip install --quiet "$@" >> "$INSTALL_LOG" 2>&1
+  else
+    python -m pip install -q "$@" >> "$INSTALL_LOG" 2>&1
+  fi
+}
+
+pkg_install_req() {
+  local req_file="$1"
+  shift
+  if [ "$USE_UV" -eq 1 ]; then
+    "$UV_EXE" pip install --quiet -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+  else
+    python -m pip install -q -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+  fi
+}
+
 ensure_cmd git
 
 # Ensure python exists; try to install if missing (Debian/Ubuntu)
@@ -73,6 +97,42 @@ if sys.version_info < required:
     )
 PY
 
+log "Installing uv (fast package installer)"
+if [ -x "$UV_EXE" ]; then
+  echo "uv already installed at $UV_EXE"
+  USE_UV=1
+else
+  echo "Downloading uv..."
+  mkdir -p "$UV_DIR"
+  UV_TAR="/tmp/uv-download.tar.gz"
+  if curl -LsSf "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz" -o "$UV_TAR" >> "$INSTALL_LOG" 2>&1; then
+    echo "Extracting uv..."
+    if tar -xzf "$UV_TAR" -C "$UV_DIR" --strip-components=1 >> "$INSTALL_LOG" 2>&1; then
+      chmod +x "$UV_EXE"
+      rm -f "$UV_TAR"
+      if [ -x "$UV_EXE" ]; then
+        echo "uv installed successfully to $UV_EXE"
+        USE_UV=1
+      else
+        echo "uv installation failed, will use pip instead."
+      fi
+    else
+      echo "Failed to extract uv, will use pip instead."
+      rm -f "$UV_TAR"
+    fi
+  else
+    echo "Failed to download uv, will use pip instead."
+  fi
+fi
+
+# Add uv to PATH for this session
+if [ "$USE_UV" -eq 1 ]; then
+  export PATH="$UV_DIR:$PATH"
+  echo "Using uv for fast package installation"
+else
+  echo "Using pip for package installation"
+fi
+
 clone_and_install() {
   local dir="$1"
   local repo="$2"
@@ -85,9 +145,9 @@ clone_and_install() {
   fi
 
   if [ -f "$dir/requirements.txt" ]; then
-    (cd "$dir" && python -m pip install -q -r requirements.txt >> "$INSTALL_LOG" 2>&1)
+    (cd "$dir" && pkg_install_req requirements.txt)
   elif [ -f "$dir/req.txt" ]; then
-    (cd "$dir" && python -m pip install -q -r req.txt >> "$INSTALL_LOG" 2>&1)
+    (cd "$dir" && pkg_install_req req.txt)
   fi
 }
 
@@ -123,16 +183,16 @@ log "Upgrading pip"
 python -m pip install -q --upgrade pip >> "$INSTALL_LOG" 2>&1
 
 log "Installing keyring helpers"
-python -m pip install -q keyrings.alt >> "$INSTALL_LOG" 2>&1
+pkg_install keyrings.alt
 
 log "Installing PyTorch 2.8.0 stack"
-python -m pip install -q torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128 >> "$INSTALL_LOG" 2>&1
+pkg_install torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128
 
 log "Installing core ComfyUI dependencies"
-python -m pip install -q -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128 >> "$INSTALL_LOG" 2>&1
+pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128
 
 log "Installing SageAttention 2.2.0"
-python -m pip install -q sageattention --no-build-isolation >> "$INSTALL_LOG" 2>&1
+pkg_install sageattention --no-build-isolation
 
 log "Installing additional custom nodes"
 mkdir -p "$COMFY_DIR/custom_nodes"

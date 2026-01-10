@@ -12,6 +12,11 @@ set "RUN_SCRIPT_NAME=run_comfy.bat"
 set "COMFY_PORT=8188"
 set "nuvu_COMPILED_REPO=https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
+REM UV install location (same as prestartup_script.py)
+set "UV_DIR=%LOCALAPPDATA%\nuvu\bin"
+set "UV_EXE=%UV_DIR%\uv.exe"
+set "USE_UV=0"
+
 echo.
 echo === Checking for Python 3.12 ===
 py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)" >> "%INSTALL_LOG%" 2>&1
@@ -31,6 +36,36 @@ if errorlevel 1 (
     echo Git was not found. Please install Git for Windows and re-run this script.
     exit /b 1
 )
+
+echo.
+echo === Installing uv (fast package installer) ===
+if exist "%UV_EXE%" (
+    echo uv already installed at %UV_EXE%
+    set "USE_UV=1"
+) else (
+    echo Downloading uv...
+    if not exist "%UV_DIR%" mkdir "%UV_DIR%"
+    set "UV_ZIP=%TEMP%\uv-download.zip"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'" >> "%INSTALL_LOG%" 2>&1
+    if errorlevel 1 (
+        echo Failed to download uv, will use pip instead.
+        goto :skip_uv
+    )
+    echo Extracting uv...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()" >> "%INSTALL_LOG%" 2>&1
+    if errorlevel 1 (
+        echo Failed to extract uv, will use pip instead.
+        goto :skip_uv
+    )
+    del /q "!UV_ZIP!" 2>nul
+    if exist "%UV_EXE%" (
+        echo uv installed successfully to %UV_EXE%
+        set "USE_UV=1"
+    ) else (
+        echo uv installation failed, will use pip instead.
+    )
+)
+:skip_uv
 
 echo.
 echo === Preparing ComfyUI directory ===
@@ -73,9 +108,16 @@ if errorlevel 1 (
     exit /b 1
 )
 
+REM Display which package manager will be used
+if "%USE_UV%"=="1" (
+    echo Using uv for fast package installation
+) else (
+    echo Using pip for package installation
+)
+
 echo.
 echo === Installing PyTorch 2.8.0 stack, this will take up to 10 minutes ===
-python -m pip install -q --no-warn-script-location torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128 >> "%INSTALL_LOG%" 2>&1
+call :pkg_install torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128
 if errorlevel 1 (
     echo Failed to install PyTorch 2.8.0 stack.
     exit /b 1
@@ -83,19 +125,19 @@ if errorlevel 1 (
 
 echo.
 echo === Installing core ComfyUI dependencies ===
-python -m pip install -q --no-warn-script-location -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128 >> "%INSTALL_LOG%" 2>&1
+call :pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128
 if errorlevel 1 (
     echo Failed to install ComfyUI requirements.
     exit /b 1
 )
 
-python -m pip install -q --no-warn-script-location -U "triton-windows<3.5" >> "%INSTALL_LOG%" 2>&1
+call :pkg_install -U "triton-windows<3.5"
 if errorlevel 1 (
     echo Failed to install Triton Windows build.
     exit /b 1
 )
 
-python -m pip install -q --no-warn-script-location https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post2/sageattention-2.2.0+cu128torch2.8.0.post2-cp39-abi3-win_amd64.whl >> "%INSTALL_LOG%" 2>&1
+call :pkg_install https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post2/sageattention-2.2.0+cu128torch2.8.0.post2-cp39-abi3-win_amd64.whl
 if errorlevel 1 (
     echo Failed to install SageAttention wheel.
     exit /b 1
@@ -179,7 +221,7 @@ if not exist "%NODE_DIR%" (
 REM Install dependency requirements if present
 if exist "%NODE_DIR%\requirements.txt" (
     pushd "%NODE_DIR%"
-    python -m pip install -q --no-warn-script-location -r requirements.txt >> "%INSTALL_LOG%" 2>&1
+    call :pkg_install_req requirements.txt
     if errorlevel 1 (
         echo Failed to install requirements.txt for %NODE_DIR%.
         popd
@@ -188,7 +230,7 @@ if exist "%NODE_DIR%\requirements.txt" (
     popd
 ) else if exist "%NODE_DIR%\req.txt" (
     pushd "%NODE_DIR%"
-    python -m pip install -q --no-warn-script-location -r req.txt >> "%INSTALL_LOG%" 2>&1
+    call :pkg_install_req req.txt
     if errorlevel 1 (
         echo Failed to install req.txt for %NODE_DIR%.
         popd
@@ -198,4 +240,30 @@ if exist "%NODE_DIR%\requirements.txt" (
 )
 
 exit /b 0
+
+REM ============================================================
+REM Package installation helpers - use uv if available, else pip
+REM ============================================================
+
+:pkg_install
+REM Install packages using uv (if available) or pip
+REM Usage: call :pkg_install package1 package2 --extra-args
+if "%USE_UV%"=="1" (
+    "%UV_EXE%" pip install --quiet %* >> "%INSTALL_LOG%" 2>&1
+) else (
+    python -m pip install -q --no-warn-script-location %* >> "%INSTALL_LOG%" 2>&1
+)
+exit /b %errorlevel%
+
+:pkg_install_req
+REM Install from requirements file using uv (if available) or pip
+REM Usage: call :pkg_install_req requirements.txt [--extra-args]
+set "REQ_FILE=%~1"
+shift
+if "%USE_UV%"=="1" (
+    "%UV_EXE%" pip install --quiet -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+) else (
+    python -m pip install -q --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+)
+exit /b %errorlevel%
 

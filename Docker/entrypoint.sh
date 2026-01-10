@@ -12,6 +12,32 @@ ensure_cmd() {
   fi
 }
 
+# Package installer helper - uses uv if available, falls back to pip
+pkg_install() {
+  local pip_cmd="$1"
+  shift
+  if command -v uv >/dev/null 2>&1; then
+    log "Installing with uv: $*"
+    uv pip install --python "$VENV_PY" "$@"
+  else
+    log "Installing with pip: $*"
+    "$pip_cmd" install "$@"
+  fi
+}
+
+pkg_install_requirements() {
+  local pip_cmd="$1"
+  local req_file="$2"
+  shift 2
+  if command -v uv >/dev/null 2>&1; then
+    log "Installing requirements with uv: $req_file"
+    uv pip install --python "$VENV_PY" -r "$req_file" "$@"
+  else
+    log "Installing requirements with pip: $req_file"
+    "$pip_cmd" install -r "$req_file" "$@"
+  fi
+}
+
 install_python312() {
   if command -v apt-get >/dev/null 2>&1; then
     log "Installing python3.12 via apt"
@@ -99,8 +125,8 @@ mkdir -p "$CUSTOM_NODES_DIR"
 
 if [ -f "$APP_DIR/requirements.txt" ]; then
   log "Installing ComfyUI requirements"
-  "$VENV_PIP" install torch==2.8.0 torchvision torchaudio --index-url "$TORCH_INDEX_URL"
-  "$VENV_PIP" install -r "$APP_DIR/requirements.txt" --extra-index-url "$TORCH_INDEX_URL"
+  pkg_install "$VENV_PIP" torch==2.8.0 torchvision torchaudio --index-url "$TORCH_INDEX_URL"
+  pkg_install_requirements "$VENV_PIP" "$APP_DIR/requirements.txt" --extra-index-url "$TORCH_INDEX_URL"
 fi
 
 log "Ensuring ComfyUI-Manager"
@@ -138,8 +164,7 @@ clone_and_install_node() {
   fi
   
   if [ -f "$NODE_DIR/requirements.txt" ]; then
-    log "Installing $NODE_NAME requirements"
-    "$VENV_PIP" install -r "$NODE_DIR/requirements.txt"
+    pkg_install_requirements "$VENV_PIP" "$NODE_DIR/requirements.txt"
   fi
 }
 
@@ -151,17 +176,16 @@ clone_and_install_node "comfyui_controlnet_aux" "https://github.com/Fannovel16/c
 clone_and_install_node "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git"
 
 log "Upgrading pip/setuptools/wheel inside venv"
-"$VENV_PIP" install --upgrade pip setuptools wheel
+pkg_install "$VENV_PIP" --upgrade pip setuptools wheel
 
 log "Installing keyring helpers"
-"$VENV_PIP" install keyrings.alt
+pkg_install "$VENV_PIP" keyrings.alt
 
 log "Installing SageAttention"
-"$VENV_PIP" install sageattention --no-build-isolation
+pkg_install "$VENV_PIP" sageattention --no-build-isolation
 
 if [ -f "$MANAGER_DIR/requirements.txt" ]; then
-  log "Installing ComfyUI-Manager requirements"
-  "$VENV_PIP" install -r "$MANAGER_DIR/requirements.txt"
+  pkg_install_requirements "$VENV_PIP" "$MANAGER_DIR/requirements.txt"
 fi
 
 # Install ComfyUI-Nuvu requirements (pulls comfyui-nuvu from PyPI)
@@ -169,10 +193,10 @@ CUSTOM_REQS="$CUSTOM_NODE_DIR/requirements.txt"
 CUSTOM_REQS_ALT="$CUSTOM_NODE_DIR/req.txt"
 if [ -f "$CUSTOM_REQS" ]; then
   log "Installing ComfyUI-Nuvu requirements.txt"
-  "$VENV_PIP" install -r "$CUSTOM_REQS"
+  pkg_install_requirements "$VENV_PIP" "$CUSTOM_REQS"
 elif [ -f "$CUSTOM_REQS_ALT" ]; then
   log "Installing ComfyUI-Nuvu req.txt"
-  "$VENV_PIP" install -r "$CUSTOM_REQS_ALT"
+  pkg_install_requirements "$VENV_PIP" "$CUSTOM_REQS_ALT"
 else
   echo "ComfyUI-Nuvu requirements file not found at $CUSTOM_REQS (or $CUSTOM_REQS_ALT)" >&2
   exit 1

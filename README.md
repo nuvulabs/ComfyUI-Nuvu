@@ -10,26 +10,32 @@ Nuvu Labs is an agency that excels at implementing, scaling, and finetuning AI p
 
 ## Table of Contents
 
-- [The Nuvu Advantage](#the-Nuvu-advantage)
-- [Installing Nuvu](#installing-Nuvu)
+- [The Nuvu Advantage](#the-nuvu-advantage)
+- [Installing Nuvu](#installing-nuvu)
   - [Auto-Installers](#auto-installers)
+    - [Windows Install](#windows-install)
+    - [Linux Install](#linux-install)
   - [Comfy Manager](#comfy-manager)
-  - [Manual Install](#manual-install)
   - [RunPod Template](#runpod-template)
+  - [Docker](#docker)
 - [Create an Account](#create-an-account)
   - [Free Features](#free-features)
   - [Paid Features](#paid-features)
-  - [How to create an account](#how-to-create-an-account)
-  - [How to subscribe](#how-to-subscribe)
-- [Using Nuvu](#using-Nuvu)
-  - [ComfyUI Optimizer](#comfyui-optimizer)
+  - [How to create a free account](#how-to-create-a-free-account)
+  - [How to subscribe to Nuvu Premium](#how-to-subscribe-to-nuvu-premium)
+- [Using Nuvu](#using-nuvu)
   - [Workflow Installer](#workflow-installer)
     - [Subgraphs](#subgraphs)
+  - [Install Missing](#install-missing)
   - [Model Installer](#model-installer)
-  - [Install Missing (Coming Soon)](#install-missing-coming-soon)
-- [User Configuration](#user-configuration)
-- [How Can We Help?](#how-can-we-help)
-- [Logout](#logout)
+  - [ComfyUI Optimizer](#comfyui-optimizer)
+  - [User Configuration](#user-configuration)
+  - [How Can We Help?](#how-can-we-help)
+  - [Support](#support)
+  - [Documentation](#documentation)
+  - [Logout](#logout)
+  - [Restart ComfyUI](#restart-comfyui)
+  - [Refresh Page](#refresh-page)
 
 ## The Nuvu Advantage
 
@@ -75,7 +81,7 @@ Your default browser should pop open when ComfyUI starts. You can slo navigate t
 #### Linux Install
 Place the .sh file in the folder location that you want to install ComfyUI-Nuvu in. Open a shell and run:
 
-```./linux_install_Nuvu_comfy.sh```
+```./linux_install_nuvu_comfy.sh```
 
 This will clone ComfyUI into your current folder. Inside the ComfyUI Folder, you will find a file called "run_comfy.sh". Double click this file or open a shell and run it to launch ComfyUI. Wait until the terminal stops producing text and then go to the next step. You should also see a Nuvu-ComfyUI icon on your desktop, which you can use to launch Nuvu.
 
@@ -151,7 +157,7 @@ docker run -d \
  - 400+ workflows in the roadmap
  - Subgraphs published straight into your library to use as nodes
  - Model Auto-Installer
- - (coming soon) Install All Missing Models & Custom Nodes for a workflow
+ - Install All Missing Models & Custom Nodes for a workflow
 
 ### How to create a free account
 
@@ -220,16 +226,16 @@ Manage the devices that Nuvu is registered on, the huggingface token for downloa
 Do you work in a studio or just need help on a passion project? Nuvu has the experts to get you to the finish line more efficiently than ever before. Submit an inquiry on this tab to get in touch with us.
 
 ### Support
-If you're having issues with your account or any Nuvu functionality, submit an issue here. 
+If you're having issues with your account or any Nuvu functionality, submit an issue here.
 
 ### Documentation
 Learn all there is to know about Nuvu Labs.
 
 ### Logout
-Log out of Nuvu. 
+Log out of Nuvu.
 
 ### Restart ComfyUI
 Restart the ComfyUI server. Useful if a workflow is frozen or you need to dump VRAM quickly.
 
 ### Refresh Page
-Refresh the browser tab. 
+Refresh the browser tab.
