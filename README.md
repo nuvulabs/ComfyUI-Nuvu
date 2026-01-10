@@ -104,9 +104,9 @@ After restarting, you should see the Nuvu button in your toolbar.
 
 ### RunPod Template
 
-Use our referral code to sign up for RunPod if you don't already have an account! [https://runpod.io?ref=rqu7tin8](https://runpod.io?ref=rqu7tin8)
+Use our referral code to sign up for RunPod if you don't already have an account! [https://runpod.io?ref=ffbuz4zw](https://runpod.io?ref=ffbuz4zw)
 
-Nuvu Labs provides a RunPod template to quickly deploy ComfyUI from anywhere, even if you don't own a GPU yourself. You can find it [at this link](https://console.runpod.io/deploy?template=ntf53vsuqj&ref=rqu7tin8)
+Nuvu Labs provides a RunPod template to quickly deploy ComfyUI from anywhere, even if you don't own a GPU yourself. You can find it [at this link](https://console.runpod.io/deploy?template=0lhzij38ow&ref=ffbuz4zw)
 
 When you click on the link and have a valid account created, you'll be prompted to start a pod.
 ![RunPod select pod](docs/images/nuvu-storage-runpod-pods.png)
@@ -138,7 +138,7 @@ docker run -d \
   -p 8188:8188 \
   -p 8888:8888 \
   -v /path/to/workspace:/workspace \
-  nitralabs/comfyui-nuvu:latest
+  docker.io/nuvulabs/comfyui-nuvu:latest
 ```
 
 ## Create an Account

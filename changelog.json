@@ -1,8 +1,14 @@
 [
   {
+    "hash": "7dbc09c",
+    "tag": "1.0.8",
+    "date": "4 minutes ago",
+    "message": "Update RunPod links to align with Nuvu Account"
+  },
+  {
     "hash": "546a69c",
     "tag": "1.0.7",
-    "date": "6 minutes ago",
+    "date": "4 hours ago",
     "message": "Add uv installer for faster and more reliable custom node installation. Add screenshots for support tickets"
   },
   {
