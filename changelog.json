@@ -1,8 +1,14 @@
 [
   {
+    "hash": "1030c01",
+    "tag": "1.0.11",
+    "date": "4 minutes ago",
+    "message": "Update Comfy Registry description to include SageAttention and Triton installers for enhanced clarity on features."
+  },
+  {
     "hash": "e63a77c",
     "tag": "1.0.10",
-    "date": "8 minutes ago",
+    "date": "17 minutes ago",
     "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
   },
   {
