@@ -1,26 +1,44 @@
 [
   {
+    "hash": "b073782",
+    "tag": "1.0.17",
+    "date": "4 minutes ago",
+    "message": "change text from gray to white"
+  },
+  {
+    "hash": "dd3abf7",
+    "tag": null,
+    "date": "6 minutes ago",
+    "message": "update bottom login dialog link to go straight to demo"
+  },
+  {
+    "hash": "46df8a8",
+    "tag": null,
+    "date": "7 minutes ago",
+    "message": "update login dialog link to go straight to demo"
+  },
+  {
     "hash": "b5b96c3",
     "tag": "1.0.16",
-    "date": "4 minutes ago",
+    "date": "27 minutes ago",
     "message": "Add logging that nuvu prestartup was successful"
   },
   {
     "hash": "f3c05c2",
     "tag": "1.0.15",
-    "date": "13 minutes ago",
+    "date": "36 minutes ago",
     "message": "More robust update handling when a locked file absolutely cannot be cleared"
   },
   {
     "hash": "afc160e",
     "tag": "1.0.14",
-    "date": "32 minutes ago",
+    "date": "55 minutes ago",
     "message": "Fix update flow when updating comfy or nuvu"
   },
   {
     "hash": "15f4c5b",
     "tag": null,
-    "date": "9 hours ago",
+    "date": "10 hours ago",
     "message": "Improve Comfy Manager Description"
   },
   {
