@@ -1,62 +1,74 @@
 [
   {
+    "hash": "afc160e",
+    "tag": "1.0.14",
+    "date": "6 minutes ago",
+    "message": "Fix update flow when updating comfy or nuvu"
+  },
+  {
+    "hash": "15f4c5b",
+    "tag": null,
+    "date": "9 hours ago",
+    "message": "Improve Comfy Manager Description"
+  },
+  {
     "hash": "4e0d75a",
     "tag": "1.0.13",
-    "date": "4 minutes ago",
+    "date": "9 hours ago",
     "message": "Refactor prestartup script to focus solely on installing uv, removing the handling of Nuvu requirements."
   },
   {
     "hash": "0883c57",
     "tag": null,
-    "date": "4 minutes ago",
+    "date": "9 hours ago",
     "message": "Fix prestartup to only handle uv for fast custom node install. do not try to handle nuvu requirements at all."
   },
   {
     "hash": "bf7e136",
     "tag": null,
-    "date": "11 minutes ago",
+    "date": "9 hours ago",
     "message": "Fix prestartup package lock."
   },
   {
     "hash": "1ee47f4",
     "tag": "1.0.12",
-    "date": "15 minutes ago",
+    "date": "9 hours ago",
     "message": "More robust Nuvu updating. Eliminates package lock issues."
   },
   {
     "hash": "f162ac9",
     "tag": null,
-    "date": "29 minutes ago",
+    "date": "10 hours ago",
     "message": "Fix package lock issue when updating Nuvu"
   },
   {
     "hash": "1030c01",
     "tag": "1.0.11",
-    "date": "5 hours ago",
+    "date": "14 hours ago",
     "message": "Update Comfy Registry description to include SageAttention and Triton installers for enhanced clarity on features."
   },
   {
     "hash": "e63a77c",
     "tag": "1.0.10",
-    "date": "5 hours ago",
+    "date": "14 hours ago",
     "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
   },
   {
     "hash": "c68e8ef",
     "tag": "1.0.9",
-    "date": "30 hours ago",
+    "date": "2 days ago",
     "message": "Fix prestartup script not being included in github build"
   },
   {
     "hash": "7dbc09c",
     "tag": "1.0.8",
-    "date": "31 hours ago",
+    "date": "2 days ago",
     "message": "Update RunPod links to align with Nuvu Account"
   },
   {
     "hash": "546a69c",
     "tag": "1.0.7",
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Add uv installer for faster and more reliable custom node installation. Add screenshots for support tickets"
   },
   {
@@ -116,19 +128,19 @@
   {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
     "hash": "45b4ff3",
     "tag": "0.0.30",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "Add 'Skip updates' option for installed custom nodes in Install Missing. Install missing no longer in beta."
   },
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "Improve workflow card readability"
   },
   {
@@ -404,7 +416,7 @@
   {
     "hash": "96380c3",
     "tag": null,
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Initial Commit from ArtOfficial gh transition"
   }
 ]

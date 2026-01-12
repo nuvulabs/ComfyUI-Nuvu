@@ -37,6 +37,7 @@ def _install_uv():
     uv_dir, uv_exe, download_url = _get_uv_paths()
     
     if os.path.isfile(uv_exe):
+        logger.info(f"[ComfyUI-Nuvu] Using uv for fast custom node install: {uv_exe}")
         return uv_exe
     
     try:
