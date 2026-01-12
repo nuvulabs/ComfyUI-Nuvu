@@ -1,14 +1,32 @@
 [
   {
+    "hash": "4e0d75a",
+    "tag": "1.0.13",
+    "date": "4 minutes ago",
+    "message": "Refactor prestartup script to focus solely on installing uv, removing the handling of Nuvu requirements."
+  },
+  {
+    "hash": "0883c57",
+    "tag": null,
+    "date": "4 minutes ago",
+    "message": "Fix prestartup to only handle uv for fast custom node install. do not try to handle nuvu requirements at all."
+  },
+  {
+    "hash": "bf7e136",
+    "tag": null,
+    "date": "11 minutes ago",
+    "message": "Fix prestartup package lock."
+  },
+  {
     "hash": "1ee47f4",
     "tag": "1.0.12",
-    "date": "6 minutes ago",
+    "date": "15 minutes ago",
     "message": "More robust Nuvu updating. Eliminates package lock issues."
   },
   {
     "hash": "f162ac9",
     "tag": null,
-    "date": "20 minutes ago",
+    "date": "29 minutes ago",
     "message": "Fix package lock issue when updating Nuvu"
   },
   {

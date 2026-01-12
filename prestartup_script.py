@@ -2,117 +2,102 @@
 ComfyUI-Nuvu Prestartup Script
 
 This script runs during ComfyUI's prestartup phase BEFORE extensions are loaded.
-It handles:
-1. Installing uv (fast Python package installer) if not present
-2. Installing/updating Nuvu requirements (while .pyd files aren't locked)
+It handles installing uv (fast Python package installer) if not present.
 
+IMPORTANT: This script must NOT import from comfyui_nuvu to avoid locking .pyd files.
 """
 
 import os
-import sys
-import subprocess
+import platform
 import logging
 
 logger = logging.getLogger("ComfyUI-Nuvu")
 
-# Add src directory to path so we can import from the package
-# This works whether or not the package is pip-installed
-_script_dir = os.path.dirname(os.path.abspath(__file__))
-_src_dir = os.path.join(_script_dir, "src")
-if _src_dir not in sys.path:
-    sys.path.insert(0, _src_dir)
 
-
-def _get_install_cmd(requirements_path, use_reinstall=False):
-    """
-    Get the install command, preferring uv over pip.
-    Returns (cmd, tool_name) tuple.
-    """
-    # Try uv first via pip_utils
-    try:
-        from comfyui_nuvu.pip_utils import make_pip_cmd, get_current_tool
-        tool = get_current_tool()
-        
-        args = ['install', '--quiet', '--no-warn-script-location']
-        if use_reinstall:
-            # uv uses --reinstall, pip uses --force-reinstall
-            args.append('--reinstall' if tool == 'uv' else '--force-reinstall')
-        args.extend(['-r', requirements_path])
-        
-        return make_pip_cmd(args), tool
-    except ImportError:
-        pass
-    
-    # Fallback to pip directly
-    args = [sys.executable, '-m', 'pip', 'install', '--quiet', '--no-warn-script-location']
-    if use_reinstall:
-        args.append('--force-reinstall')
-    args.extend(['-r', requirements_path])
-    
-    return args, "pip"
-
-
-def _install_requirements():
-    """
-    Install Nuvu requirements.txt during prestartup (before .pyd files are loaded).
-    This avoids Windows file lock issues when updating the comfyui-nuvu package.
-    """
-    requirements_path = os.path.join(_script_dir, "requirements.txt")
-    if not os.path.isfile(requirements_path):
-        return
-    
-    cmd, tool = _get_install_cmd(requirements_path, use_reinstall=False)
-    
-    try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=300,  # 5 minute timeout
-            cwd=_script_dir,
-        )
-        
-        # Check for RECORD file error (corrupted previous install)
-        output = (result.stderr or "") + (result.stdout or "")
-        if result.returncode != 0 and ("no RECORD file" in output or "uninstall-no-record-file" in output):
-            logger.info(f"[ComfyUI-Nuvu] Detected corrupted install, retrying with {tool} reinstall flag")
-            
-            # Retry with reinstall flag to fix corrupted installation
-            retry_cmd, tool = _get_install_cmd(requirements_path, use_reinstall=True)
-            
-            result = subprocess.run(
-                retry_cmd,
-                capture_output=True,
-                text=True,
-                timeout=300,
-                cwd=_script_dir,
-            )
-        
-        if result.returncode == 0:
-            logger.debug(f"[ComfyUI-Nuvu] Requirements installed successfully with {tool}")
+def _get_uv_paths():
+    """Get platform-specific uv paths."""
+    if platform.system() == "Windows":
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            uv_dir = os.path.join(local_app_data, "nuvu", "bin")
         else:
-            # Log error but don't fail - the extension might still work
-            error_msg = result.stderr or result.stdout or "Unknown error"
-            logger.warning(f"[ComfyUI-Nuvu] Requirements install returned non-zero: {error_msg[:200]}")
-    except subprocess.TimeoutExpired:
-        logger.warning("[ComfyUI-Nuvu] Requirements install timed out")
+            uv_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "nuvu", "bin")
+        uv_exe = os.path.join(uv_dir, "uv.exe")
+        download_url = "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip"
+    else:
+        uv_dir = os.path.join(os.path.expanduser("~"), ".local", "bin")
+        uv_exe = os.path.join(uv_dir, "uv")
+        download_url = "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz"
+    
+    return uv_dir, uv_exe, download_url
+
+
+def _install_uv():
+    """Install uv to the platform-specific location if not already present."""
+    uv_dir, uv_exe, download_url = _get_uv_paths()
+    
+    if os.path.isfile(uv_exe):
+        return uv_exe
+    
+    try:
+        os.makedirs(uv_dir, exist_ok=True)
+        
+        if platform.system() == "Windows":
+            import urllib.request
+            import zipfile
+            import tempfile
+            
+            with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
+                tmp_path = tmp.name
+            
+            try:
+                logger.info("[ComfyUI-Nuvu] Downloading uv...")
+                urllib.request.urlretrieve(download_url, tmp_path)
+                
+                with zipfile.ZipFile(tmp_path, 'r') as zf:
+                    for member in zf.namelist():
+                        if member.endswith("uv.exe"):
+                            with zf.open(member) as src, open(uv_exe, 'wb') as dst:
+                                dst.write(src.read())
+                            break
+            finally:
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
+        else:
+            import urllib.request
+            import tarfile
+            import tempfile
+            
+            with tempfile.NamedTemporaryFile(suffix=".tar.gz", delete=False) as tmp:
+                tmp_path = tmp.name
+            
+            try:
+                logger.info("[ComfyUI-Nuvu] Downloading uv...")
+                urllib.request.urlretrieve(download_url, tmp_path)
+                
+                with tarfile.open(tmp_path, 'r:gz') as tf:
+                    for member in tf.getmembers():
+                        if member.name.endswith("/uv") or member.name == "uv":
+                            member.name = "uv"
+                            tf.extract(member, uv_dir)
+                            break
+                
+                os.chmod(uv_exe, 0o755)
+            finally:
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
+        
+        if os.path.isfile(uv_exe):
+            logger.info(f"[ComfyUI-Nuvu] uv installed to {uv_exe}")
+            return uv_exe
     except Exception as e:
-        logger.warning(f"[ComfyUI-Nuvu] Requirements install error: {e}")
+        logger.warning(f"[ComfyUI-Nuvu] Failed to install uv: {e}")
+    
+    return None
 
 
-# Step 1: Install uv if needed
+# Run on module load (prestartup phase)
 try:
-    from comfyui_nuvu.uv_installer import run_prestartup
-    run_prestartup()
-except ImportError as e:
-    # Package not available yet - this can happen on first install
-    logger.debug(f"[ComfyUI-Nuvu] uv_installer not available yet (first install?): {e}")
+    _install_uv()
 except Exception as e:
-    # Non-fatal error - pip will be used as fallback
-    logger.warning(f"[ComfyUI-Nuvu] uv setup error (non-fatal): {e}")
-
-# Step 2: Install requirements (before extension loads, so .pyd isn't locked)
-try:
-    _install_requirements()
-except Exception as e:
-    logger.warning(f"[ComfyUI-Nuvu] Requirements install error (non-fatal): {e}")
+    logger.warning(f"[ComfyUI-Nuvu] Prestartup error (non-fatal): {e}")
