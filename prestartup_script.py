@@ -126,6 +126,7 @@ def _install_requirements():
     if uv_path:
         cmd = [uv_path, 'pip', 'install', '--quiet', '-r', requirements_path]
         tool = "uv"
+        logger.info("[ComfyUI-Nuvu] Using uv for faster installs")
     else:
         cmd = [sys.executable, '-m', 'pip', 'install', '--quiet', '-r', requirements_path]
         tool = "pip"
@@ -140,7 +141,7 @@ def _install_requirements():
         )
         
         if result.returncode == 0:
-            logger.debug(f"[ComfyUI-Nuvu] Requirements installed with {tool}")
+            logger.info("[ComfyUI-Nuvu] Nuvu requirements up to date")
         else:
             output = (result.stderr or "") + (result.stdout or "")
             logger.warning(f"[ComfyUI-Nuvu] Requirements install issue: {output[:200]}")
