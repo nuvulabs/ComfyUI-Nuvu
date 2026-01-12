@@ -2,16 +2,23 @@
 ComfyUI-Nuvu Prestartup Script
 
 This script runs during ComfyUI's prestartup phase BEFORE extensions are loaded.
-It handles installing uv (fast Python package installer) if not present.
+It handles:
+1. Installing uv (fast Python package installer) if not present
+2. Installing requirements.txt (before .pyd files are loaded/locked)
 
 IMPORTANT: This script must NOT import from comfyui_nuvu to avoid locking .pyd files.
 """
 
 import os
+import sys
+import subprocess
+import shutil
 import platform
 import logging
 
 logger = logging.getLogger("ComfyUI-Nuvu")
+
+_script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def _get_uv_paths():
@@ -32,12 +39,19 @@ def _get_uv_paths():
     return uv_dir, uv_exe, download_url
 
 
+def _find_uv():
+    """Find uv executable without importing from comfyui_nuvu."""
+    uv_dir, uv_exe, _ = _get_uv_paths()
+    if os.path.isfile(uv_exe):
+        return uv_exe
+    return shutil.which("uv")
+
+
 def _install_uv():
     """Install uv to the platform-specific location if not already present."""
     uv_dir, uv_exe, download_url = _get_uv_paths()
     
     if os.path.isfile(uv_exe):
-        logger.info(f"[ComfyUI-Nuvu] Using uv for fast custom node install: {uv_exe}")
         return uv_exe
     
     try:
@@ -97,8 +111,47 @@ def _install_uv():
     return None
 
 
+def _install_requirements():
+    """Install requirements.txt using uv or pip (without importing comfyui_nuvu)."""
+    requirements_path = os.path.join(_script_dir, "requirements.txt")
+    if not os.path.isfile(requirements_path):
+        return
+    
+    # Find or install uv
+    uv_path = _find_uv()
+    if not uv_path:
+        uv_path = _install_uv()
+    
+    # Build install command
+    if uv_path:
+        cmd = [uv_path, 'pip', 'install', '--quiet', '-r', requirements_path]
+        tool = "uv"
+    else:
+        cmd = [sys.executable, '-m', 'pip', 'install', '--quiet', '-r', requirements_path]
+        tool = "pip"
+    
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=300,
+            cwd=_script_dir,
+        )
+        
+        if result.returncode == 0:
+            logger.debug(f"[ComfyUI-Nuvu] Requirements installed with {tool}")
+        else:
+            output = (result.stderr or "") + (result.stdout or "")
+            logger.warning(f"[ComfyUI-Nuvu] Requirements install issue: {output[:200]}")
+    except subprocess.TimeoutExpired:
+        logger.warning("[ComfyUI-Nuvu] Requirements install timed out")
+    except Exception as e:
+        logger.warning(f"[ComfyUI-Nuvu] Requirements install error: {e}")
+
+
 # Run on module load (prestartup phase)
 try:
-    _install_uv()
+    _install_requirements()
 except Exception as e:
     logger.warning(f"[ComfyUI-Nuvu] Prestartup error (non-fatal): {e}")

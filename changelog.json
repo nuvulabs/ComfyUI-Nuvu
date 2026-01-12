@@ -1,8 +1,14 @@
 [
   {
+    "hash": "f3c05c2",
+    "tag": "1.0.15",
+    "date": "4 minutes ago",
+    "message": "More robust update handling when a locked file absolutely cannot be cleared"
+  },
+  {
     "hash": "afc160e",
     "tag": "1.0.14",
-    "date": "6 minutes ago",
+    "date": "23 minutes ago",
     "message": "Fix update flow when updating comfy or nuvu"
   },
   {
@@ -26,13 +32,13 @@
   {
     "hash": "bf7e136",
     "tag": null,
-    "date": "9 hours ago",
+    "date": "10 hours ago",
     "message": "Fix prestartup package lock."
   },
   {
     "hash": "1ee47f4",
     "tag": "1.0.12",
-    "date": "9 hours ago",
+    "date": "10 hours ago",
     "message": "More robust Nuvu updating. Eliminates package lock issues."
   },
   {
@@ -44,13 +50,13 @@
   {
     "hash": "1030c01",
     "tag": "1.0.11",
-    "date": "14 hours ago",
+    "date": "15 hours ago",
     "message": "Update Comfy Registry description to include SageAttention and Triton installers for enhanced clarity on features."
   },
   {
     "hash": "e63a77c",
     "tag": "1.0.10",
-    "date": "14 hours ago",
+    "date": "15 hours ago",
     "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
   },
   {
