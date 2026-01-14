@@ -133,6 +133,20 @@ if "%USE_UV%"=="1" (
     echo Using pip for package installation
 )
 
+echo.
+echo === Installing Triton ===
+call :pkg_install_portable -U "triton-windows"
+if errorlevel 1 (
+    echo [WARNING] Failed to install Triton.
+)
+
+echo.
+echo === Installing SageAttention ===
+call :pkg_install_portable https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post4/sageattention-2.2.0+cu130torch2.9.0andhigher.post4-cp39-abi3-win_amd64.whl
+if errorlevel 1 (
+    echo [WARNING] Failed to install SageAttention wheel.
+)
+
 cd /d "%CUSTOM_NODES_DIR%"
 
 echo.

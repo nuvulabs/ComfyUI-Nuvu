@@ -266,4 +266,3 @@ if "%USE_UV%"=="1" (
     python -m pip install -q --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
 )
 exit /b %errorlevel%
-
