@@ -1,26 +1,32 @@
 [
   {
+    "hash": "8e2c6f6",
+    "tag": "1.0.22",
+    "date": "6 minutes ago",
+    "message": "Display actual subgraph names on failed install Use uv with python portable not just venv Display correct number of installed models when less than all of the models fail to download."
+  },
+  {
     "hash": "9c1584c",
     "tag": "1.0.21",
-    "date": "6 minutes ago",
+    "date": "17 hours ago",
     "message": "Bump default installed torch version to 2.9.1 cu13.0 for Comfy Speed Boosts and memory management. Ensure huggingface token persists with Comfy Portable"
   },
   {
     "hash": "a24f6b8",
     "tag": "1.0.20",
-    "date": "3 hours ago",
+    "date": "20 hours ago",
     "message": "Further clarity in Comfy Manager description"
   },
   {
     "hash": "88439ea",
     "tag": null,
-    "date": "3 hours ago",
+    "date": "20 hours ago",
     "message": "Fix portable installer sageattention and triton"
   },
   {
     "hash": "e055932",
     "tag": null,
-    "date": "28 hours ago",
+    "date": "2 days ago",
     "message": "Add better SEO for discovering Nuvu through Manager"
   },
   {
@@ -68,61 +74,61 @@
   {
     "hash": "15f4c5b",
     "tag": null,
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Improve Comfy Manager Description"
   },
   {
     "hash": "4e0d75a",
     "tag": "1.0.13",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Refactor prestartup script to focus solely on installing uv, removing the handling of Nuvu requirements."
   },
   {
     "hash": "0883c57",
     "tag": null,
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Fix prestartup to only handle uv for fast custom node install. do not try to handle nuvu requirements at all."
   },
   {
     "hash": "bf7e136",
     "tag": null,
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Fix prestartup package lock."
   },
   {
     "hash": "1ee47f4",
     "tag": "1.0.12",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "More robust Nuvu updating. Eliminates package lock issues."
   },
   {
     "hash": "f162ac9",
     "tag": null,
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Fix package lock issue when updating Nuvu"
   },
   {
     "hash": "1030c01",
     "tag": "1.0.11",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Update Comfy Registry description to include SageAttention and Triton installers for enhanced clarity on features."
   },
   {
     "hash": "e63a77c",
     "tag": "1.0.10",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
   },
   {
     "hash": "c68e8ef",
     "tag": "1.0.9",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Fix prestartup script not being included in github build"
   },
   {
     "hash": "7dbc09c",
     "tag": "1.0.8",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Update RunPod links to align with Nuvu Account"
   },
   {
@@ -134,73 +140,73 @@
   {
     "hash": "27929f6",
     "tag": "1.0.6",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Update README Documentation"
   },
   {
     "hash": "0fe9ec5",
     "tag": "1.0.5",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "tag push doesn't work, need to trigger a dispatch github action"
   },
   {
     "hash": "500e626",
     "tag": "1.0.4",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Fix github workflow to deploy to Comfy Registry correctly."
   },
   {
     "hash": "bc9f1e3",
     "tag": "1.0.3",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Fix version update in github workflow"
   },
   {
     "hash": "f32972f",
     "tag": null,
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Change Registry name from Nuvu to ComfyUI-Nuvu"
   },
   {
     "hash": "ed0c6a0",
     "tag": "1.0.1",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
   },
   {
     "hash": "2e220d8",
     "tag": "1.0.0",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Add Nuvu to Comfy Manager Registry"
   },
   {
     "hash": "544cea0",
     "tag": "0.0.32",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "correct discord link"
   },
   {
     "hash": "56e9ac7",
     "tag": null,
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Update README with correct branding, update documentation tab, and add Discord link."
   },
   {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
     "hash": "45b4ff3",
     "tag": "0.0.30",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Add 'Skip updates' option for installed custom nodes in Install Missing. Install missing no longer in beta."
   },
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Improve workflow card readability"
   },
   {
@@ -218,55 +224,55 @@
   {
     "hash": "bb603bb",
     "tag": "0.0.26",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Fix bug when installing custom node packages that require models to be downloaded from huggingface"
   },
   {
     "hash": "78757ec",
     "tag": "0.0.25",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Correct Desktop & Start Menu Icon not showing correctly."
   },
   {
     "hash": "c7b15c8",
     "tag": "0.0.24",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Fix strange git state"
   },
   {
     "hash": "7265609",
     "tag": null,
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Fix strange git state. No feature updates."
   },
   {
     "hash": "0dd5178",
     "tag": "0.0.23",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Add desktop shortcuts and icon copying for Nuvu-ComfyUI installation scripts; remove VRAM checks from workflow components"
   },
   {
     "hash": "d58bf2d",
     "tag": "0.0.22",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Increase reliability of system VRAM check for whether a workflow can be run on a user's machine."
   },
   {
     "hash": "0f6ed82",
     "tag": null,
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Add estimate of if user's hardware can run a workflow that they are installing."
   },
   {
     "hash": "b485600",
     "tag": null,
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Ensure process finishes when downloading multiple models on \"Models\" tab."
   },
   {
     "hash": "d19ff21",
     "tag": "0.0.21",
-    "date": "2 weeks ago",
+    "date": "3 weeks ago",
     "message": "Refactor build_cython.py and setup.py to dynamically discover Python files for compilation, excluding __init__.py files. This improves maintainability by automating file management."
   },
   {
@@ -308,43 +314,43 @@
   {
     "hash": "db37708",
     "tag": "0.0.15",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Update .gitignore to exclude log files and enhance GitHub Actions workflow to prevent log files from being uploaded. Clean up potential log files during build process for improved artifact management."
   },
   {
     "hash": "b71d6ab",
     "tag": "0.0.14",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Merge: Accept incoming changes - restructure to src-frontend"
   },
   {
     "hash": "a712092",
     "tag": "0.0.13",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Enhance Vite configuration to suppress specific warnings related to import.meta.url and adjust asset file naming for CSS. Update dialog.js to ensure correct base URL handling after bundling, and modify nuvu.js to reflect changes in module structure. Remove obsolete JavaScript files to streamline the codebase."
   },
   {
     "hash": "c9cbc03",
     "tag": "0.0.12",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Update Vite configuration to improve build output structure and reserved names. Change output directory to 'dist' and adjust library entry points for better organization. Enhance reserved strings and names for ComfyUI integration. Update GitHub Actions workflow to reflect changes in build process and output paths. Modify extension path handling in JavaScript files to ensure compatibility with Vite's ignore feature."
   },
   {
     "hash": "7739b9e",
     "tag": "0.0.11",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Update README.md to replace logo image with a new design. Enhance changelog retrieval by implementing separate handling for Nuvu and ComfyUI repositories, improving error handling, and adding remote fetching capabilities for commit history. This update streamlines the process of obtaining the latest commit information for both repository types."
   },
   {
     "hash": "4603c61",
     "tag": "0.0.10",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Refactor OptimizerPanel.vue and Sidebar.vue for improved button structure and update website URL. Clean up ChangelogModal.vue by removing unnecessary whitespace. Enhance version detection in nuvu_server.py with better error handling and formatting. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   },
   {
     "hash": "5a6d612",
     "tag": null,
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Update installation scripts and documentation to reflect repository name change from nuvu-Compiled to ComfyUI-Nuvu. Modify relevant paths and messages in linux_install_nuvu_comfyui.sh, windows_install_nuvu_comfyui.bat, and README.md for consistency. Adjust Docker entrypoint script to use the new repository name and ensure proper installation of custom nodes."
   },
   {

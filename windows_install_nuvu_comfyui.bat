@@ -253,9 +253,7 @@ if "%USE_UV%"=="1" (
 ) else (
     python -m pip install -q --no-warn-script-location %* >> "%INSTALL_LOG%" 2>&1
 )
-exit /b %errorlevel%
-
-:pkg_install_req
+exit /b %errorlevel%:pkg_install_req
 REM Install from requirements file using uv (if available) or pip
 REM Usage: call :pkg_install_req requirements.txt [--extra-args]
 set "REQ_FILE=%~1"

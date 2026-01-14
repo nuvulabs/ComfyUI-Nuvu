@@ -123,12 +123,20 @@ def _install_requirements():
         uv_path = _install_uv()
     
     # Build install command
+    is_embedded = "python_embeded" in sys.executable.lower()
     if uv_path:
-        cmd = [uv_path, 'pip', 'install', '--quiet', '-r', requirements_path]
+        cmd = [uv_path, 'pip', 'install', '--quiet']
+        # For embedded Python without venv, use --system and --python
+        if is_embedded:
+            cmd.extend(['--system', '--python', sys.executable])
+        cmd.extend(['-r', requirements_path])
         tool = "uv"
         logger.info("[ComfyUI-Nuvu] Using uv for faster installs")
     else:
-        cmd = [sys.executable, '-m', 'pip', 'install', '--quiet', '-r', requirements_path]
+        base = [sys.executable]
+        if is_embedded:
+            base.append('-s')
+        cmd = base + ['-m', 'pip', 'install', '--quiet', '-r', requirements_path]
         tool = "pip"
     
     try:
