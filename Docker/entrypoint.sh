@@ -57,7 +57,7 @@ install_python312() {
 }
 
 COMFY_DIR=${COMFY_DIR:-/workspace}
-TORCH_INDEX_URL=${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
+TORCH_INDEX_URL=${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu130}
 nuvu_REPO=${nuvu_REPO:-https://github.com/nuvulabs/ComfyUI-Nuvu.git}
 nuvu_BRANCH=${nuvu_BRANCH:-}
 MANAGER_REPO=${MANAGER_REPO:-https://github.com/Comfy-Org/ComfyUI-Manager.git}
@@ -125,7 +125,7 @@ mkdir -p "$CUSTOM_NODES_DIR"
 
 if [ -f "$APP_DIR/requirements.txt" ]; then
   log "Installing ComfyUI requirements"
-  pkg_install "$VENV_PIP" torch==2.8.0 torchvision torchaudio --index-url "$TORCH_INDEX_URL"
+  pkg_install "$VENV_PIP" torch==2.9.1 torchvision torchaudio --index-url "$TORCH_INDEX_URL"
   pkg_install_requirements "$VENV_PIP" "$APP_DIR/requirements.txt" --extra-index-url "$TORCH_INDEX_URL"
 fi
 

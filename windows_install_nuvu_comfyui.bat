@@ -116,28 +116,28 @@ if "%USE_UV%"=="1" (
 )
 
 echo.
-echo === Installing PyTorch 2.8.0 stack, this will take up to 10 minutes ===
-call :pkg_install torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128
+echo === Installing PyTorch 2.9.1 stack, this will take up to 10 minutes ===
+call :pkg_install torch==2.9.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130
 if errorlevel 1 (
-    echo Failed to install PyTorch 2.8.0 stack.
+    echo Failed to install PyTorch 2.9.1 stack.
     exit /b 1
 )
 
 echo.
 echo === Installing core ComfyUI dependencies ===
-call :pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128
+call :pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu130
 if errorlevel 1 (
     echo Failed to install ComfyUI requirements.
     exit /b 1
 )
 
-call :pkg_install -U "triton-windows<3.5"
+call :pkg_install -U "triton-windows"
 if errorlevel 1 (
     echo Failed to install Triton Windows build.
     exit /b 1
 )
 
-call :pkg_install https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post2/sageattention-2.2.0+cu128torch2.8.0.post2-cp39-abi3-win_amd64.whl
+call :pkg_install https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post4/sageattention-2.2.0+cu130torch2.9.0andhigher.post4-cp39-abi3-win_amd64.whl
 if errorlevel 1 (
     echo Failed to install SageAttention wheel.
     exit /b 1

@@ -36,8 +36,8 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
 
 WORKDIR /workspace
 
-# CUDA-appropriate PyTorch wheel index (CUDA 12.8)
-ENV TORCH_INDEX_URL=https://download.pytorch.org/whl/cu128 \
+# CUDA-appropriate PyTorch wheel index (CUDA 13.0)
+ENV TORCH_INDEX_URL=https://download.pytorch.org/whl/cu130 \
     COMFY_DIR=/workspace
 
 # Copy setup script and make it executable

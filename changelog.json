@@ -1,26 +1,32 @@
 [
   {
+    "hash": "9c1584c",
+    "tag": "1.0.21",
+    "date": "6 minutes ago",
+    "message": "Bump default installed torch version to 2.9.1 cu13.0 for Comfy Speed Boosts and memory management. Ensure huggingface token persists with Comfy Portable"
+  },
+  {
     "hash": "a24f6b8",
     "tag": "1.0.20",
-    "date": "4 minutes ago",
+    "date": "3 hours ago",
     "message": "Further clarity in Comfy Manager description"
   },
   {
     "hash": "88439ea",
     "tag": null,
-    "date": "8 minutes ago",
+    "date": "3 hours ago",
     "message": "Fix portable installer sageattention and triton"
   },
   {
     "hash": "e055932",
     "tag": null,
-    "date": "25 hours ago",
+    "date": "28 hours ago",
     "message": "Add better SEO for discovering Nuvu through Manager"
   },
   {
     "hash": "4e207cc",
     "tag": "1.0.18",
-    "date": "33 hours ago",
+    "date": "2 days ago",
     "message": "Update Comfy Registry Message for better searchability"
   },
   {
@@ -122,7 +128,7 @@
   {
     "hash": "546a69c",
     "tag": "1.0.7",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Add uv installer for faster and more reliable custom node installation. Add screenshots for support tickets"
   },
   {
@@ -200,7 +206,7 @@
   {
     "hash": "5e743cc",
     "tag": "0.0.28",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
   },
   {

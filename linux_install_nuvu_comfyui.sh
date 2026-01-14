@@ -185,11 +185,11 @@ python -m pip install -q --upgrade pip >> "$INSTALL_LOG" 2>&1
 log "Installing keyring helpers"
 pkg_install keyrings.alt
 
-log "Installing PyTorch 2.8.0 stack"
-pkg_install torch==2.8.0 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu128
+log "Installing PyTorch 2.9.1 stack"
+pkg_install torch==2.9.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130
 
 log "Installing core ComfyUI dependencies"
-pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu128
+pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu130
 
 log "Installing SageAttention 2.2.0"
 pkg_install sageattention --no-build-isolation

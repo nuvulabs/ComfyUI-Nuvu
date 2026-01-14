@@ -68,6 +68,10 @@ if exist "%EXTRACT_DIR%" (
         echo Cleaning up 7-Zip...
         if exist 7zr.exe del 7zr.exe
     )
+    
+    echo.
+    echo Cleaning up downloaded archive...
+    if exist "%ARCHIVE_NAME%" del "%ARCHIVE_NAME%"
 )
 
 echo.
