@@ -1,254 +1,266 @@
 [
   {
+    "hash": "82d12ea",
+    "tag": "1.0.23",
+    "date": "4 minutes ago",
+    "message": "More robust portable and manual install updater Handle file locks when custom nodes, ComfyUI, and Nuvu use conpiled python packages Allow switching Nuvu and ComfyUI version through the interface"
+  },
+  {
+    "hash": "0ef8d91",
+    "tag": null,
+    "date": "69 minutes ago",
+    "message": "More robust update methodology for both ComfyUI manual/portable and Nuvu"
+  },
+  {
     "hash": "8e2c6f6",
     "tag": "1.0.22",
-    "date": "6 minutes ago",
+    "date": "24 hours ago",
     "message": "Display actual subgraph names on failed install Use uv with python portable not just venv Display correct number of installed models when less than all of the models fail to download."
   },
   {
     "hash": "9c1584c",
     "tag": "1.0.21",
-    "date": "17 hours ago",
+    "date": "2 days ago",
     "message": "Bump default installed torch version to 2.9.1 cu13.0 for Comfy Speed Boosts and memory management. Ensure huggingface token persists with Comfy Portable"
   },
   {
     "hash": "a24f6b8",
     "tag": "1.0.20",
-    "date": "20 hours ago",
+    "date": "2 days ago",
     "message": "Further clarity in Comfy Manager description"
   },
   {
     "hash": "88439ea",
     "tag": null,
-    "date": "20 hours ago",
+    "date": "2 days ago",
     "message": "Fix portable installer sageattention and triton"
   },
   {
     "hash": "e055932",
     "tag": null,
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Add better SEO for discovering Nuvu through Manager"
   },
   {
     "hash": "4e207cc",
     "tag": "1.0.18",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Update Comfy Registry Message for better searchability"
   },
   {
     "hash": "b073782",
     "tag": "1.0.17",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "change text from gray to white"
   },
   {
     "hash": "dd3abf7",
     "tag": null,
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "update bottom login dialog link to go straight to demo"
   },
   {
     "hash": "46df8a8",
     "tag": null,
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "update login dialog link to go straight to demo"
   },
   {
     "hash": "b5b96c3",
     "tag": "1.0.16",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Add logging that nuvu prestartup was successful"
   },
   {
     "hash": "f3c05c2",
     "tag": "1.0.15",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "More robust update handling when a locked file absolutely cannot be cleared"
   },
   {
     "hash": "afc160e",
     "tag": "1.0.14",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Fix update flow when updating comfy or nuvu"
   },
   {
     "hash": "15f4c5b",
     "tag": null,
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Improve Comfy Manager Description"
   },
   {
     "hash": "4e0d75a",
     "tag": "1.0.13",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Refactor prestartup script to focus solely on installing uv, removing the handling of Nuvu requirements."
   },
   {
     "hash": "0883c57",
     "tag": null,
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Fix prestartup to only handle uv for fast custom node install. do not try to handle nuvu requirements at all."
   },
   {
     "hash": "bf7e136",
     "tag": null,
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Fix prestartup package lock."
   },
   {
     "hash": "1ee47f4",
     "tag": "1.0.12",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "More robust Nuvu updating. Eliminates package lock issues."
   },
   {
     "hash": "f162ac9",
     "tag": null,
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Fix package lock issue when updating Nuvu"
   },
   {
     "hash": "1030c01",
     "tag": "1.0.11",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Update Comfy Registry description to include SageAttention and Triton installers for enhanced clarity on features."
   },
   {
     "hash": "e63a77c",
     "tag": "1.0.10",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
   },
   {
     "hash": "c68e8ef",
     "tag": "1.0.9",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "Fix prestartup script not being included in github build"
   },
   {
     "hash": "7dbc09c",
     "tag": "1.0.8",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "Update RunPod links to align with Nuvu Account"
   },
   {
     "hash": "546a69c",
     "tag": "1.0.7",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "Add uv installer for faster and more reliable custom node installation. Add screenshots for support tickets"
   },
   {
     "hash": "27929f6",
     "tag": "1.0.6",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Update README Documentation"
   },
   {
     "hash": "0fe9ec5",
     "tag": "1.0.5",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "tag push doesn't work, need to trigger a dispatch github action"
   },
   {
     "hash": "500e626",
     "tag": "1.0.4",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Fix github workflow to deploy to Comfy Registry correctly."
   },
   {
     "hash": "bc9f1e3",
     "tag": "1.0.3",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Fix version update in github workflow"
   },
   {
     "hash": "f32972f",
     "tag": null,
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Change Registry name from Nuvu to ComfyUI-Nuvu"
   },
   {
     "hash": "ed0c6a0",
     "tag": "1.0.1",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
   },
   {
     "hash": "2e220d8",
     "tag": "1.0.0",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Add Nuvu to Comfy Manager Registry"
   },
   {
     "hash": "544cea0",
     "tag": "0.0.32",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "correct discord link"
   },
   {
     "hash": "56e9ac7",
     "tag": null,
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Update README with correct branding, update documentation tab, and add Discord link."
   },
   {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
     "hash": "45b4ff3",
     "tag": "0.0.30",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Add 'Skip updates' option for installed custom nodes in Install Missing. Install missing no longer in beta."
   },
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Improve workflow card readability"
   },
   {
     "hash": "5e743cc",
     "tag": "0.0.28",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
   },
   {
     "hash": "4c6dc12",
     "tag": "0.0.27",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Update references to point to new ComfyUI Repo location"
   },
   {
     "hash": "bb603bb",
     "tag": "0.0.26",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Fix bug when installing custom node packages that require models to be downloaded from huggingface"
   },
   {
     "hash": "78757ec",
     "tag": "0.0.25",
-    "date": "9 days ago",
+    "date": "10 days ago",
     "message": "Correct Desktop & Start Menu Icon not showing correctly."
   },
   {
     "hash": "c7b15c8",
     "tag": "0.0.24",
-    "date": "9 days ago",
+    "date": "10 days ago",
     "message": "Fix strange git state"
   },
   {
     "hash": "7265609",
     "tag": null,
-    "date": "9 days ago",
+    "date": "10 days ago",
     "message": "Fix strange git state. No feature updates."
   },
   {
     "hash": "0dd5178",
     "tag": "0.0.23",
-    "date": "9 days ago",
+    "date": "10 days ago",
     "message": "Add desktop shortcuts and icon copying for Nuvu-ComfyUI installation scripts; remove VRAM checks from workflow components"
   },
   {
@@ -296,19 +308,19 @@
   {
     "hash": "67290b9",
     "tag": null,
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Refactor CSS and JavaScript files for improved structure and readability. Update comfyui-nuvu.css for consistent styling and enhance nuvu.js by cleaning up imports and optimizing code structure."
   },
   {
     "hash": "99f03aa",
     "tag": "0.0.17",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Improve messaging when user's device is not registered, and allow analyzing a new workflow without having to refresh the page"
   },
   {
     "hash": "9c7cedc",
     "tag": "0.0.16",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Adjust logo paths to avoid unrendered logos"
   },
   {

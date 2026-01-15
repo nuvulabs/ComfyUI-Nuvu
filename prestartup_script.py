@@ -4,7 +4,7 @@ ComfyUI-Nuvu Prestartup Script
 This script runs during ComfyUI's prestartup phase BEFORE extensions are loaded.
 It handles:
 1. Installing uv (fast Python package installer) if not present
-2. Installing requirements.txt (before .pyd files are loaded/locked)
+2. Installing pending requirements (before .pyd files are loaded/locked)
 
 IMPORTANT: This script must NOT import from comfyui_nuvu to avoid locking .pyd files.
 """
@@ -15,10 +15,81 @@ import subprocess
 import shutil
 import platform
 import logging
+import filecmp
 
 logger = logging.getLogger("ComfyUI-Nuvu")
 
 _script_dir = os.path.dirname(os.path.abspath(__file__))
+
+
+# =============================================================================
+# Requirements Tracking (inline to avoid importing comfyui_nuvu)
+# =============================================================================
+
+def _get_requirements_cache_path(repo_path):
+    """Get the path to the cached requirements file for a repo"""
+    nuvu_dir = os.path.join(repo_path, '.nuvu')
+    os.makedirs(nuvu_dir, exist_ok=True)
+    return os.path.join(nuvu_dir, 'installed_requirements.txt')
+
+
+def _files_equal(file1, file2):
+    """Check if two files are equal"""
+    try:
+        return filecmp.cmp(file1, file2, shallow=False)
+    except Exception:
+        return False
+
+
+def _requirements_need_install(repo_path, requirements_filename='requirements.txt'):
+    """
+    Check if requirements need to be installed by comparing with cached version.
+    Returns True if requirements have changed or cache doesn't exist.
+    """
+    requirements_path = os.path.join(repo_path, requirements_filename)
+    cache_path = _get_requirements_cache_path(repo_path)
+    
+    if not os.path.exists(requirements_path):
+        return False
+    
+    if not os.path.exists(cache_path):
+        return True
+    
+    return not _files_equal(requirements_path, cache_path)
+
+
+def _mark_requirements_installed(repo_path, requirements_filename='requirements.txt'):
+    """Mark requirements as successfully installed by copying to cache."""
+    requirements_path = os.path.join(repo_path, requirements_filename)
+    cache_path = _get_requirements_cache_path(repo_path)
+    
+    if not os.path.exists(requirements_path):
+        return False
+    
+    try:
+        shutil.copy(requirements_path, cache_path)
+        return True
+    except Exception as e:
+        logger.warning(f"[ComfyUI-Nuvu] Failed to cache requirements: {e}")
+        return False
+
+
+def _detect_comfyui_root():
+    """Detect the ComfyUI root directory."""
+    # Walk up from script directory to find ComfyUI root
+    current = os.path.dirname(_script_dir)  # custom_nodes
+    parent = os.path.dirname(current)  # Should be ComfyUI root
+    
+    # Verify it looks like ComfyUI
+    if os.path.exists(os.path.join(parent, 'main.py')) or os.path.exists(os.path.join(parent, 'comfy')):
+        return parent
+    
+    # Try environment variable
+    env_root = os.environ.get('COMFYUI_ROOT')
+    if env_root and os.path.isdir(env_root):
+        return env_root
+    
+    return None
 
 
 def _get_uv_paths():
@@ -111,56 +182,160 @@ def _install_uv():
     return None
 
 
-def _install_requirements():
-    """Install requirements.txt using uv or pip (without importing comfyui_nuvu)."""
-    requirements_path = os.path.join(_script_dir, "requirements.txt")
-    if not os.path.isfile(requirements_path):
-        return
-    
-    # Find or install uv
-    uv_path = _find_uv()
-    if not uv_path:
-        uv_path = _install_uv()
-    
-    # Build install command
+def _build_install_cmd(uv_path, requirements_path):
+    """Build the install command for requirements."""
     is_embedded = "python_embeded" in sys.executable.lower()
     if uv_path:
         cmd = [uv_path, 'pip', 'install', '--quiet']
-        # For embedded Python without venv, use --system and --python
         if is_embedded:
             cmd.extend(['--system', '--python', sys.executable])
         cmd.extend(['-r', requirements_path])
-        tool = "uv"
-        logger.info("[ComfyUI-Nuvu] Using uv for faster installs")
     else:
         base = [sys.executable]
         if is_embedded:
             base.append('-s')
         cmd = base + ['-m', 'pip', 'install', '--quiet', '-r', requirements_path]
-        tool = "pip"
+    return cmd
+
+
+def _run_requirements_install(name, repo_path, requirements_filename, uv_path):
+    """Install requirements for a specific repo if needed."""
+    requirements_path = os.path.join(repo_path, requirements_filename)
+    
+    if not os.path.isfile(requirements_path):
+        return
+    
+    # Check if we need to install (either requirements changed OR pending marker exists)
+    needs_install = _requirements_need_install(repo_path, requirements_filename)
+    has_pending = _has_pending_install_marker(repo_path)
+    
+    if not needs_install and not has_pending:
+        logger.debug(f"[ComfyUI-Nuvu] {name} requirements already up to date")
+        return
+    
+    logger.info(f"[ComfyUI-Nuvu] Installing {name} requirements...")
+    
+    cmd = _build_install_cmd(uv_path, requirements_path)
     
     try:
         result = subprocess.run(
             cmd,
             capture_output=True,
             text=True,
-            timeout=300,
-            cwd=_script_dir,
+            timeout=600,
+            cwd=repo_path,
         )
         
         if result.returncode == 0:
-            logger.info("[ComfyUI-Nuvu] Nuvu requirements up to date")
+            logger.info(f"[ComfyUI-Nuvu] {name} requirements installed successfully")
+            _mark_requirements_installed(repo_path, requirements_filename)
+            _remove_pending_install_marker(repo_path)  # Clear pending marker on success
         else:
             output = (result.stderr or "") + (result.stdout or "")
-            logger.warning(f"[ComfyUI-Nuvu] Requirements install issue: {output[:200]}")
+            # Check for file lock errors
+            lock_indicators = ['Access is denied', 'os error 5', 'failed to remove file', 'being used by another process']
+            if any(ind in output for ind in lock_indicators):
+                logger.warning(f"[ComfyUI-Nuvu] {name} requirements have file locks - will retry on next restart")
+                _create_pending_install_marker(repo_path)  # Mark for retry
+            else:
+                logger.warning(f"[ComfyUI-Nuvu] {name} requirements install issue: {output[:300]}")
     except subprocess.TimeoutExpired:
-        logger.warning("[ComfyUI-Nuvu] Requirements install timed out")
+        logger.warning(f"[ComfyUI-Nuvu] {name} requirements install timed out")
+        _create_pending_install_marker(repo_path)  # Mark for retry
     except Exception as e:
-        logger.warning(f"[ComfyUI-Nuvu] Requirements install error: {e}")
+        logger.warning(f"[ComfyUI-Nuvu] {name} requirements install error: {e}")
+
+
+def _has_pending_install_marker(repo_path):
+    """Check if a repo has a pending install marker (created when install fails due to file locks)."""
+    marker_path = os.path.join(repo_path, '.nuvu', 'pending_requirements')
+    return os.path.exists(marker_path)
+
+
+def _create_pending_install_marker(repo_path):
+    """Create a marker to indicate requirements need to be installed on next restart."""
+    nuvu_dir = os.path.join(repo_path, '.nuvu')
+    os.makedirs(nuvu_dir, exist_ok=True)
+    marker_path = os.path.join(nuvu_dir, 'pending_requirements')
+    try:
+        with open(marker_path, 'w') as f:
+            f.write('')
+        return True
+    except Exception:
+        return False
+
+
+def _remove_pending_install_marker(repo_path):
+    """Remove the pending install marker after successful install."""
+    marker_path = os.path.join(repo_path, '.nuvu', 'pending_requirements')
+    try:
+        if os.path.exists(marker_path):
+            os.remove(marker_path)
+    except Exception:
+        pass
+
+
+def _get_custom_nodes_with_pending_requirements(custom_nodes_dir):
+    """Find custom nodes that have pending requirements to install.
+    
+    Only returns nodes that have been explicitly marked for retry
+    (via .nuvu/pending_requirements marker) to avoid reinstalling
+    all custom nodes on every startup.
+    """
+    pending = []
+    
+    if not os.path.isdir(custom_nodes_dir):
+        return pending
+    
+    for node_name in os.listdir(custom_nodes_dir):
+        node_path = os.path.join(custom_nodes_dir, node_name)
+        
+        # Skip non-directories and hidden folders
+        if not os.path.isdir(node_path) or node_name.startswith('.'):
+            continue
+        
+        # Skip Nuvu itself (handled separately)
+        if node_name in ('ComfyUI-Nuvu', 'ComfyUI-Nuvu-Packager'):
+            continue
+        
+        # Only process nodes with pending install marker
+        # This prevents reinstalling all nodes on every startup
+        if _has_pending_install_marker(node_path):
+            pending.append((node_name, node_path))
+    
+    return pending
+
+
+def _install_pending_requirements():
+    """Install pending requirements for Nuvu, ComfyUI, and custom nodes."""
+    # Find or install uv
+    uv_path = _find_uv()
+    if not uv_path:
+        uv_path = _install_uv()
+    
+    if uv_path:
+        logger.info("[ComfyUI-Nuvu] Using uv for faster installs")
+    
+    # Install Nuvu requirements
+    _run_requirements_install("Nuvu", _script_dir, "requirements.txt", uv_path)
+    
+    # Install ComfyUI requirements (if pending)
+    comfyui_root = _detect_comfyui_root()
+    if comfyui_root:
+        _run_requirements_install("ComfyUI", comfyui_root, "requirements.txt", uv_path)
+        
+        # Install custom nodes requirements (if pending)
+        custom_nodes_dir = os.path.join(comfyui_root, 'custom_nodes')
+        pending_nodes = _get_custom_nodes_with_pending_requirements(custom_nodes_dir)
+        
+        if pending_nodes:
+            logger.info(f"[ComfyUI-Nuvu] Found {len(pending_nodes)} custom node(s) with pending requirements")
+            for node_name, node_path in pending_nodes:
+                _run_requirements_install(f"Custom Node: {node_name}", node_path, "requirements.txt", uv_path)
 
 
 # Run on module load (prestartup phase)
 try:
-    _install_requirements()
+    _install_pending_requirements()
 except Exception as e:
     logger.warning(f"[ComfyUI-Nuvu] Prestartup error (non-fatal): {e}")
