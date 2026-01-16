@@ -228,15 +228,6 @@ if exist "%NODE_DIR%\requirements.txt" (
         exit /b 1
     )
     popd
-) else if exist "%NODE_DIR%\req.txt" (
-    pushd "%NODE_DIR%"
-    call :pkg_install_req req.txt
-    if errorlevel 1 (
-        echo Failed to install req.txt for %NODE_DIR%.
-        popd
-        exit /b 1
-    )
-    popd
 )
 
 exit /b 0
@@ -253,7 +244,9 @@ if "%USE_UV%"=="1" (
 ) else (
     python -m pip install -q --no-warn-script-location %* >> "%INSTALL_LOG%" 2>&1
 )
-exit /b %errorlevel%:pkg_install_req
+exit /b %errorlevel%
+
+:pkg_install_req
 REM Install from requirements file using uv (if available) or pip
 REM Usage: call :pkg_install_req requirements.txt [--extra-args]
 set "REQ_FILE=%~1"
