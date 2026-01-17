@@ -1,26 +1,32 @@
 [
   {
+    "hash": "0dc2735",
+    "tag": "1.0.27",
+    "date": "4 minutes ago",
+    "message": "Fix version retrieval for Nuvu Updater"
+  },
+  {
     "hash": "6401610",
     "tag": "1.0.26",
-    "date": "4 minutes ago",
+    "date": "69 minutes ago",
     "message": "Change default workflow sort to Newest. Show model links to subscribed users in model downloader."
   },
   {
     "hash": "bb3529b",
     "tag": null,
-    "date": "17 hours ago",
+    "date": "19 hours ago",
     "message": "Correct Nuvu versioning search to clear a log error"
   },
   {
     "hash": "a397fd3",
     "tag": "1.0.25",
-    "date": "19 hours ago",
+    "date": "20 hours ago",
     "message": "Add workflow changelog"
   },
   {
     "hash": "8d662b6",
     "tag": "1.0.24",
-    "date": "28 hours ago",
+    "date": "29 hours ago",
     "message": "Fix broken package installer for manual comfy install"
   },
   {
@@ -44,7 +50,7 @@
   {
     "hash": "9c1584c",
     "tag": "1.0.21",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Bump default installed torch version to 2.9.1 cu13.0 for Comfy Speed Boosts and memory management. Ensure huggingface token persists with Comfy Portable"
   },
   {
