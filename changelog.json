@@ -1,32 +1,38 @@
 [
   {
+    "hash": "fe887ae",
+    "tag": "1.0.28",
+    "date": "4 minutes ago",
+    "message": "Make sure workflow install message shows in all cases. Make workflow card height remain consistent even when there aren't enough cards to fill the container."
+  },
+  {
     "hash": "0dc2735",
     "tag": "1.0.27",
-    "date": "4 minutes ago",
+    "date": "12 hours ago",
     "message": "Fix version retrieval for Nuvu Updater"
   },
   {
     "hash": "6401610",
     "tag": "1.0.26",
-    "date": "69 minutes ago",
+    "date": "13 hours ago",
     "message": "Change default workflow sort to Newest. Show model links to subscribed users in model downloader."
   },
   {
     "hash": "bb3529b",
     "tag": null,
-    "date": "19 hours ago",
+    "date": "30 hours ago",
     "message": "Correct Nuvu versioning search to clear a log error"
   },
   {
     "hash": "a397fd3",
     "tag": "1.0.25",
-    "date": "20 hours ago",
+    "date": "32 hours ago",
     "message": "Add workflow changelog"
   },
   {
     "hash": "8d662b6",
     "tag": "1.0.24",
-    "date": "29 hours ago",
+    "date": "2 days ago",
     "message": "Fix broken package installer for manual comfy install"
   },
   {
@@ -74,43 +80,43 @@
   {
     "hash": "4e207cc",
     "tag": "1.0.18",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Update Comfy Registry Message for better searchability"
   },
   {
     "hash": "b073782",
     "tag": "1.0.17",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "change text from gray to white"
   },
   {
     "hash": "dd3abf7",
     "tag": null,
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "update bottom login dialog link to go straight to demo"
   },
   {
     "hash": "46df8a8",
     "tag": null,
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "update login dialog link to go straight to demo"
   },
   {
     "hash": "b5b96c3",
     "tag": "1.0.16",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Add logging that nuvu prestartup was successful"
   },
   {
     "hash": "f3c05c2",
     "tag": "1.0.15",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "More robust update handling when a locked file absolutely cannot be cleared"
   },
   {
     "hash": "afc160e",
     "tag": "1.0.14",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Fix update flow when updating comfy or nuvu"
   },
   {
@@ -176,7 +182,7 @@
   {
     "hash": "546a69c",
     "tag": "1.0.7",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Add uv installer for faster and more reliable custom node installation. Add screenshots for support tickets"
   },
   {
@@ -254,13 +260,13 @@
   {
     "hash": "5e743cc",
     "tag": "0.0.28",
-    "date": "10 days ago",
+    "date": "11 days ago",
     "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
   },
   {
     "hash": "4c6dc12",
     "tag": "0.0.27",
-    "date": "10 days ago",
+    "date": "11 days ago",
     "message": "Update references to point to new ComfyUI Repo location"
   },
   {
