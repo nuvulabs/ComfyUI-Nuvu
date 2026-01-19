@@ -1,14 +1,20 @@
 [
   {
+    "hash": "da77cfd",
+    "tag": "1.0.30",
+    "date": "13 minutes ago",
+    "message": "Fix workflow media  expiring and not rehydrating."
+  },
+  {
     "hash": "5a83d02",
     "tag": "1.0.29",
-    "date": "4 minutes ago",
+    "date": "2 hours ago",
     "message": "Fix poor authentication handling, make it clearer when user is logged in vs not logged in."
   },
   {
     "hash": "fe887ae",
     "tag": "1.0.28",
-    "date": "35 hours ago",
+    "date": "2 days ago",
     "message": "Make sure workflow install message shows in all cases. Make workflow card height remain consistent even when there aren't enough cards to fill the container."
   },
   {
@@ -62,7 +68,7 @@
   {
     "hash": "9c1584c",
     "tag": "1.0.21",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Bump default installed torch version to 2.9.1 cu13.0 for Comfy Speed Boosts and memory management. Ensure huggingface token persists with Comfy Portable"
   },
   {
@@ -194,7 +200,7 @@
   {
     "hash": "27929f6",
     "tag": "1.0.6",
-    "date": "10 days ago",
+    "date": "11 days ago",
     "message": "Update README Documentation"
   },
   {
@@ -236,13 +242,13 @@
   {
     "hash": "544cea0",
     "tag": "0.0.32",
-    "date": "11 days ago",
+    "date": "12 days ago",
     "message": "correct discord link"
   },
   {
     "hash": "56e9ac7",
     "tag": null,
-    "date": "11 days ago",
+    "date": "12 days ago",
     "message": "Update README with correct branding, update documentation tab, and add Discord link."
   },
   {
