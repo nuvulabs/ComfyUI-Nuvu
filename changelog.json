@@ -1,20 +1,26 @@
 [
   {
+    "hash": "4a8b79b",
+    "tag": "1.0.32",
+    "date": "5 minutes ago",
+    "message": "--no-warn-script-location removed from python install commands because uv does not support it."
+  },
+  {
     "hash": "e0a7770",
     "tag": "1.0.31",
-    "date": "6 minutes ago",
+    "date": "89 minutes ago",
     "message": "Show spinning icon when workflow media  is loading"
   },
   {
     "hash": "da77cfd",
     "tag": "1.0.30",
-    "date": "3 hours ago",
+    "date": "4 hours ago",
     "message": "Fix workflow media  expiring and not rehydrating."
   },
   {
     "hash": "5a83d02",
     "tag": "1.0.29",
-    "date": "5 hours ago",
+    "date": "7 hours ago",
     "message": "Fix poor authentication handling, make it clearer when user is logged in vs not logged in."
   },
   {
