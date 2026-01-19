@@ -1,14 +1,20 @@
 [
   {
+    "hash": "e0a7770",
+    "tag": "1.0.31",
+    "date": "6 minutes ago",
+    "message": "Show spinning icon when workflow media  is loading"
+  },
+  {
     "hash": "da77cfd",
     "tag": "1.0.30",
-    "date": "13 minutes ago",
+    "date": "3 hours ago",
     "message": "Fix workflow media  expiring and not rehydrating."
   },
   {
     "hash": "5a83d02",
     "tag": "1.0.29",
-    "date": "2 hours ago",
+    "date": "5 hours ago",
     "message": "Fix poor authentication handling, make it clearer when user is logged in vs not logged in."
   },
   {
