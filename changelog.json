@@ -1,26 +1,32 @@
 [
   {
+    "hash": "6648ffb",
+    "tag": "1.0.33",
+    "date": "4 minutes ago",
+    "message": "Handle cu13 onnxruntime-gpu needing nightly version for now."
+  },
+  {
     "hash": "4a8b79b",
     "tag": "1.0.32",
-    "date": "5 minutes ago",
+    "date": "16 hours ago",
     "message": "--no-warn-script-location removed from python install commands because uv does not support it."
   },
   {
     "hash": "e0a7770",
     "tag": "1.0.31",
-    "date": "89 minutes ago",
+    "date": "18 hours ago",
     "message": "Show spinning icon when workflow media  is loading"
   },
   {
     "hash": "da77cfd",
     "tag": "1.0.30",
-    "date": "4 hours ago",
+    "date": "20 hours ago",
     "message": "Fix workflow media  expiring and not rehydrating."
   },
   {
     "hash": "5a83d02",
     "tag": "1.0.29",
-    "date": "7 hours ago",
+    "date": "23 hours ago",
     "message": "Fix poor authentication handling, make it clearer when user is logged in vs not logged in."
   },
   {
@@ -32,49 +38,49 @@
   {
     "hash": "0dc2735",
     "tag": "1.0.27",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Fix version retrieval for Nuvu Updater"
   },
   {
     "hash": "6401610",
     "tag": "1.0.26",
-    "date": "2 days ago",
+    "date": "3 days ago",
     "message": "Change default workflow sort to Newest. Show model links to subscribed users in model downloader."
   },
   {
     "hash": "bb3529b",
     "tag": null,
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Correct Nuvu versioning search to clear a log error"
   },
   {
     "hash": "a397fd3",
     "tag": "1.0.25",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Add workflow changelog"
   },
   {
     "hash": "8d662b6",
     "tag": "1.0.24",
-    "date": "3 days ago",
+    "date": "4 days ago",
     "message": "Fix broken package installer for manual comfy install"
   },
   {
     "hash": "82d12ea",
     "tag": "1.0.23",
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "More robust portable and manual install updater Handle file locks when custom nodes, ComfyUI, and Nuvu use conpiled python packages Allow switching Nuvu and ComfyUI version through the interface"
   },
   {
     "hash": "0ef8d91",
     "tag": null,
-    "date": "4 days ago",
+    "date": "5 days ago",
     "message": "More robust update methodology for both ComfyUI manual/portable and Nuvu"
   },
   {
     "hash": "8e2c6f6",
     "tag": "1.0.22",
-    "date": "5 days ago",
+    "date": "6 days ago",
     "message": "Display actual subgraph names on failed install Use uv with python portable not just venv Display correct number of installed models when less than all of the models fail to download."
   },
   {
@@ -86,61 +92,61 @@
   {
     "hash": "a24f6b8",
     "tag": "1.0.20",
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Further clarity in Comfy Manager description"
   },
   {
     "hash": "88439ea",
     "tag": null,
-    "date": "6 days ago",
+    "date": "7 days ago",
     "message": "Fix portable installer sageattention and triton"
   },
   {
     "hash": "e055932",
     "tag": null,
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Add better SEO for discovering Nuvu through Manager"
   },
   {
     "hash": "4e207cc",
     "tag": "1.0.18",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Update Comfy Registry Message for better searchability"
   },
   {
     "hash": "b073782",
     "tag": "1.0.17",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "change text from gray to white"
   },
   {
     "hash": "dd3abf7",
     "tag": null,
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "update bottom login dialog link to go straight to demo"
   },
   {
     "hash": "46df8a8",
     "tag": null,
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "update login dialog link to go straight to demo"
   },
   {
     "hash": "b5b96c3",
     "tag": "1.0.16",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Add logging that nuvu prestartup was successful"
   },
   {
     "hash": "f3c05c2",
     "tag": "1.0.15",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "More robust update handling when a locked file absolutely cannot be cleared"
   },
   {
     "hash": "afc160e",
     "tag": "1.0.14",
-    "date": "7 days ago",
+    "date": "8 days ago",
     "message": "Fix update flow when updating comfy or nuvu"
   },
   {
@@ -182,31 +188,31 @@
   {
     "hash": "1030c01",
     "tag": "1.0.11",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Update Comfy Registry description to include SageAttention and Triton installers for enhanced clarity on features."
   },
   {
     "hash": "e63a77c",
     "tag": "1.0.10",
-    "date": "8 days ago",
+    "date": "9 days ago",
     "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
   },
   {
     "hash": "c68e8ef",
     "tag": "1.0.9",
-    "date": "9 days ago",
+    "date": "10 days ago",
     "message": "Fix prestartup script not being included in github build"
   },
   {
     "hash": "7dbc09c",
     "tag": "1.0.8",
-    "date": "9 days ago",
+    "date": "10 days ago",
     "message": "Update RunPod links to align with Nuvu Account"
   },
   {
     "hash": "546a69c",
     "tag": "1.0.7",
-    "date": "9 days ago",
+    "date": "10 days ago",
     "message": "Add uv installer for faster and more reliable custom node installation. Add screenshots for support tickets"
   },
   {
@@ -266,31 +272,31 @@
   {
     "hash": "78de470",
     "tag": "0.0.31",
-    "date": "12 days ago",
+    "date": "13 days ago",
     "message": "Add optional sound checkbox to workflows tab"
   },
   {
     "hash": "45b4ff3",
     "tag": "0.0.30",
-    "date": "12 days ago",
+    "date": "13 days ago",
     "message": "Add 'Skip updates' option for installed custom nodes in Install Missing. Install missing no longer in beta."
   },
   {
     "hash": "91879d2",
     "tag": "0.0.29",
-    "date": "12 days ago",
+    "date": "13 days ago",
     "message": "Improve workflow card readability"
   },
   {
     "hash": "5e743cc",
     "tag": "0.0.28",
-    "date": "12 days ago",
+    "date": "13 days ago",
     "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
   },
   {
     "hash": "4c6dc12",
     "tag": "0.0.27",
-    "date": "12 days ago",
+    "date": "13 days ago",
     "message": "Update references to point to new ComfyUI Repo location"
   },
   {
@@ -350,7 +356,7 @@
   {
     "hash": "4f6cb8b",
     "tag": "0.0.20",
-    "date": "3 weeks ago",
+    "date": "4 weeks ago",
     "message": "Add system optimization for better user experience"
   },
   {
@@ -428,127 +434,127 @@
   {
     "hash": "e9d64d8",
     "tag": "0.0.9",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Enhance changelog retrieval in nuvu_server.py by detecting the current git branch before fetching commit history. Update command to prioritize remote tracking branches, improving version detection accuracy. This change streamlines the process of obtaining the latest commit information for better frontend integration."
   },
   {
     "hash": "3d8737c",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Enhance version tracking in OptimizerPanel.vue and ChangelogModal.vue by adding hash information for Nuvu and ComfyUI components. Update changelog links to prioritize hash values for better accuracy. Modify nuvu_server.py to retrieve and store commit hashes alongside tags for improved version detection. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   },
   {
     "hash": "8f87b08",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Remove obsolete JavaScript files: auth-pil8uz3l.js and main-BYFDc9sq.js. Update import paths in nuvu.js to reflect changes in module structure."
   },
   {
     "hash": "7368dea",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Refactor version detection logic in ChangelogModal.vue to improve accuracy. Enhance matching criteria for current version by prioritizing hash checks, followed by tag comparisons, and fallback to short hash checks. Clean up version strings for consistent comparison."
   },
   {
     "hash": "e686a07",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Update changelog retrieval logic in nuvu_server.py to fetch the last 100 commits and improve version detection in the frontend. Enhance OptimizerPanel.vue and ChangelogModal.vue to display current version indicators and update changelog links. Remove obsolete JavaScript files and ensure consistent styling in the changelog modal."
   },
   {
     "hash": "4f49af9",
     "tag": "0.0.8",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Refactor version detection in nuvu_server.py to streamline fallback logic for backend version retrieval. Ensure accurate detection of installed versions using pip commands and improve error handling. Remove redundant checks and enhance clarity in version assignment for both backend and frontend components."
   },
   {
     "hash": "c0100b1",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Refactor version detection logic in nuvu_server.py to improve accuracy. Implement checks for installed backend version and fallback mechanisms using pip and changelog.json. Enhance frontend version retrieval by detecting git tags and reading from changelog.json if necessary. Update handling of version defaults for better reliability."
   },
   {
     "hash": "8497a22",
     "tag": "0.0.7",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Implement changelog generation in CI workflow and integrate changelog modal in the dashboard. Add API endpoint to fetch changelog data from changelog.json or git log. Update frontend components to display changelog links and modal for Nuvu and ComfyUI updates."
   },
   {
     "hash": "26fb88f",
     "tag": "0.0.6",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Enhance Windows installation script by adding a configurable port for ComfyUI and updating the helper launcher to use this port. Standardize capitalization of 'Nuvu' across various frontend components and backend logging for consistency. Remove obsolete JavaScript files from the Vue directory."
   },
   {
     "hash": "359b893",
     "tag": "0.0.5",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Update batch scripts to include '--no-warn-script-location' flag for pip installations, enhancing compatibility and reducing warnings. Standardize capitalization of 'Nuvu' in various components for consistency across the application."
   },
   {
     "hash": "ab3b724",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Standardize capitalization of 'Nuvu' across various components and files, including loading messages and system info displays. Update references in the backend to ensure consistency in directory naming and logging. Handle user cancellation in installation processes gracefully."
   },
   {
     "hash": "c569550",
     "tag": "0.0.4",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "f57caca",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Update batch script and CI workflow to reflect renaming of 'nuvu-Compiled' to 'ComfyUI-Nuvu' and include 'windows_install_portable_nuvu.bat' in the build process."
   },
   {
     "hash": "15d004f",
     "tag": "0.0.3",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Merge branch 'stg'"
   },
   {
     "hash": "e1e2182",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Standardize method names in dialog.js for Nuvu app integration, changing 'isnuvuAppMounted', 'mountnuvuApp', and 'setnuvuView' to 'isNuvuAppMounted', 'mountNuvuApp', and 'setNuvuView' for consistency."
   },
   {
     "hash": "05bd561",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Update import path in nuvu.js to reflect changes in main.js, switching from 'main-DEw3n8uv.js' to 'main-CAKph1xX.js' for consistency with recent refactoring."
   },
   {
     "hash": "2c73579",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Standardize method name in main.js by changing 'setnuvuAuthenticated' to 'setNuvuAuthenticated' for consistency with Nuvu app integration naming conventions."
   },
   {
     "hash": "8d57e5d",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Standardize method names in main.js and dialog.js for Nuvu app integration, changing 'mountnuvuApp', 'unmountnuvuApp', 'isnuvuAppMounted', 'getnuvuAppRef', and 'setnuvuView' to 'mountNuvuApp', 'unmountNuvuApp', 'isNuvuAppMounted', 'getNuvuAppRef', and 'setNuvuView', respectively. Update import statements in nuvu.js to reflect these changes."
   },
   {
     "hash": "433d4de",
     "tag": "0.0.2",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Update repository references from TheArtOfficial to nuvulabs across all files, including installation scripts, documentation, and Docker configurations."
   },
   {
     "hash": "a97faa1",
     "tag": "0.0.1",
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Refactor dialog.js to standardize method names for Nuvu app integration, changing 'isNuvuAppMounted' and 'mountNuvuApp' to 'isnuvuAppMounted' and 'mountnuvuApp', respectively."
   },
   {
     "hash": "3213113",
     "tag": null,
-    "date": "4 weeks ago",
+    "date": "5 weeks ago",
     "message": "Rename ComfyUI-Nitra to ComfyUI-Nuvu across all files and update related documentation. Remove obsolete Nitra files and adjust logging messages accordingly."
   },
   {
