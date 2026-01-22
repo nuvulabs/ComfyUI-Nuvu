@@ -1,5 +1,11 @@
 [
   {
+    "hash": "b3d8225",
+    "tag": "1.0.35",
+    "date": "2026-01-22T15:20:56-05:00",
+    "message": "Allow Nuvu sign in from any domain."
+  },
+  {
     "hash": "39c18c3",
     "tag": "1.0.34",
     "date": "2026-01-20T22:38:02-05:00",
