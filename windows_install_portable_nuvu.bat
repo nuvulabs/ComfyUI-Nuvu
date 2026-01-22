@@ -12,9 +12,22 @@ set "UV_DIR=%LOCALAPPDATA%\nuvu\bin"
 set "UV_EXE=%UV_DIR%\uv.exe"
 set "USE_UV=0"
 
+REM Verbose mode - set to 1 to show all output, 0 to hide
+set "VERBOSE=0"
+
+REM Parse command line arguments
+:parse_args
+if "%~1"=="" goto :done_args
+if /i "%~1"=="--verbose" set "VERBOSE=1" & shift & goto :parse_args
+if /i "%~1"=="-v" set "VERBOSE=1" & shift & goto :parse_args
+shift
+goto :parse_args
+:done_args
+
 echo ========================================================
 echo   ComfyUI Portable + Nuvu Auto-Installer
 echo ========================================================
+if "%VERBOSE%"=="1" echo   [VERBOSE MODE ENABLED]
 echo.
 
 if exist "%EXTRACT_DIR%" (
@@ -109,13 +122,21 @@ if exist "%UV_EXE%" (
     echo Downloading uv...
     if not exist "%UV_DIR%" mkdir "%UV_DIR%"
     set "UV_ZIP=%TEMP%\uv-download.zip"
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'" 2>nul
+    if "%VERBOSE%"=="1" (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'"
+    ) else (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'" 2>nul
+    )
     if errorlevel 1 (
         echo Failed to download uv, will use pip instead.
         goto :skip_uv_portable
     )
     echo Extracting uv...
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()" 2>nul
+    if "%VERBOSE%"=="1" (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()"
+    ) else (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()" 2>nul
+    )
     if errorlevel 1 (
         echo Failed to extract uv, will use pip instead.
         goto :skip_uv_portable
@@ -139,7 +160,7 @@ if "%USE_UV%"=="1" (
 
 echo.
 echo === Installing Triton ===
-call :pkg_install_portable -U "triton-windows"
+call :pkg_install_portable "triton-windows<3.6"
 if errorlevel 1 (
     echo [WARNING] Failed to install Triton.
 )
@@ -221,7 +242,11 @@ set "NODE_REPO=%~2"
 echo.
 echo Installing %NODE_DIR%...
 if not exist "%NODE_DIR%" (
-    git clone -q "%NODE_REPO%" "%NODE_DIR%"
+    if "%VERBOSE%"=="1" (
+        git clone "%NODE_REPO%" "%NODE_DIR%"
+    ) else (
+        git clone -q "%NODE_REPO%" "%NODE_DIR%"
+    )
     if errorlevel 1 (
         echo [ERROR] Failed to clone %NODE_DIR%.
         exit /b 1
@@ -229,7 +254,11 @@ if not exist "%NODE_DIR%" (
 ) else (
     echo %NODE_DIR% already present. Pulling latest...
     pushd "%NODE_DIR%"
-    git pull
+    if "%VERBOSE%"=="1" (
+        git pull
+    ) else (
+        git pull -q
+    )
     popd
 )
 
@@ -261,10 +290,18 @@ REM ============================================================
 :pkg_install_portable
 REM Install packages using uv (if available) or pip
 REM Usage: call :pkg_install_portable package1 package2 --extra-args
-if "%USE_UV%"=="1" (
-    "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet %*
+if "%VERBOSE%"=="1" (
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install --python "%PYTHON_EXE%" %*
+    ) else (
+        "%PYTHON_EXE%" -s -m pip install --no-warn-script-location %*
+    )
 ) else (
-    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location %*
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet %*
+    ) else (
+        "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location %*
+    )
 )
 exit /b %errorlevel%
 
@@ -272,9 +309,17 @@ exit /b %errorlevel%
 REM Install from requirements file using uv (if available) or pip
 REM Usage: call :pkg_install_req_portable requirements.txt
 set "REQ_FILE=%~1"
-if "%USE_UV%"=="1" (
-    "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet -r "%REQ_FILE%"
+if "%VERBOSE%"=="1" (
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install --python "%PYTHON_EXE%" -r "%REQ_FILE%"
+    ) else (
+        "%PYTHON_EXE%" -s -m pip install --no-warn-script-location -r "%REQ_FILE%"
+    )
 ) else (
-    "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r "%REQ_FILE%"
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet -r "%REQ_FILE%"
+    ) else (
+        "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r "%REQ_FILE%"
+    )
 )
 exit /b %errorlevel%

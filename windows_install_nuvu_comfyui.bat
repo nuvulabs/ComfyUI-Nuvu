@@ -17,12 +17,37 @@ set "UV_DIR=%LOCALAPPDATA%\nuvu\bin"
 set "UV_EXE=%UV_DIR%\uv.exe"
 set "USE_UV=0"
 
+REM Verbose mode - set to 1 to show all output, 0 to redirect to log file
+set "VERBOSE=0"
+
+REM Parse command line arguments
+:parse_args
+if "%~1"=="" goto :done_args
+if /i "%~1"=="--verbose" set "VERBOSE=1" & shift & goto :parse_args
+if /i "%~1"=="-v" set "VERBOSE=1" & shift & goto :parse_args
+shift
+goto :parse_args
+:done_args
+
+echo.
+echo ========================================================
+echo   ComfyUI + Nuvu Installer
+echo ========================================================
+if "%VERBOSE%"=="1" echo   [VERBOSE MODE ENABLED]
 echo.
 echo === Checking for Python 3.12 ===
-py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)" >> "%INSTALL_LOG%" 2>&1
+if "%VERBOSE%"=="1" (
+    py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)"
+) else (
+    py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)" >> "%INSTALL_LOG%" 2>&1
+)
 if errorlevel 1 (
     echo Python 3.12 not detected. Attempting install via winget...
-    winget install -e --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements >> "%INSTALL_LOG%" 2>&1
+    if "%VERBOSE%"=="1" (
+        winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
+    ) else (
+        winget install -e --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements >> "%INSTALL_LOG%" 2>&1
+    )
     if errorlevel 1 (
         echo Failed to install Python 3.12 via winget. Please install Python 3.12 manually and re-run this script.
         exit /b 1
@@ -31,7 +56,11 @@ if errorlevel 1 (
 
 echo.
 echo === Checking for git ===
-git --version >> "%INSTALL_LOG%" 2>&1
+if "%VERBOSE%"=="1" (
+    git --version
+) else (
+    git --version >> "%INSTALL_LOG%" 2>&1
+)
 if errorlevel 1 (
     echo Git was not found. Please install Git for Windows and re-run this script.
     exit /b 1
@@ -46,13 +75,21 @@ if exist "%UV_EXE%" (
     echo Downloading uv...
     if not exist "%UV_DIR%" mkdir "%UV_DIR%"
     set "UV_ZIP=%TEMP%\uv-download.zip"
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'" >> "%INSTALL_LOG%" 2>&1
+    if "%VERBOSE%"=="1" (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'"
+    ) else (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.zip' -OutFile '!UV_ZIP!'" >> "%INSTALL_LOG%" 2>&1
+    )
     if errorlevel 1 (
         echo Failed to download uv, will use pip instead.
         goto :skip_uv
     )
     echo Extracting uv...
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()" >> "%INSTALL_LOG%" 2>&1
+    if "%VERBOSE%"=="1" (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()"
+    ) else (
+        powershell -NoProfile -ExecutionPolicy Bypass -Command "Add-Type -AssemblyName System.IO.Compression.FileSystem; $zip = [System.IO.Compression.ZipFile]::OpenRead('!UV_ZIP!'); foreach ($entry in $zip.Entries) { if ($entry.Name -eq 'uv.exe') { $dest = '%UV_EXE%'; [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $dest, $true); break } }; $zip.Dispose()" >> "%INSTALL_LOG%" 2>&1
+    )
     if errorlevel 1 (
         echo Failed to extract uv, will use pip instead.
         goto :skip_uv
@@ -71,13 +108,17 @@ echo.
 echo === Preparing ComfyUI directory ===
 if not exist "%COMFY_DIR%" (
     echo Cloning ComfyUI...
-    git clone -q https://github.com/Comfy-Org/ComfyUI.git "%COMFY_DIR%" >> "%INSTALL_LOG%" 2>&1
+    if "%VERBOSE%"=="1" (
+        git clone https://github.com/Comfy-Org/ComfyUI.git "%COMFY_DIR%"
+    ) else (
+        git clone -q https://github.com/Comfy-Org/ComfyUI.git "%COMFY_DIR%" >> "%INSTALL_LOG%" 2>&1
+    )
     if errorlevel 1 (
         echo Failed to clone ComfyUI.
         exit /b 1
     )
 ) else (
-    echo ComfyUI folder already exists at "%COMFY_DIR%". Skipping clone. >> "%INSTALL_LOG%" 2>&1
+    echo ComfyUI folder already exists at "%COMFY_DIR%". Skipping clone.
 )
 
 cd /d "%COMFY_DIR%"
@@ -85,16 +126,24 @@ cd /d "%COMFY_DIR%"
 echo.
 echo === Creating virtual environment ===
 if not exist "venv" (
-    py -3.12 -m venv venv >> "%INSTALL_LOG%" 2>&1
+    if "%VERBOSE%"=="1" (
+        py -3.12 -m venv venv
+    ) else (
+        py -3.12 -m venv venv >> "%INSTALL_LOG%" 2>&1
+    )
     if errorlevel 1 (
         echo Failed to create Python 3.12 virtual environment.
         exit /b 1
     )
 ) else (
-    echo venv already exists. Skipping creation. >> "%INSTALL_LOG%" 2>&1
+    echo venv already exists. Skipping creation.
 )
 
-call "venv\Scripts\activate.bat" >> "%INSTALL_LOG%" 2>&1
+if "%VERBOSE%"=="1" (
+    call "venv\Scripts\activate.bat"
+) else (
+    call "venv\Scripts\activate.bat" >> "%INSTALL_LOG%" 2>&1
+)
 if errorlevel 1 (
     echo Failed to activate the virtual environment.
     exit /b 1
@@ -102,7 +151,11 @@ if errorlevel 1 (
 
 echo.
 echo === Upgrading pip ===
-python -m pip install -q --no-warn-script-location --upgrade pip >> "%INSTALL_LOG%" 2>&1
+if "%VERBOSE%"=="1" (
+    python -m pip install --no-warn-script-location --upgrade pip
+) else (
+    python -m pip install -q --no-warn-script-location --upgrade pip >> "%INSTALL_LOG%" 2>&1
+)
 if errorlevel 1 (
     echo Failed to upgrade pip.
     exit /b 1
@@ -131,7 +184,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-call :pkg_install -U "triton-windows"
+call :pkg_install "triton-windows<3.6"
 if errorlevel 1 (
     echo Failed to install Triton Windows build.
     exit /b 1
@@ -209,13 +262,21 @@ set "NODE_DIR=%~1"
 set "NODE_REPO=%~2"
 echo Installing %NODE_DIR% custom node...
 if not exist "%NODE_DIR%" (
-    git clone -q "%NODE_REPO%" >> "%INSTALL_LOG%" 2>&1
+    if "%VERBOSE%"=="1" (
+        git clone "%NODE_REPO%"
+    ) else (
+        git clone -q "%NODE_REPO%" >> "%INSTALL_LOG%" 2>&1
+    )
     if errorlevel 1 (
         echo Failed to clone %NODE_DIR%.
         exit /b 1
     )
 ) else (
-    echo %NODE_DIR% already present. Skipping clone. >> "%INSTALL_LOG%" 2>&1
+    if "%VERBOSE%"=="1" (
+        echo %NODE_DIR% already present. Skipping clone.
+    ) else (
+        echo %NODE_DIR% already present. Skipping clone. >> "%INSTALL_LOG%" 2>&1
+    )
 )
 
 REM Install dependency requirements if present
@@ -239,10 +300,18 @@ REM ============================================================
 :pkg_install
 REM Install packages using uv (if available) or pip
 REM Usage: call :pkg_install package1 package2 --extra-args
-if "%USE_UV%"=="1" (
-    "%UV_EXE%" pip install --quiet %* >> "%INSTALL_LOG%" 2>&1
+if "%VERBOSE%"=="1" (
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install %*
+    ) else (
+        python -m pip install --no-warn-script-location %*
+    )
 ) else (
-    python -m pip install -q --no-warn-script-location %* >> "%INSTALL_LOG%" 2>&1
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install --quiet %* >> "%INSTALL_LOG%" 2>&1
+    ) else (
+        python -m pip install -q --no-warn-script-location %* >> "%INSTALL_LOG%" 2>&1
+    )
 )
 exit /b %errorlevel%
 
@@ -251,9 +320,17 @@ REM Install from requirements file using uv (if available) or pip
 REM Usage: call :pkg_install_req requirements.txt [--extra-args]
 set "REQ_FILE=%~1"
 shift
-if "%USE_UV%"=="1" (
-    "%UV_EXE%" pip install --quiet -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+if "%VERBOSE%"=="1" (
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install -r "%REQ_FILE%" %1 %2 %3 %4 %5
+    ) else (
+        python -m pip install --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5
+    )
 ) else (
-    python -m pip install -q --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+    if "%USE_UV%"=="1" (
+        "%UV_EXE%" pip install --quiet -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+    ) else (
+        python -m pip install -q --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+    )
 )
 exit /b %errorlevel%

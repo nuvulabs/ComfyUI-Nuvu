@@ -6,9 +6,42 @@ set -E
 INSTALL_LOG="$(pwd)/install.log"
 > "$INSTALL_LOG"
 
+# Verbose mode - set to 1 to show all output, 0 to redirect to log file
+VERBOSE=0
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --verbose|-v)
+      VERBOSE=1
+      shift
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Helper to redirect output based on verbose mode
+run_cmd() {
+  if [ "$VERBOSE" -eq 1 ]; then
+    "$@"
+  else
+    "$@" >> "$INSTALL_LOG" 2>&1
+  fi
+}
+
 log() {
   printf '\n=== %s ===\n' "$1"
 }
+
+if [ "$VERBOSE" -eq 1 ]; then
+  echo "========================================================"
+  echo "  ComfyUI + Nuvu Installer"
+  echo "========================================================"
+  echo "  [VERBOSE MODE ENABLED]"
+  echo ""
+fi
 
 on_error() {
   local rc=$?
@@ -50,20 +83,36 @@ USE_UV=0
 
 # Package installation helper - uses uv if available, falls back to pip
 pkg_install() {
-  if [ "$USE_UV" -eq 1 ]; then
-    "$UV_EXE" pip install --quiet "$@" >> "$INSTALL_LOG" 2>&1
+  if [ "$VERBOSE" -eq 1 ]; then
+    if [ "$USE_UV" -eq 1 ]; then
+      "$UV_EXE" pip install "$@"
+    else
+      python -m pip install "$@"
+    fi
   else
-    python -m pip install -q "$@" >> "$INSTALL_LOG" 2>&1
+    if [ "$USE_UV" -eq 1 ]; then
+      "$UV_EXE" pip install --quiet "$@" >> "$INSTALL_LOG" 2>&1
+    else
+      python -m pip install -q "$@" >> "$INSTALL_LOG" 2>&1
+    fi
   fi
 }
 
 pkg_install_req() {
   local req_file="$1"
   shift
-  if [ "$USE_UV" -eq 1 ]; then
-    "$UV_EXE" pip install --quiet -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+  if [ "$VERBOSE" -eq 1 ]; then
+    if [ "$USE_UV" -eq 1 ]; then
+      "$UV_EXE" pip install -r "$req_file" "$@"
+    else
+      python -m pip install -r "$req_file" "$@"
+    fi
   else
-    python -m pip install -q -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+    if [ "$USE_UV" -eq 1 ]; then
+      "$UV_EXE" pip install --quiet -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+    else
+      python -m pip install -q -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+    fi
   fi
 }
 
@@ -74,8 +123,13 @@ if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
   log "Python not detected"
   if command -v apt-get >/dev/null 2>&1; then
     log "Installing python3 and venv via apt-get"
-    sudo apt-get update >> "$INSTALL_LOG" 2>&1
-    sudo apt-get install -y python3 python3-venv >> "$INSTALL_LOG" 2>&1
+    if [ "$VERBOSE" -eq 1 ]; then
+      sudo apt-get update
+      sudo apt-get install -y python3 python3-venv
+    else
+      sudo apt-get update >> "$INSTALL_LOG" 2>&1
+      sudo apt-get install -y python3 python3-venv >> "$INSTALL_LOG" 2>&1
+    fi
     PYTHON_BIN="python3"
   else
     echo "Python is required but was not found. Install python3.10+ and re-run." | tee -a "$INSTALL_LOG"
@@ -105,23 +159,44 @@ else
   echo "Downloading uv..."
   mkdir -p "$UV_DIR"
   UV_TAR="/tmp/uv-download.tar.gz"
-  if curl -LsSf "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz" -o "$UV_TAR" >> "$INSTALL_LOG" 2>&1; then
-    echo "Extracting uv..."
-    if tar -xzf "$UV_TAR" -C "$UV_DIR" --strip-components=1 >> "$INSTALL_LOG" 2>&1; then
-      chmod +x "$UV_EXE"
-      rm -f "$UV_TAR"
-      if [ -x "$UV_EXE" ]; then
-        echo "uv installed successfully to $UV_EXE"
-        USE_UV=1
+  if [ "$VERBOSE" -eq 1 ]; then
+    if curl -LsSf "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz" -o "$UV_TAR"; then
+      echo "Extracting uv..."
+      if tar -xzf "$UV_TAR" -C "$UV_DIR" --strip-components=1; then
+        chmod +x "$UV_EXE"
+        rm -f "$UV_TAR"
+        if [ -x "$UV_EXE" ]; then
+          echo "uv installed successfully to $UV_EXE"
+          USE_UV=1
+        else
+          echo "uv installation failed, will use pip instead."
+        fi
       else
-        echo "uv installation failed, will use pip instead."
+        echo "Failed to extract uv, will use pip instead."
+        rm -f "$UV_TAR"
       fi
     else
-      echo "Failed to extract uv, will use pip instead."
-      rm -f "$UV_TAR"
+      echo "Failed to download uv, will use pip instead."
     fi
   else
-    echo "Failed to download uv, will use pip instead."
+    if curl -LsSf "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz" -o "$UV_TAR" >> "$INSTALL_LOG" 2>&1; then
+      echo "Extracting uv..."
+      if tar -xzf "$UV_TAR" -C "$UV_DIR" --strip-components=1 >> "$INSTALL_LOG" 2>&1; then
+        chmod +x "$UV_EXE"
+        rm -f "$UV_TAR"
+        if [ -x "$UV_EXE" ]; then
+          echo "uv installed successfully to $UV_EXE"
+          USE_UV=1
+        else
+          echo "uv installation failed, will use pip instead."
+        fi
+      else
+        echo "Failed to extract uv, will use pip instead."
+        rm -f "$UV_TAR"
+      fi
+    else
+      echo "Failed to download uv, will use pip instead."
+    fi
   fi
 fi
 
@@ -139,9 +214,17 @@ clone_and_install() {
 
   echo "Installing $dir custom node..."
   if [ ! -d "$dir" ]; then
-    git clone -q "$repo" >> "$INSTALL_LOG" 2>&1
+    if [ "$VERBOSE" -eq 1 ]; then
+      git clone "$repo"
+    else
+      git clone -q "$repo" >> "$INSTALL_LOG" 2>&1
+    fi
   else
-    echo "$dir already present; skipping clone." >> "$INSTALL_LOG" 2>&1
+    if [ "$VERBOSE" -eq 1 ]; then
+      echo "$dir already present; skipping clone."
+    else
+      echo "$dir already present; skipping clone." >> "$INSTALL_LOG" 2>&1
+    fi
   fi
 
   if [ -f "$dir/requirements.txt" ]; then
@@ -153,34 +236,51 @@ clone_and_install() {
 
 log "Installing system packages"
 if command -v apt-get >/dev/null 2>&1; then
-  sudo apt-get update >> "$INSTALL_LOG" 2>&1
-  sudo apt-get install -y ninja-build >> "$INSTALL_LOG" 2>&1
+  if [ "$VERBOSE" -eq 1 ]; then
+    sudo apt-get update
+    sudo apt-get install -y ninja-build
+  else
+    sudo apt-get update >> "$INSTALL_LOG" 2>&1
+    sudo apt-get install -y ninja-build >> "$INSTALL_LOG" 2>&1
+  fi
 else
-  echo "apt-get not found; install ninja manually for faster builds." >> "$INSTALL_LOG" 2>&1
+  echo "apt-get not found; install ninja manually for faster builds."
 fi
 
 log "Preparing ComfyUI directory"
 if [ ! -d "$COMFY_DIR" ]; then
   echo "Cloning ComfyUI..."
-  git clone -q https://github.com/Comfy-Org/ComfyUI.git "$COMFY_DIR" >> "$INSTALL_LOG" 2>&1
+  if [ "$VERBOSE" -eq 1 ]; then
+    git clone https://github.com/Comfy-Org/ComfyUI.git "$COMFY_DIR"
+  else
+    git clone -q https://github.com/Comfy-Org/ComfyUI.git "$COMFY_DIR" >> "$INSTALL_LOG" 2>&1
+  fi
 else
-  echo "ComfyUI already exists at $COMFY_DIR; skipping clone." >> "$INSTALL_LOG" 2>&1
+  echo "ComfyUI already exists at $COMFY_DIR; skipping clone."
 fi
 
 cd "$COMFY_DIR"
 
 log "Creating virtual environment"
 if [ ! -d "venv" ]; then
-  "$PYTHON_BIN" -m venv venv >> "$INSTALL_LOG" 2>&1
+  if [ "$VERBOSE" -eq 1 ]; then
+    "$PYTHON_BIN" -m venv venv
+  else
+    "$PYTHON_BIN" -m venv venv >> "$INSTALL_LOG" 2>&1
+  fi
 else
-  echo "venv already exists; skipping creation." >> "$INSTALL_LOG" 2>&1
+  echo "venv already exists; skipping creation."
 fi
 
 # shellcheck disable=SC1091
 source "venv/bin/activate"
 
 log "Upgrading pip"
-python -m pip install -q --upgrade pip >> "$INSTALL_LOG" 2>&1
+if [ "$VERBOSE" -eq 1 ]; then
+  python -m pip install --upgrade pip
+else
+  python -m pip install -q --upgrade pip >> "$INSTALL_LOG" 2>&1
+fi
 
 log "Installing keyring helpers"
 pkg_install keyrings.alt
