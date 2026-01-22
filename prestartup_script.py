@@ -26,6 +26,71 @@ _script_dir = os.path.dirname(os.path.abspath(__file__))
 # Requirements Tracking (inline to avoid importing comfyui_nuvu)
 # =============================================================================
 
+def _cleanup_orphaned_dist_info():
+    """
+    Clean up orphaned comfyui_nuvu .dist-info directories.
+    
+    These can accumulate when installations are interrupted or when uv/pip
+    fails to uninstall old versions due to missing RECORD files.
+    """
+    try:
+        # Find site-packages directory
+        import site
+        site_packages = None
+        
+        # Try to find the site-packages containing comfyui_nuvu
+        for sp in site.getsitepackages() + [site.getusersitepackages()]:
+            if sp and os.path.isdir(sp):
+                # Check if this site-packages has any comfyui_nuvu dist-info
+                for item in os.listdir(sp):
+                    if item.startswith('comfyui_nuvu-') and item.endswith('.dist-info'):
+                        site_packages = sp
+                        break
+            if site_packages:
+                break
+        
+        if not site_packages:
+            return
+        
+        # Find all comfyui_nuvu dist-info directories
+        dist_infos = []
+        for item in os.listdir(site_packages):
+            if item.startswith('comfyui_nuvu-') and item.endswith('.dist-info'):
+                dist_infos.append(item)
+        
+        if len(dist_infos) <= 1:
+            # Nothing to clean up
+            return
+        
+        # Find which ones are orphaned (missing RECORD file)
+        orphaned = []
+        valid = []
+        for dist_info in dist_infos:
+            dist_info_path = os.path.join(site_packages, dist_info)
+            record_path = os.path.join(dist_info_path, 'RECORD')
+            if os.path.isfile(record_path):
+                valid.append(dist_info)
+            else:
+                orphaned.append(dist_info)
+        
+        if not orphaned:
+            return
+        
+        logger.info(f"[ComfyUI-Nuvu] Cleaning up {len(orphaned)} orphaned dist-info directories")
+        
+        for dist_info in orphaned:
+            dist_info_path = os.path.join(site_packages, dist_info)
+            try:
+                shutil.rmtree(dist_info_path)
+                logger.debug(f"[ComfyUI-Nuvu] Removed orphaned: {dist_info}")
+            except Exception as e:
+                logger.debug(f"[ComfyUI-Nuvu] Could not remove {dist_info}: {e}")
+    
+    except Exception as e:
+        # Non-fatal - don't break startup for cleanup issues
+        logger.debug(f"[ComfyUI-Nuvu] Dist-info cleanup skipped: {e}")
+
+
 def _get_requirements_cache_path(repo_path):
     """Get the path to the cached requirements file for a repo"""
     nuvu_dir = os.path.join(repo_path, '.nuvu')
@@ -336,6 +401,10 @@ def _install_pending_requirements():
 
 # Run on module load (prestartup phase)
 try:
+    # Install any pending requirements
     _install_pending_requirements()
+    
+    # Clean up orphaned dist-info directories after install
+    _cleanup_orphaned_dist_info()
 except Exception as e:
     logger.warning(f"[ComfyUI-Nuvu] Prestartup error (non-fatal): {e}")

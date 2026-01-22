@@ -1,5 +1,11 @@
 [
   {
+    "hash": "3f9be23",
+    "tag": "1.0.37",
+    "date": "2026-01-22T16:39:37-05:00",
+    "message": "Cleanup orphaned dist-info directories on comfy prestartup"
+  },
+  {
     "hash": "36bd506",
     "tag": "1.0.36",
     "date": "2026-01-22T16:14:23-05:00",
