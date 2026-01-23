@@ -416,12 +416,56 @@ def _get_all_pending_uninstall_markers():
     return markers
 
 
+def _force_delete_package(pkg_name):
+    """Force delete a package by removing its directories from site-packages.
+    
+    Used when pip/uv can't uninstall due to missing RECORD file.
+    """
+    import site
+    
+    # Get site-packages directories
+    site_packages_dirs = site.getsitepackages()
+    if hasattr(site, 'getusersitepackages'):
+        user_site = site.getusersitepackages()
+        if user_site:
+            site_packages_dirs.append(user_site)
+    
+    # Normalize package name for directory matching
+    pkg_normalized = pkg_name.lower().replace('-', '_').replace('.', '_')
+    
+    deleted = False
+    for sp_dir in site_packages_dirs:
+        if not os.path.isdir(sp_dir):
+            continue
+        
+        try:
+            for item in os.listdir(sp_dir):
+                item_lower = item.lower().replace('-', '_').replace('.', '_')
+                # Match package directory or dist-info/egg-info
+                if (item_lower.startswith(pkg_normalized) or 
+                    item_lower.startswith(f"{pkg_normalized}-")):
+                    item_path = os.path.join(sp_dir, item)
+                    if os.path.isdir(item_path):
+                        print(f"[ComfyUI-Nuvu] Force deleting: {item_path}", flush=True)
+                        shutil.rmtree(item_path, ignore_errors=True)
+                        deleted = True
+        except Exception as e:
+            logger.debug(f"[ComfyUI-Nuvu] Error scanning {sp_dir}: {e}")
+    
+    return deleted
+
+
 def _run_pending_uninstalls(uv_path):
     """Uninstall all packages that were marked for removal on restart.
     
     This is a generic system that handles any installer's pending uninstalls.
     Marker files are stored in .nuvu/pending_uninstalls/<name>.txt
     Each file contains package names, one per line.
+    
+    Always uses pip for uninstalls (not uv) because pip is more lenient about
+    missing RECORD files and other metadata issues.
+    
+    If pip fails, falls back to force deletion.
     """
     markers = _get_all_pending_uninstall_markers()
     
@@ -445,17 +489,12 @@ def _run_pending_uninstalls(uv_path):
             print(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall: {', '.join(packages)}", flush=True)
             logger.info(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall: {', '.join(packages)}")
             
-            # Build uninstall command (no -y for uv)
+            # Always use pip for uninstalls - it's more lenient about missing RECORD files
             is_embedded = "python_embeded" in sys.executable.lower()
-            if uv_path:
-                cmd = [uv_path, 'pip', 'uninstall']
-                if is_embedded:
-                    cmd.extend(['--system', '--python', sys.executable])
-            else:
-                base = [sys.executable]
-                if is_embedded:
-                    base.append('-s')
-                cmd = base + ['-m', 'pip', 'uninstall', '-y']
+            base = [sys.executable]
+            if is_embedded:
+                base.append('-s')
+            cmd = base + ['-m', 'pip', 'uninstall', '-y']
             
             cmd.extend(packages)
             
@@ -475,6 +514,10 @@ def _run_pending_uninstalls(uv_path):
                     logger.info(f"[ComfyUI-Nuvu] Uninstalled: {pkg}")
                 os.remove(marker_path)
             else:
+                # Check if RECORD file error - need force deletion
+                error_output = result.stderr + result.stdout
+                is_record_error = 'RECORD' in error_output and 'not found' in error_output.lower()
+                
                 # Check if packages are actually gone despite error
                 all_gone = True
                 still_installed = []
@@ -482,6 +525,18 @@ def _run_pending_uninstalls(uv_path):
                     check_cmd = [sys.executable, '-m', 'pip', 'show', pkg]
                     check_result = subprocess.run(check_cmd, capture_output=True, text=True, timeout=30)
                     if check_result.returncode == 0:
+                        # Package still installed
+                        if is_record_error:
+                            # Try force deletion
+                            print(f"[ComfyUI-Nuvu] RECORD file missing for {pkg}, trying force delete...", flush=True)
+                            if _force_delete_package(pkg):
+                                # Verify it's gone
+                                verify_cmd = [sys.executable, '-m', 'pip', 'show', pkg]
+                                verify_result = subprocess.run(verify_cmd, capture_output=True, text=True, timeout=30)
+                                if verify_result.returncode != 0:
+                                    print(f"[ComfyUI-Nuvu] Force deleted: {pkg}", flush=True)
+                                    logger.info(f"[ComfyUI-Nuvu] Force deleted: {pkg}")
+                                    continue
                         all_gone = False
                         still_installed.append(pkg)
                     else:
