@@ -1,5 +1,17 @@
 [
   {
+    "hash": "3edf07a",
+    "tag": "1.0.46",
+    "date": "2026-01-23T17:45:09-05:00",
+    "message": "install onnxruntime-gpu requirements before onnxruntime-gpu"
+  },
+  {
+    "hash": "e50237c",
+    "tag": null,
+    "date": "2026-01-23T17:20:27-05:00",
+    "message": "Revert to install external deps for onnx"
+  },
+  {
     "hash": "f507279",
     "tag": "1.0.45",
     "date": "2026-01-23T17:05:03-05:00",
@@ -586,17 +598,5 @@
     "tag": null,
     "date": "2025-12-19T10:07:43-05:00",
     "message": "Update import path in nuvu.js to reflect changes in main.js, switching from 'main-DEw3n8uv.js' to 'main-CAKph1xX.js' for consistency with recent refactoring."
-  },
-  {
-    "hash": "2c73579",
-    "tag": null,
-    "date": "2025-12-19T10:07:23-05:00",
-    "message": "Standardize method name in main.js by changing 'setnuvuAuthenticated' to 'setNuvuAuthenticated' for consistency with Nuvu app integration naming conventions."
-  },
-  {
-    "hash": "8d57e5d",
-    "tag": null,
-    "date": "2025-12-19T10:07:10-05:00",
-    "message": "Standardize method names in main.js and dialog.js for Nuvu app integration, changing 'mountnuvuApp', 'unmountnuvuApp', 'isnuvuAppMounted', 'getnuvuAppRef', and 'setnuvuView' to 'mountNuvuApp', 'unmountNuvuApp', 'isNuvuAppMounted', 'getNuvuAppRef', and 'setNuvuView', respectively. Update import statements in nuvu.js to reflect these changes."
   }
 ]

@@ -597,14 +597,14 @@ def _run_pending_installs(uv_path):
             print(f"[ComfyUI-Nuvu] Pending install: {package_spec}", flush=True)
             logger.info(f"[ComfyUI-Nuvu] Pending install: {package_spec}")
             
-            # Split the package spec to handle args like --pre --index-url
-            # e.g., "onnxruntime-gpu --pre --index-url https://..."
+            # Split the package spec to handle args like --pre --extra-index-url
+            # e.g., "onnxruntime-gpu --pre --extra-index-url https://..."
             import shlex
             spec_parts = shlex.split(package_spec)
             
             # Use uv if available, otherwise pip
             # Note: For special index URLs, we use pip since uv may not support all options
-            if '--index-url' in package_spec or '--pre' in package_spec:
+            if '--index-url' in package_spec or '--extra-index-url' in package_spec or '--pre' in package_spec:
                 # Use pip for special cases
                 cmd = [sys.executable, '-m', 'pip', 'install', '-U'] + spec_parts
             elif uv_path:
