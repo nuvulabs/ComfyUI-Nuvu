@@ -13,12 +13,13 @@ ensure_cmd() {
 }
 
 # Package installer helper - uses uv if available, falls back to pip
+# Sets VIRTUAL_ENV so uv properly targets the venv
 pkg_install() {
   local pip_cmd="$1"
   shift
   if command -v uv >/dev/null 2>&1; then
     log "Installing with uv: $*"
-    uv pip install --python "$VENV_PY" "$@"
+    VIRTUAL_ENV="$VENV_DIR" uv pip install "$@"
   else
     log "Installing with pip: $*"
     "$pip_cmd" install "$@"
@@ -31,7 +32,7 @@ pkg_install_requirements() {
   shift 2
   if command -v uv >/dev/null 2>&1; then
     log "Installing requirements with uv: $req_file"
-    uv pip install --python "$VENV_PY" -r "$req_file" "$@"
+    VIRTUAL_ENV="$VENV_DIR" uv pip install -r "$req_file" "$@"
   else
     log "Installing requirements with pip: $req_file"
     "$pip_cmd" install -r "$req_file" "$@"
@@ -57,7 +58,7 @@ install_python312() {
 }
 
 COMFY_DIR=${COMFY_DIR:-/workspace}
-TORCH_INDEX_URL=${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu130}
+TORCH_INDEX_URL=${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
 nuvu_REPO=${nuvu_REPO:-https://github.com/nuvulabs/ComfyUI-Nuvu.git}
 nuvu_BRANCH=${nuvu_BRANCH:-}
 MANAGER_REPO=${MANAGER_REPO:-https://github.com/Comfy-Org/ComfyUI-Manager.git}
@@ -117,6 +118,9 @@ if [ ! -x "$VENV_PY" ]; then
   "$PYTHON_BIN" -m venv "$VENV_DIR"
 fi
 
+# Export VIRTUAL_ENV so uv and other tools properly target this venv
+export VIRTUAL_ENV="$VENV_DIR"
+
 CUSTOM_NODES_DIR="$APP_DIR/custom_nodes"
 CUSTOM_NODE_DIR="$CUSTOM_NODES_DIR/ComfyUI-Nuvu"
 MANAGER_DIR="$CUSTOM_NODES_DIR/ComfyUI-Manager"
@@ -125,7 +129,7 @@ mkdir -p "$CUSTOM_NODES_DIR"
 
 if [ -f "$APP_DIR/requirements.txt" ]; then
   log "Installing ComfyUI requirements"
-  pkg_install "$VENV_PIP" torch==2.9.1 torchvision torchaudio --index-url "$TORCH_INDEX_URL"
+   pkg_install "$VENV_PIP" torch==2.9.1 torchvision torchaudio --index-url "$TORCH_INDEX_URL"
   pkg_install_requirements "$VENV_PIP" "$APP_DIR/requirements.txt" --extra-index-url "$TORCH_INDEX_URL"
 fi
 

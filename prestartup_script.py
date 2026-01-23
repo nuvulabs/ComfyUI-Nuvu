@@ -371,6 +371,136 @@ def _get_custom_nodes_with_pending_requirements(custom_nodes_dir):
     return pending
 
 
+def _get_pending_uninstalls_dir():
+    """Get the directory for pending uninstall markers."""
+    nuvu_dir = os.path.join(_script_dir, '.nuvu', 'pending_uninstalls')
+    os.makedirs(nuvu_dir, exist_ok=True)
+    return nuvu_dir
+
+
+def _migrate_old_pending_markers():
+    """Migrate old-style pending markers to new location."""
+    # Old triton marker location (for backward compatibility)
+    old_triton_marker = os.path.join(_script_dir, '.nuvu', 'pending_triton_uninstall')
+    if os.path.exists(old_triton_marker):
+        try:
+            new_dir = _get_pending_uninstalls_dir()
+            new_path = os.path.join(new_dir, 'triton.txt')
+            shutil.move(old_triton_marker, new_path)
+            logger.info("[ComfyUI-Nuvu] Migrated old triton uninstall marker to new location")
+        except Exception as e:
+            logger.debug(f"[ComfyUI-Nuvu] Could not migrate old marker: {e}")
+
+
+def _get_all_pending_uninstall_markers():
+    """Get all pending uninstall marker files."""
+    # First, migrate any old-style markers
+    _migrate_old_pending_markers()
+    
+    pending_dir = _get_pending_uninstalls_dir()
+    markers = []
+    
+    logger.debug(f"[ComfyUI-Nuvu] Checking for pending uninstalls in: {pending_dir}")
+    
+    if not os.path.isdir(pending_dir):
+        logger.debug(f"[ComfyUI-Nuvu] Pending uninstalls directory does not exist")
+        return markers
+    
+    for filename in os.listdir(pending_dir):
+        if filename.endswith('.txt'):
+            markers.append(os.path.join(pending_dir, filename))
+    
+    if markers:
+        logger.debug(f"[ComfyUI-Nuvu] Found pending uninstall markers: {markers}")
+    
+    return markers
+
+
+def _run_pending_uninstalls(uv_path):
+    """Uninstall all packages that were marked for removal on restart.
+    
+    This is a generic system that handles any installer's pending uninstalls.
+    Marker files are stored in .nuvu/pending_uninstalls/<name>.txt
+    Each file contains package names, one per line.
+    """
+    markers = _get_all_pending_uninstall_markers()
+    
+    if not markers:
+        return
+    
+    print(f"\n[ComfyUI-Nuvu] Processing {len(markers)} pending uninstall(s)...", flush=True)
+    logger.info(f"[ComfyUI-Nuvu] Found {len(markers)} pending uninstall marker(s)")
+    
+    for marker_path in markers:
+        marker_name = os.path.basename(marker_path).replace('.txt', '')
+        
+        try:
+            with open(marker_path, 'r') as f:
+                packages = [pkg.strip() for pkg in f.read().strip().split('\n') if pkg.strip()]
+            
+            if not packages:
+                os.remove(marker_path)
+                continue
+            
+            print(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall: {', '.join(packages)}", flush=True)
+            logger.info(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall: {', '.join(packages)}")
+            
+            # Build uninstall command (no -y for uv)
+            is_embedded = "python_embeded" in sys.executable.lower()
+            if uv_path:
+                cmd = [uv_path, 'pip', 'uninstall']
+                if is_embedded:
+                    cmd.extend(['--system', '--python', sys.executable])
+            else:
+                base = [sys.executable]
+                if is_embedded:
+                    base.append('-s')
+                cmd = base + ['-m', 'pip', 'uninstall', '-y']
+            
+            cmd.extend(packages)
+            
+            print(f"[ComfyUI-Nuvu] Running: {' '.join(cmd)}", flush=True)
+            logger.info(f"[ComfyUI-Nuvu] Running: {' '.join(cmd)}")
+            
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+            
+            if result.returncode == 0:
+                for pkg in packages:
+                    print(f"[ComfyUI-Nuvu] Uninstalled: {pkg}", flush=True)
+                    logger.info(f"[ComfyUI-Nuvu] Uninstalled: {pkg}")
+                os.remove(marker_path)
+            else:
+                # Check if packages are actually gone despite error
+                all_gone = True
+                still_installed = []
+                for pkg in packages:
+                    check_cmd = [sys.executable, '-m', 'pip', 'show', pkg]
+                    check_result = subprocess.run(check_cmd, capture_output=True, text=True, timeout=30)
+                    if check_result.returncode == 0:
+                        all_gone = False
+                        still_installed.append(pkg)
+                    else:
+                        print(f"[ComfyUI-Nuvu] Uninstalled: {pkg}", flush=True)
+                        logger.info(f"[ComfyUI-Nuvu] Uninstalled: {pkg}")
+                
+                if all_gone:
+                    print(f"[ComfyUI-Nuvu] {marker_name} packages verified removed", flush=True)
+                    logger.info(f"[ComfyUI-Nuvu] {marker_name} packages verified removed")
+                    os.remove(marker_path)
+                else:
+                    print(f"[ComfyUI-Nuvu] {marker_name} uninstall incomplete, still installed: {', '.join(still_installed)}", flush=True)
+                    logger.warning(f"[ComfyUI-Nuvu] {marker_name} uninstall issue: {result.stderr[:200]}")
+        
+        except Exception as e:
+            print(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall error: {e}", flush=True)
+            logger.warning(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall error: {e}")
+
+
 def _install_pending_requirements():
     """Install pending requirements for Nuvu, ComfyUI, and custom nodes."""
     # Find or install uv
@@ -380,6 +510,9 @@ def _install_pending_requirements():
     
     if uv_path:
         logger.info("[ComfyUI-Nuvu] Using uv for faster installs")
+    
+    # Handle pending package uninstalls FIRST (before anything loads .pyd files)
+    _run_pending_uninstalls(uv_path)
     
     # Install Nuvu requirements
     _run_requirements_install("Nuvu", _script_dir, "requirements.txt", uv_path)
