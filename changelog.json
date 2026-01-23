@@ -1,5 +1,11 @@
 [
   {
+    "hash": "f507279",
+    "tag": "1.0.44",
+    "date": "2026-01-23T17:05:03-05:00",
+    "message": "Remove external onnxruntime-gpu dependencies that sometimes fail to install even in prestartup"
+  },
+  {
     "hash": "fb12b57",
     "tag": "1.0.43",
     "date": "2026-01-23T16:39:38-05:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2025-12-19T10:07:10-05:00",
     "message": "Standardize method names in main.js and dialog.js for Nuvu app integration, changing 'mountnuvuApp', 'unmountnuvuApp', 'isnuvuAppMounted', 'getnuvuAppRef', and 'setnuvuView' to 'mountNuvuApp', 'unmountNuvuApp', 'isNuvuAppMounted', 'getNuvuAppRef', and 'setNuvuView', respectively. Update import statements in nuvu.js to reflect these changes."
-  },
-  {
-    "hash": "433d4de",
-    "tag": "0.0.2",
-    "date": "2025-12-19T08:59:56-05:00",
-    "message": "Update repository references from TheArtOfficial to nuvulabs across all files, including installation scripts, documentation, and Docker configurations."
   }
 ]
