@@ -1,5 +1,11 @@
 [
   {
+    "hash": "fb12b57",
+    "tag": "1.0.43",
+    "date": "2026-01-23T16:39:38-05:00",
+    "message": "stabilize onnxruntime-gpu install when python files are locked"
+  },
+  {
     "hash": "9195550",
     "tag": "1.0.42",
     "date": "2026-01-23T16:15:35-05:00",
@@ -592,11 +598,5 @@
     "tag": "0.0.2",
     "date": "2025-12-19T08:59:56-05:00",
     "message": "Update repository references from TheArtOfficial to nuvulabs across all files, including installation scripts, documentation, and Docker configurations."
-  },
-  {
-    "hash": "a97faa1",
-    "tag": "0.0.1",
-    "date": "2025-12-19T08:32:48-05:00",
-    "message": "Refactor dialog.js to standardize method names for Nuvu app integration, changing 'isNuvuAppMounted' and 'mountNuvuApp' to 'isnuvuAppMounted' and 'mountnuvuApp', respectively."
   }
 ]
