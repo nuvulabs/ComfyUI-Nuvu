@@ -1,5 +1,11 @@
 [
   {
+    "hash": "9195550",
+    "tag": "1.0.42",
+    "date": "2026-01-23T16:15:35-05:00",
+    "message": "Add python package manager inside Nuvu for help with troubleshooting and reduce complexity when fixing broken Comfy Environment."
+  },
+  {
     "hash": "0350949",
     "tag": "1.0.41",
     "date": "2026-01-22T20:21:57-05:00",
@@ -592,11 +598,5 @@
     "tag": "0.0.1",
     "date": "2025-12-19T08:32:48-05:00",
     "message": "Refactor dialog.js to standardize method names for Nuvu app integration, changing 'isNuvuAppMounted' and 'mountNuvuApp' to 'isnuvuAppMounted' and 'mountnuvuApp', respectively."
-  },
-  {
-    "hash": "3213113",
-    "tag": null,
-    "date": "2025-12-19T07:46:14-05:00",
-    "message": "Rename ComfyUI-Nitra to ComfyUI-Nuvu across all files and update related documentation. Remove obsolete Nitra files and adjust logging messages accordingly."
   }
 ]

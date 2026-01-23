@@ -556,6 +556,77 @@ def _run_pending_uninstalls(uv_path):
             logger.warning(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall error: {e}")
 
 
+def _get_pending_installs_dir():
+    """Get the directory for pending install markers."""
+    nuvu_dir = os.path.join(_script_dir, '.nuvu', 'pending_installs')
+    os.makedirs(nuvu_dir, exist_ok=True)
+    return nuvu_dir
+
+
+def _run_pending_installs(uv_path):
+    """Install all packages that were marked for installation on restart.
+    
+    This handles packages that failed to install due to locked files.
+    Marker files are stored in .nuvu/pending_installs/<name>.txt
+    Each file contains the full package spec to install.
+    """
+    pending_dir = _get_pending_installs_dir()
+    
+    if not os.path.isdir(pending_dir):
+        return
+    
+    markers = [f for f in os.listdir(pending_dir) if f.endswith('.txt')]
+    
+    if not markers:
+        return
+    
+    print(f"\n[ComfyUI-Nuvu] Processing {len(markers)} pending install(s)...", flush=True)
+    logger.info(f"[ComfyUI-Nuvu] Found {len(markers)} pending install marker(s)")
+    
+    for filename in markers:
+        marker_path = os.path.join(pending_dir, filename)
+        
+        try:
+            with open(marker_path, 'r') as f:
+                package_spec = f.read().strip()
+            
+            if not package_spec:
+                os.remove(marker_path)
+                continue
+            
+            print(f"[ComfyUI-Nuvu] Pending install: {package_spec}", flush=True)
+            logger.info(f"[ComfyUI-Nuvu] Pending install: {package_spec}")
+            
+            # Use uv if available, otherwise pip
+            if uv_path:
+                cmd = [uv_path, 'pip', 'install', '-U', package_spec]
+            else:
+                cmd = [sys.executable, '-m', 'pip', 'install', '-U', package_spec]
+            
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            
+            if result.returncode == 0:
+                print(f"[ComfyUI-Nuvu] Successfully installed {package_spec}", flush=True)
+                logger.info(f"[ComfyUI-Nuvu] Successfully installed {package_spec}")
+            else:
+                print(f"[ComfyUI-Nuvu] Failed to install {package_spec}: {result.stderr[:200]}", flush=True)
+                logger.warning(f"[ComfyUI-Nuvu] Failed to install {package_spec}: {result.stderr[:200]}")
+            
+            # Remove marker regardless of success (don't retry forever)
+            os.remove(marker_path)
+            
+        except subprocess.TimeoutExpired:
+            print(f"[ComfyUI-Nuvu] Pending install timed out: {package_spec}", flush=True)
+            logger.warning(f"[ComfyUI-Nuvu] Pending install timed out: {package_spec}")
+            try:
+                os.remove(marker_path)
+            except Exception:
+                pass
+        except Exception as e:
+            print(f"[ComfyUI-Nuvu] Pending install error: {e}", flush=True)
+            logger.warning(f"[ComfyUI-Nuvu] Pending install error: {e}")
+
+
 def _install_pending_requirements():
     """Install pending requirements for Nuvu, ComfyUI, and custom nodes."""
     # Find or install uv
@@ -568,6 +639,9 @@ def _install_pending_requirements():
     
     # Handle pending package uninstalls FIRST (before anything loads .pyd files)
     _run_pending_uninstalls(uv_path)
+    
+    # Handle pending package installs (for packages that failed due to locked files)
+    _run_pending_installs(uv_path)
     
     # Install Nuvu requirements
     _run_requirements_install("Nuvu", _script_dir, "requirements.txt", uv_path)
