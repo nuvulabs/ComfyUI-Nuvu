@@ -373,7 +373,8 @@ def _get_custom_nodes_with_pending_requirements(custom_nodes_dir):
 
 def _get_pending_uninstalls_dir():
     """Get the directory for pending uninstall markers."""
-    nuvu_dir = os.path.join(_script_dir, '.nuvu', 'pending_uninstalls')
+    comfyui_root = _detect_comfyui_root() or os.path.dirname(os.path.dirname(_script_dir))
+    nuvu_dir = os.path.join(comfyui_root, 'user', 'default', '.nuvu', 'pending_uninstalls')
     os.makedirs(nuvu_dir, exist_ok=True)
     return nuvu_dir
 
@@ -558,7 +559,8 @@ def _run_pending_uninstalls(uv_path):
 
 def _get_pending_installs_dir():
     """Get the directory for pending install markers."""
-    nuvu_dir = os.path.join(_script_dir, '.nuvu', 'pending_installs')
+    comfyui_root = _detect_comfyui_root() or os.path.dirname(os.path.dirname(_script_dir))
+    nuvu_dir = os.path.join(comfyui_root, 'user', 'default', '.nuvu', 'pending_installs')
     os.makedirs(nuvu_dir, exist_ok=True)
     return nuvu_dir
 
