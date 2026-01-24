@@ -129,7 +129,7 @@ mkdir -p "$CUSTOM_NODES_DIR"
 
 if [ -f "$APP_DIR/requirements.txt" ]; then
   log "Installing ComfyUI requirements"
-   pkg_install "$VENV_PIP" torch==2.9.1 torchvision torchaudio --index-url "$TORCH_INDEX_URL"
+   pkg_install "$VENV_PIP" torch torchvision torchaudio --index-url "$TORCH_INDEX_URL"
   pkg_install_requirements "$VENV_PIP" "$APP_DIR/requirements.txt" --extra-index-url "$TORCH_INDEX_URL"
 fi
 
@@ -177,7 +177,6 @@ clone_and_install_node "ComfyUI-VideoHelperSuite" "https://github.com/Kosinkadin
 clone_and_install_node "RES4LYF" "https://github.com/ClownsharkBatwing/RES4LYF.git"
 clone_and_install_node "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.git"
 clone_and_install_node "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
-clone_and_install_node "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git"
 
 log "Upgrading pip/setuptools/wheel inside venv"
 pkg_install "$VENV_PIP" --upgrade pip setuptools wheel

@@ -1,5 +1,11 @@
 [
   {
+    "hash": "be2aa08",
+    "tag": "1.0.48",
+    "date": "2026-01-24T18:20:03-05:00",
+    "message": "Add more reliable sageattention detection  on linux"
+  },
+  {
     "hash": "f9fbc6c",
     "tag": "1.0.47",
     "date": "2026-01-24T09:45:42-05:00",
@@ -592,11 +598,5 @@
     "tag": "0.0.3",
     "date": "2025-12-19T10:11:59-05:00",
     "message": "Merge branch 'stg'"
-  },
-  {
-    "hash": "e1e2182",
-    "tag": null,
-    "date": "2025-12-19T10:10:11-05:00",
-    "message": "Standardize method names in dialog.js for Nuvu app integration, changing 'isnuvuAppMounted', 'mountnuvuApp', and 'setnuvuView' to 'isNuvuAppMounted', 'mountNuvuApp', and 'setNuvuView' for consistency."
   }
 ]
