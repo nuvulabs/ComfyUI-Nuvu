@@ -1,5 +1,11 @@
 [
   {
+    "hash": "685c010",
+    "tag": "1.0.49",
+    "date": "2026-01-25T10:51:54-05:00",
+    "message": "Sort PyTorch versions by newest first. Modify docker to use torch 2.8.0 because of RunPod's driver constraints. Modify README to include git install instructions for windows."
+  },
+  {
     "hash": "be2aa08",
     "tag": "1.0.48",
     "date": "2026-01-24T18:20:03-05:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2025-12-19T10:28:32-05:00",
     "message": "Update batch script and CI workflow to reflect renaming of 'nuvu-Compiled' to 'ComfyUI-Nuvu' and include 'windows_install_portable_nuvu.bat' in the build process."
-  },
-  {
-    "hash": "15d004f",
-    "tag": "0.0.3",
-    "date": "2025-12-19T10:11:59-05:00",
-    "message": "Merge branch 'stg'"
   }
 ]

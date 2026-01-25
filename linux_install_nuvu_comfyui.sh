@@ -116,6 +116,24 @@ pkg_install_req() {
   fi
 }
 
+# Ensure git exists; try to install if missing (Debian/Ubuntu)
+if ! command -v git >/dev/null 2>&1; then
+  log "Git not detected"
+  if command -v apt-get >/dev/null 2>&1; then
+    log "Installing git via apt-get"
+    if [ "$VERBOSE" -eq 1 ]; then
+      sudo apt-get update
+      sudo apt-get install -y git
+    else
+      sudo apt-get update >> "$INSTALL_LOG" 2>&1
+      sudo apt-get install -y git >> "$INSTALL_LOG" 2>&1
+    fi
+  else
+    echo "Git is required but was not found. Install git and re-run." | tee -a "$INSTALL_LOG"
+    exit 1
+  fi
+fi
+
 ensure_cmd git
 
 # Ensure python exists; try to install if missing (Debian/Ubuntu)
@@ -238,13 +256,13 @@ log "Installing system packages"
 if command -v apt-get >/dev/null 2>&1; then
   if [ "$VERBOSE" -eq 1 ]; then
     sudo apt-get update
-    sudo apt-get install -y ninja-build
+    sudo apt-get install -y git ninja-build
   else
     sudo apt-get update >> "$INSTALL_LOG" 2>&1
-    sudo apt-get install -y ninja-build >> "$INSTALL_LOG" 2>&1
+    sudo apt-get install -y git ninja-build >> "$INSTALL_LOG" 2>&1
   fi
 else
-  echo "apt-get not found; install ninja manually for faster builds."
+  echo "apt-get not found; install git and ninja manually."
 fi
 
 log "Preparing ComfyUI directory"

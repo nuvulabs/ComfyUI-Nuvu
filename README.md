@@ -67,6 +67,9 @@ Nuvu Labs offers a variety of ways to install the Nuvu Plug-in into ComfyUI for 
 Download the applicable script for your system, which can be found [at this link](https://github.com/Nuvulabs/ComfyUI-Nuvu/releases).
 
 #### Windows Install
+
+Install git through the instructions found on the github website here: [GitHub Git install instructions](https://github.com/git-guides/install-git)
+
 Place the .bat file in the folder location on windows that you want to install ComfyUI-Nuvu in. Double click on the .bat file, and it will start to install ComfyUI with Nuvu.
 ![alt text](docs/images/batFileInstall.png)
 
