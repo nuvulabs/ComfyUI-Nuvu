@@ -1,5 +1,17 @@
 [
   {
+    "hash": "0d466b5",
+    "tag": "1.0.50",
+    "date": "2026-01-29T09:03:14-05:00",
+    "message": "Enhance subscription and device verification logic. Introduce floating license checks to exempt users from device registration requirements. Update related functions and add user notifications in the frontend for floating license users."
+  },
+  {
+    "hash": "5a95c52",
+    "tag": null,
+    "date": "2026-01-28T19:07:15-05:00",
+    "message": "Add capability for enterprise orgs. Including named and floating licenses managed by a central administrator(s)."
+  },
+  {
     "hash": "685c010",
     "tag": "1.0.49",
     "date": "2026-01-25T10:51:54-05:00",
@@ -586,17 +598,5 @@
     "tag": null,
     "date": "2025-12-19T11:01:35-05:00",
     "message": "Standardize capitalization of 'Nuvu' across various components and files, including loading messages and system info displays. Update references in the backend to ensure consistency in directory naming and logging. Handle user cancellation in installation processes gracefully."
-  },
-  {
-    "hash": "c569550",
-    "tag": "0.0.4",
-    "date": "2025-12-19T10:28:51-05:00",
-    "message": "Merge branch 'stg'"
-  },
-  {
-    "hash": "f57caca",
-    "tag": null,
-    "date": "2025-12-19T10:28:32-05:00",
-    "message": "Update batch script and CI workflow to reflect renaming of 'nuvu-Compiled' to 'ComfyUI-Nuvu' and include 'windows_install_portable_nuvu.bat' in the build process."
   }
 ]
