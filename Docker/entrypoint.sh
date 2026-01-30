@@ -100,115 +100,151 @@ VENV_DIR="$APP_DIR/venv"
 VENV_PY="$VENV_DIR/bin/python"
 VENV_PIP="$VENV_DIR/bin/pip"
 
-# Trust mounted repositories to avoid Git safe.directory warnings
-git config --global --add safe.directory '*' || true
-
-# Ensure base ComfyUI directory exists
-mkdir -p "$COMFY_DIR"
-
-log "Ensuring ComfyUI repository"
-if [ ! -d "$APP_DIR/.git" ]; then
-  git clone https://github.com/Comfy-Org/ComfyUI.git "$APP_DIR"
-else
-  log "ComfyUI already cloned, reusing existing copy"
-fi
-
-if [ ! -x "$VENV_PY" ]; then
-  log "Creating Python venv at $VENV_DIR"
-  "$PYTHON_BIN" -m venv "$VENV_DIR"
-fi
-
-# Export VIRTUAL_ENV so uv and other tools properly target this venv
-export VIRTUAL_ENV="$VENV_DIR"
-
 CUSTOM_NODES_DIR="$APP_DIR/custom_nodes"
 CUSTOM_NODE_DIR="$CUSTOM_NODES_DIR/ComfyUI-Nuvu"
 MANAGER_DIR="$CUSTOM_NODES_DIR/ComfyUI-Manager"
 
-mkdir -p "$CUSTOM_NODES_DIR"
+# Trust mounted repositories to avoid Git safe.directory warnings
+git config --global --add safe.directory '*' || true
 
-if [ -f "$APP_DIR/requirements.txt" ]; then
-  log "Installing ComfyUI requirements"
-   pkg_install "$VENV_PIP" torch torchvision torchaudio --index-url "$TORCH_INDEX_URL"
-  pkg_install_requirements "$VENV_PIP" "$APP_DIR/requirements.txt" --extra-index-url "$TORCH_INDEX_URL"
-fi
-
-log "Ensuring ComfyUI-Manager"
-if [ ! -d "$MANAGER_DIR/.git" ]; then
-  git clone "$MANAGER_REPO" "$MANAGER_DIR"
-else
-  log "ComfyUI-Manager already present, skipping clone"
-fi
-
-log "Ensuring ComfyUI-Nuvu custom node"
-if [ ! -d "$CUSTOM_NODE_DIR/.git" ]; then
-  git clone "$nuvu_REPO" "$CUSTOM_NODE_DIR"
-else
-  log "ComfyUI-Nuvu already present, skipping clone"
-fi
-if [ -n "$nuvu_BRANCH" ]; then
-  log "Checking out ComfyUI-Nuvu branch: $nuvu_BRANCH"
-  git -C "$CUSTOM_NODE_DIR" fetch origin "$nuvu_BRANCH" || true
-  git -C "$CUSTOM_NODE_DIR" checkout "$nuvu_BRANCH"
-else
-  log "Using ComfyUI-Nuvu repository default branch"
-fi
-
-# Install additional custom nodes
+# Helper function to clone and install a custom node if missing
+# Checks individually - only installs if not present
 clone_and_install_node() {
   local NODE_NAME="$1"
   local NODE_REPO="$2"
   local NODE_DIR="$CUSTOM_NODES_DIR/$NODE_NAME"
   
-  log "Ensuring $NODE_NAME custom node"
   if [ ! -d "$NODE_DIR/.git" ]; then
+    log "$NODE_NAME not found, installing..."
     git clone "$NODE_REPO" "$NODE_DIR"
+    
+    if [ -f "$NODE_DIR/requirements.txt" ]; then
+      pkg_install_requirements "$VENV_PIP" "$NODE_DIR/requirements.txt"
+    fi
   else
-    log "$NODE_NAME already present, skipping clone"
-  fi
-  
-  if [ -f "$NODE_DIR/requirements.txt" ]; then
-    pkg_install_requirements "$VENV_PIP" "$NODE_DIR/requirements.txt"
+    log "$NODE_NAME already present, skipping"
   fi
 }
 
-clone_and_install_node "rgthree-comfy" "https://github.com/rgthree/rgthree-comfy.git"
-clone_and_install_node "ComfyUI-VideoHelperSuite" "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git"
-clone_and_install_node "RES4LYF" "https://github.com/ClownsharkBatwing/RES4LYF.git"
-clone_and_install_node "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.git"
-clone_and_install_node "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
+# Helper function to ensure ComfyUI-Nuvu is installed
+ensure_nuvu_node() {
+  if [ ! -d "$CUSTOM_NODE_DIR/.git" ]; then
+    log "ComfyUI-Nuvu not found, installing..."
+    mkdir -p "$CUSTOM_NODES_DIR"
+    git clone "$nuvu_REPO" "$CUSTOM_NODE_DIR"
+    
+    if [ -n "$nuvu_BRANCH" ]; then
+      log "Checking out ComfyUI-Nuvu branch: $nuvu_BRANCH"
+      git -C "$CUSTOM_NODE_DIR" fetch origin "$nuvu_BRANCH" || true
+      git -C "$CUSTOM_NODE_DIR" checkout "$nuvu_BRANCH"
+    fi
+    
+    # Install ComfyUI-Nuvu requirements
+    CUSTOM_REQS="$CUSTOM_NODE_DIR/requirements.txt"
+    CUSTOM_REQS_ALT="$CUSTOM_NODE_DIR/req.txt"
+    if [ -f "$CUSTOM_REQS" ]; then
+      log "Installing ComfyUI-Nuvu requirements.txt"
+      pkg_install_requirements "$VENV_PIP" "$CUSTOM_REQS"
+    elif [ -f "$CUSTOM_REQS_ALT" ]; then
+      log "Installing ComfyUI-Nuvu req.txt"
+      pkg_install_requirements "$VENV_PIP" "$CUSTOM_REQS_ALT"
+    else
+      echo "ComfyUI-Nuvu requirements file not found at $CUSTOM_REQS (or $CUSTOM_REQS_ALT)" >&2
+      exit 1
+    fi
+  else
+    log "ComfyUI-Nuvu already present, skipping"
+    
+    # Check branch if specified
+    if [ -n "$nuvu_BRANCH" ]; then
+      log "Checking out ComfyUI-Nuvu branch: $nuvu_BRANCH"
+      git -C "$CUSTOM_NODE_DIR" fetch origin "$nuvu_BRANCH" || true
+      git -C "$CUSTOM_NODE_DIR" checkout "$nuvu_BRANCH"
+    fi
+  fi
+}
 
-log "Upgrading pip/setuptools/wheel inside venv"
-pkg_install "$VENV_PIP" --upgrade pip setuptools wheel
+# Helper function to ensure ComfyUI-Manager is installed
+ensure_manager_node() {
+  if [ ! -d "$MANAGER_DIR/.git" ]; then
+    log "ComfyUI-Manager not found, installing..."
+    git clone "$MANAGER_REPO" "$MANAGER_DIR"
+    
+    if [ -f "$MANAGER_DIR/requirements.txt" ]; then
+      pkg_install_requirements "$VENV_PIP" "$MANAGER_DIR/requirements.txt"
+    fi
+  else
+    log "ComfyUI-Manager already present, skipping"
+  fi
+}
 
-log "Installing keyring helpers"
-pkg_install "$VENV_PIP" keyrings.alt
-
-log "Installing SageAttention"
-pkg_install "$VENV_PIP" sageattention --no-build-isolation
-
-if [ -f "$MANAGER_DIR/requirements.txt" ]; then
-  pkg_install_requirements "$VENV_PIP" "$MANAGER_DIR/requirements.txt"
+# Check if ComfyUI is already fully installed (has venv with working python)
+COMFYUI_INSTALLED=false
+if [ -d "$APP_DIR/.git" ] && [ -x "$VENV_PY" ]; then
+  log "ComfyUI installation detected at $APP_DIR"
+  COMFYUI_INSTALLED=true
 fi
 
-# Install ComfyUI-Nuvu requirements (pulls comfyui-nuvu from PyPI)
-CUSTOM_REQS="$CUSTOM_NODE_DIR/requirements.txt"
-CUSTOM_REQS_ALT="$CUSTOM_NODE_DIR/req.txt"
-if [ -f "$CUSTOM_REQS" ]; then
-  log "Installing ComfyUI-Nuvu requirements.txt"
-  pkg_install_requirements "$VENV_PIP" "$CUSTOM_REQS"
-elif [ -f "$CUSTOM_REQS_ALT" ]; then
-  log "Installing ComfyUI-Nuvu req.txt"
-  pkg_install_requirements "$VENV_PIP" "$CUSTOM_REQS_ALT"
+if [ "$COMFYUI_INSTALLED" = true ]; then
+  log "Skipping ComfyUI installation (already installed)"
+  
+  # Export VIRTUAL_ENV so uv and other tools properly target this venv
+  export VIRTUAL_ENV="$VENV_DIR"
+  
+  # Check each custom node individually and install only if missing
+  log "Checking custom nodes..."
+  ensure_manager_node
+  ensure_nuvu_node
+  clone_and_install_node "rgthree-comfy" "https://github.com/rgthree/rgthree-comfy.git"
+  clone_and_install_node "ComfyUI-VideoHelperSuite" "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git"
+  clone_and_install_node "RES4LYF" "https://github.com/ClownsharkBatwing/RES4LYF.git"
+  clone_and_install_node "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.git"
+  clone_and_install_node "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
 else
-  echo "ComfyUI-Nuvu requirements file not found at $CUSTOM_REQS (or $CUSTOM_REQS_ALT)" >&2
-  exit 1
+  log "ComfyUI not found, performing full installation..."
+  
+  # Ensure base ComfyUI directory exists
+  mkdir -p "$COMFY_DIR"
+
+  log "Cloning ComfyUI repository"
+  git clone https://github.com/Comfy-Org/ComfyUI.git "$APP_DIR"
+
+  log "Creating Python venv at $VENV_DIR"
+  "$PYTHON_BIN" -m venv "$VENV_DIR"
+
+  # Export VIRTUAL_ENV so uv and other tools properly target this venv
+  export VIRTUAL_ENV="$VENV_DIR"
+
+  mkdir -p "$CUSTOM_NODES_DIR"
+
+  if [ -f "$APP_DIR/requirements.txt" ]; then
+    log "Installing ComfyUI requirements"
+    pkg_install "$VENV_PIP" torch torchvision torchaudio --index-url "$TORCH_INDEX_URL"
+    pkg_install_requirements "$VENV_PIP" "$APP_DIR/requirements.txt" --extra-index-url "$TORCH_INDEX_URL"
+  fi
+
+  log "Upgrading pip/setuptools/wheel inside venv"
+  pkg_install "$VENV_PIP" --upgrade pip setuptools wheel
+
+  log "Installing keyring helpers"
+  pkg_install "$VENV_PIP" keyrings.alt
+
+  log "Installing SageAttention"
+  pkg_install "$VENV_PIP" sageattention --no-build-isolation
+
+  # Install all custom nodes (each checked individually)
+  ensure_manager_node
+  ensure_nuvu_node
+  clone_and_install_node "rgthree-comfy" "https://github.com/rgthree/rgthree-comfy.git"
+  clone_and_install_node "ComfyUI-VideoHelperSuite" "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git"
+  clone_and_install_node "RES4LYF" "https://github.com/ClownsharkBatwing/RES4LYF.git"
+  clone_and_install_node "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.git"
+  clone_and_install_node "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
+
+  # Install JupyterLab using python3.12
+  log "Installing JupyterLab"
+  "$PYTHON_BIN" -m pip install jupyterlab pexpect || true
 fi
-
-
-# Install JupyterLab using python3.12
-log "Installing JupyterLab"
-"$PYTHON_BIN" -m pip install jupyterlab pexpect || true
 
 # Start JupyterLab in the background using python3.12
 log "Starting JupyterLab on port 8888"

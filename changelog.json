@@ -1,5 +1,11 @@
 [
   {
+    "hash": "760dca3",
+    "tag": "1.0.51",
+    "date": "2026-01-30T17:41:08-05:00",
+    "message": "Allow toggling sageattention from ComfyUI Optimizer since it causes quality loss with some models. Fix ComfyUI Optimizer requiring paid subscription for installs."
+  },
+  {
     "hash": "0d466b5",
     "tag": "1.0.50",
     "date": "2026-01-29T09:03:14-05:00",
@@ -592,11 +598,5 @@
     "tag": "0.0.5",
     "date": "2025-12-19T11:15:52-05:00",
     "message": "Update batch scripts to include '--no-warn-script-location' flag for pip installations, enhancing compatibility and reducing warnings. Standardize capitalization of 'Nuvu' in various components for consistency across the application."
-  },
-  {
-    "hash": "ab3b724",
-    "tag": null,
-    "date": "2025-12-19T11:01:35-05:00",
-    "message": "Standardize capitalization of 'Nuvu' across various components and files, including loading messages and system info displays. Update references in the backend to ensure consistency in directory naming and logging. Handle user cancellation in installation processes gracefully."
   }
 ]
