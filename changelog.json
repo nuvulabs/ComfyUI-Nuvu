@@ -1,5 +1,11 @@
 [
   {
+    "hash": "367159a",
+    "tag": "1.0.52",
+    "date": "2026-01-30T20:46:51-05:00",
+    "message": "Cleanup sageattention default behavior to catch non-nuvu sage installs."
+  },
+  {
     "hash": "760dca3",
     "tag": "1.0.51",
     "date": "2026-01-30T17:41:08-05:00",
@@ -592,11 +598,5 @@
     "tag": "0.0.6",
     "date": "2025-12-19T17:54:25-05:00",
     "message": "Enhance Windows installation script by adding a configurable port for ComfyUI and updating the helper launcher to use this port. Standardize capitalization of 'Nuvu' across various frontend components and backend logging for consistency. Remove obsolete JavaScript files from the Vue directory."
-  },
-  {
-    "hash": "359b893",
-    "tag": "0.0.5",
-    "date": "2025-12-19T11:15:52-05:00",
-    "message": "Update batch scripts to include '--no-warn-script-location' flag for pip installations, enhancing compatibility and reducing warnings. Standardize capitalization of 'Nuvu' in various components for consistency across the application."
   }
 ]
