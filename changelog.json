@@ -1,5 +1,17 @@
 [
   {
+    "hash": "7746282",
+    "tag": "1.0.55",
+    "date": "2026-02-01T13:22:58-05:00",
+    "message": "Add common comfyui command line settings as User Configuration Settings."
+  },
+  {
+    "hash": "eeea1c0",
+    "tag": null,
+    "date": "2026-02-01T12:30:44-05:00",
+    "message": "Improve UI for extra models/custom nodes selector by making entire row clickable instead of just radio button"
+  },
+  {
     "hash": "572ed3e",
     "tag": "1.0.54",
     "date": "2026-02-01T11:56:21-05:00",
@@ -586,17 +598,5 @@
     "tag": null,
     "date": "2025-12-19T19:08:56-05:00",
     "message": "Update changelog retrieval logic in nuvu_server.py to fetch the last 100 commits and improve version detection in the frontend. Enhance OptimizerPanel.vue and ChangelogModal.vue to display current version indicators and update changelog links. Remove obsolete JavaScript files and ensure consistent styling in the changelog modal."
-  },
-  {
-    "hash": "4f49af9",
-    "tag": "0.0.8",
-    "date": "2025-12-19T18:47:20-05:00",
-    "message": "Refactor version detection in nuvu_server.py to streamline fallback logic for backend version retrieval. Ensure accurate detection of installed versions using pip commands and improve error handling. Remove redundant checks and enhance clarity in version assignment for both backend and frontend components."
-  },
-  {
-    "hash": "c0100b1",
-    "tag": null,
-    "date": "2025-12-19T18:38:47-05:00",
-    "message": "Refactor version detection logic in nuvu_server.py to improve accuracy. Implement checks for installed backend version and fallback mechanisms using pip and changelog.json. Enhance frontend version retrieval by detecting git tags and reading from changelog.json if necessary. Update handling of version defaults for better reliability."
   }
 ]
