@@ -1,5 +1,11 @@
 [
   {
+    "hash": "825d6b9",
+    "tag": "1.0.56",
+    "date": "2026-02-01T14:11:36-05:00",
+    "message": "Update default preview method in UserConfigPanel to 'auto'"
+  },
+  {
     "hash": "7746282",
     "tag": "1.0.55",
     "date": "2026-02-01T13:22:58-05:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2025-12-19T19:19:43-05:00",
     "message": "Refactor version detection logic in ChangelogModal.vue to improve accuracy. Enhance matching criteria for current version by prioritizing hash checks, followed by tag comparisons, and fallback to short hash checks. Clean up version strings for consistent comparison."
-  },
-  {
-    "hash": "e686a07",
-    "tag": null,
-    "date": "2025-12-19T19:08:56-05:00",
-    "message": "Update changelog retrieval logic in nuvu_server.py to fetch the last 100 commits and improve version detection in the frontend. Enhance OptimizerPanel.vue and ChangelogModal.vue to display current version indicators and update changelog links. Remove obsolete JavaScript files and ensure consistent styling in the changelog modal."
   }
 ]
