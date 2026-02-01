@@ -1,5 +1,11 @@
 [
   {
+    "hash": "572ed3e",
+    "tag": "1.0.54",
+    "date": "2026-02-01T11:56:21-05:00",
+    "message": "Support choosing the directory to install models from the extra_model_paths list. Support adding extra custom node paths, and choose which path to install new custom ndoes to."
+  },
+  {
     "hash": "f20d248",
     "tag": "1.0.53",
     "date": "2026-02-01T09:19:26-05:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2025-12-19T18:38:47-05:00",
     "message": "Refactor version detection logic in nuvu_server.py to improve accuracy. Implement checks for installed backend version and fallback mechanisms using pip and changelog.json. Enhance frontend version retrieval by detecting git tags and reading from changelog.json if necessary. Update handling of version defaults for better reliability."
-  },
-  {
-    "hash": "8497a22",
-    "tag": "0.0.7",
-    "date": "2025-12-19T18:29:11-05:00",
-    "message": "Implement changelog generation in CI workflow and integrate changelog modal in the dashboard. Add API endpoint to fetch changelog data from changelog.json or git log. Update frontend components to display changelog links and modal for Nuvu and ComfyUI updates."
   }
 ]
