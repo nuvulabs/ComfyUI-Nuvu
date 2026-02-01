@@ -1,5 +1,11 @@
 [
   {
+    "hash": "e1ceae6",
+    "tag": "1.0.57",
+    "date": "2026-02-01T14:19:45-05:00",
+    "message": "Optimize Common Comfy Settings to only save settings and not whole User Configuration tab."
+  },
+  {
     "hash": "825d6b9",
     "tag": "1.0.56",
     "date": "2026-02-01T14:11:36-05:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2025-12-19T19:23:07-05:00",
     "message": "Remove obsolete JavaScript files: auth-pil8uz3l.js and main-BYFDc9sq.js. Update import paths in nuvu.js to reflect changes in module structure."
-  },
-  {
-    "hash": "7368dea",
-    "tag": null,
-    "date": "2025-12-19T19:19:43-05:00",
-    "message": "Refactor version detection logic in ChangelogModal.vue to improve accuracy. Enhance matching criteria for current version by prioritizing hash checks, followed by tag comparisons, and fallback to short hash checks. Clean up version strings for consistent comparison."
   }
 ]
