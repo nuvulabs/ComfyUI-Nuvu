@@ -1,5 +1,11 @@
 [
   {
+    "hash": "7d63a07",
+    "tag": "1.0.61",
+    "date": "2026-02-02T13:00:18-05:00",
+    "message": "Update huggingface_hub dependency to version 0.34.0 with hf_transfer included, and add transformers version 4.57.6 to requirements. This was leading to broken installs when transformers 5.0 was applied accidentally."
+  },
+  {
     "hash": "fd09f6f",
     "tag": "1.0.60",
     "date": "2026-02-02T12:51:51-05:00",
@@ -592,11 +598,5 @@
     "tag": "0.0.11",
     "date": "2025-12-20T20:58:47-05:00",
     "message": "Update README.md to replace logo image with a new design. Enhance changelog retrieval by implementing separate handling for Nuvu and ComfyUI repositories, improving error handling, and adding remote fetching capabilities for commit history. This update streamlines the process of obtaining the latest commit information for both repository types."
-  },
-  {
-    "hash": "4603c61",
-    "tag": "0.0.10",
-    "date": "2025-12-20T20:23:17-05:00",
-    "message": "Refactor OptimizerPanel.vue and Sidebar.vue for improved button structure and update website URL. Clean up ChangelogModal.vue by removing unnecessary whitespace. Enhance version detection in nuvu_server.py with better error handling and formatting. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
   }
 ]
