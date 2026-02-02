@@ -3,4 +3,4 @@ huggingface_hub[hf_transfer]>=0.34.0,<1.0
 hf_xet
 keyring>=24.3.0
 
-comfyui-nuvu==1.0.57
+comfyui-nuvu==1.0.58

@@ -1,5 +1,11 @@
 [
   {
+    "hash": "872daaf",
+    "tag": "1.0.58",
+    "date": "2026-02-02T12:19:18-05:00",
+    "message": "Fix prestartup python package dependency resolver to handle python portable. Enhance windows auto-installers to be more reliable"
+  },
+  {
     "hash": "e1ceae6",
     "tag": "1.0.57",
     "date": "2026-02-01T14:19:45-05:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2025-12-19T19:42:25-05:00",
     "message": "Enhance version tracking in OptimizerPanel.vue and ChangelogModal.vue by adding hash information for Nuvu and ComfyUI components. Update changelog links to prioritize hash values for better accuracy. Modify nuvu_server.py to retrieve and store commit hashes alongside tags for improved version detection. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
-  },
-  {
-    "hash": "8f87b08",
-    "tag": null,
-    "date": "2025-12-19T19:23:07-05:00",
-    "message": "Remove obsolete JavaScript files: auth-pil8uz3l.js and main-BYFDc9sq.js. Update import paths in nuvu.js to reflect changes in module structure."
   }
 ]

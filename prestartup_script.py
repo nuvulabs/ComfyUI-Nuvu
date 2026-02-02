@@ -606,11 +606,15 @@ def _run_pending_installs(uv_path):
             
             # Use uv if available, otherwise pip
             # Note: For special index URLs, we use pip since uv may not support all options
+            is_embedded = "python_embeded" in sys.executable.lower()
             if '--index-url' in package_spec or '--extra-index-url' in package_spec or '--pre' in package_spec:
                 # Use pip for special cases
                 cmd = [sys.executable, '-m', 'pip', 'install', '-U'] + spec_parts
             elif uv_path:
-                cmd = [uv_path, 'pip', 'install', '-U'] + spec_parts
+                cmd = [uv_path, 'pip', 'install', '-U']
+                if is_embedded:
+                    cmd.extend(['--system', '--python', sys.executable])
+                cmd += spec_parts
             else:
                 cmd = [sys.executable, '-m', 'pip', 'install', '-U'] + spec_parts
             

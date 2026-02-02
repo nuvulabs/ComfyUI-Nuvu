@@ -7,6 +7,15 @@ set "ARCHIVE_NAME=ComfyUI_windows_portable_nvidia.7z"
 set "EXTRACT_DIR=ComfyUI_windows_portable"
 set "NUVU_REPO=https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
+REM Ensure common Windows paths are available for tooling
+if exist "%windir%\System32" set "PATH=%PATH%;%windir%\System32"
+if exist "%windir%\System32\WindowsPowerShell\v1.0" set "PATH=%PATH%;%windir%\System32\WindowsPowerShell\v1.0"
+if exist "%LOCALAPPDATA%\Microsoft\WindowsApps" set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WindowsApps"
+if exist "%ProgramFiles%\Git\cmd\git.exe" set "PATH=%PATH%;%ProgramFiles%\Git\cmd"
+if exist "%ProgramFiles%\Git\bin\git.exe" set "PATH=%PATH%;%ProgramFiles%\Git\bin"
+if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "PATH=%PATH%;%ProgramFiles(x86)%\Git\cmd"
+if exist "%ProgramFiles(x86)%\Git\bin\git.exe" set "PATH=%PATH%;%ProgramFiles(x86)%\Git\bin"
+
 REM UV install location (same as prestartup_script.py)
 set "UV_DIR=%LOCALAPPDATA%\nuvu\bin"
 set "UV_EXE=%UV_DIR%\uv.exe"
@@ -30,6 +39,11 @@ echo ========================================================
 if "%VERBOSE%"=="1" echo   [VERBOSE MODE ENABLED]
 echo.
 
+call :ensure_git
+if errorlevel 1 (
+    exit /b 1
+)
+
 if exist "%EXTRACT_DIR%" (
     echo Folder "%EXTRACT_DIR%" already exists.
     echo Skipping download and extraction to prevent overwriting.
@@ -38,7 +52,7 @@ if exist "%EXTRACT_DIR%" (
         echo Downloading ComfyUI Portable from:
         echo %URL%
         echo.
-        curl -L -o "%ARCHIVE_NAME%" "%URL%"
+        call :download_file "%URL%" "%ARCHIVE_NAME%"
         if errorlevel 1 (
             echo.
             echo [ERROR] Download failed. Please check your internet connection.
@@ -60,7 +74,7 @@ if exist "%EXTRACT_DIR%" (
         echo [WARNING] Native extraction failed. Attempting fallback to 7-Zip...
         
         echo Downloading 7-Zip standalone tool...
-        curl -L -o 7zr.exe "https://www.7-zip.org/a/7zr.exe"
+        call :download_file "https://www.7-zip.org/a/7zr.exe" "7zr.exe"
         if errorlevel 1 (
             echo.
             echo [ERROR] Failed to download 7zr.exe.
@@ -234,6 +248,45 @@ echo.
 echo You can also find "Nuvu-ComfyUI" in your Start Menu and on your Desktop.
 echo.
 pause
+exit /b 0
+
+REM ============================================================
+REM Download helper
+REM ============================================================
+
+:download_file
+set "DL_URL=%~1"
+set "DL_OUT=%~2"
+if "%VERBOSE%"=="1" (
+    where curl.exe
+) else (
+    where curl.exe >nul 2>&1
+)
+if not errorlevel 1 (
+    curl -L -o "%DL_OUT%" "%DL_URL%"
+    exit /b %errorlevel%
+)
+if "%VERBOSE%"=="1" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri '%DL_URL%' -OutFile '%DL_OUT%'"
+) else (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri '%DL_URL%' -OutFile '%DL_OUT%'" 2>nul
+)
+exit /b %errorlevel%
+
+REM ============================================================
+REM Git availability helper
+REM ============================================================
+
+:ensure_git
+if "%VERBOSE%"=="1" (
+    git --version
+) else (
+    git --version >nul 2>&1
+)
+if errorlevel 1 (
+    echo [ERROR] Git was not found. Please install Git for Windows and re-run this script.
+    exit /b 1
+)
 exit /b 0
 
 :clone_and_install

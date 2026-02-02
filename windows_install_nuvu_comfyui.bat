@@ -12,6 +12,11 @@ set "RUN_SCRIPT_NAME=run_comfy.bat"
 set "COMFY_PORT=8188"
 set "nuvu_COMPILED_REPO=https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
+REM Ensure common Windows paths are available for tooling
+if exist "%windir%\System32" set "PATH=%PATH%;%windir%\System32"
+if exist "%windir%\System32\WindowsPowerShell\v1.0" set "PATH=%PATH%;%windir%\System32\WindowsPowerShell\v1.0"
+if exist "%LOCALAPPDATA%\Microsoft\WindowsApps" set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WindowsApps"
+
 REM UV install location (same as prestartup_script.py)
 set "UV_DIR=%LOCALAPPDATA%\nuvu\bin"
 set "UV_EXE=%UV_DIR%\uv.exe"
@@ -36,26 +41,36 @@ echo ========================================================
 if "%VERBOSE%"=="1" echo   [VERBOSE MODE ENABLED]
 echo.
 echo === Checking for Python 3.12 ===
-if "%VERBOSE%"=="1" (
-    py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)"
-) else (
-    py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)" >> "%INSTALL_LOG%" 2>&1
-)
+call :detect_python312
 if errorlevel 1 (
     echo Python 3.12 not detected. Attempting install via winget...
+    call :ensure_winget
+    if errorlevel 1 (
+        exit /b 1
+    )
     if "%VERBOSE%"=="1" (
         winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
     ) else (
         winget install -e --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements >> "%INSTALL_LOG%" 2>&1
     )
     if errorlevel 1 (
-        echo Failed to install Python 3.12 via winget. Please install Python 3.12 manually and re-run this script.
+        set "WINGET_ERROR=%errorlevel%"
+        echo Winget returned error %WINGET_ERROR%. Checking if Python 3.12 is now available...
+    )
+    call :detect_python312
+    if errorlevel 1 (
+        echo Failed to detect Python 3.12 after winget install. Please install Python 3.12 manually and re-run this script.
         exit /b 1
     )
 )
+echo Using Python command: "%PYTHON_EXE%" %PYTHON_ARGS%
 
 echo.
 echo === Checking for git ===
+if exist "%ProgramFiles%\Git\cmd\git.exe" set "PATH=%PATH%;%ProgramFiles%\Git\cmd"
+if exist "%ProgramFiles%\Git\bin\git.exe" set "PATH=%PATH%;%ProgramFiles%\Git\bin"
+if exist "%ProgramFiles(x86)%\Git\cmd\git.exe" set "PATH=%PATH%;%ProgramFiles(x86)%\Git\cmd"
+if exist "%ProgramFiles(x86)%\Git\bin\git.exe" set "PATH=%PATH%;%ProgramFiles(x86)%\Git\bin"
 if "%VERBOSE%"=="1" (
     git --version
 ) else (
@@ -127,9 +142,9 @@ echo.
 echo === Creating virtual environment ===
 if not exist "venv" (
     if "%VERBOSE%"=="1" (
-        py -3.12 -m venv venv
+        "%PYTHON_EXE%" %PYTHON_ARGS% -m venv venv
     ) else (
-        py -3.12 -m venv venv >> "%INSTALL_LOG%" 2>&1
+        "%PYTHON_EXE%" %PYTHON_ARGS% -m venv venv >> "%INSTALL_LOG%" 2>&1
     )
     if errorlevel 1 (
         echo Failed to create Python 3.12 virtual environment.
@@ -255,6 +270,64 @@ echo All done! Use "%COMFY_DIR%\%RUN_SCRIPT_NAME%" to launch ComfyUI with ComfyU
 echo You can also find "Nuvu-ComfyUI" in your Start Menu and on your Desktop.
 echo If you run into issues, check: "%INSTALL_LOG%"
 pause
+exit /b 0
+
+REM ============================================================
+REM Python 3.12 detection helper
+REM ============================================================
+
+:detect_python312
+set "PYTHON_EXE="
+set "PYTHON_ARGS="
+if "%VERBOSE%"=="1" (
+    py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)"
+) else (
+    py -3.12 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)" >> "%INSTALL_LOG%" 2>&1
+)
+if not errorlevel 1 (
+    set "PYTHON_EXE=py"
+    set "PYTHON_ARGS=-3.12"
+    exit /b 0
+)
+
+if "%VERBOSE%"=="1" (
+    python -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)"
+) else (
+    python -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)" >> "%INSTALL_LOG%" 2>&1
+)
+if not errorlevel 1 (
+    set "PYTHON_EXE=python"
+    set "PYTHON_ARGS="
+    exit /b 0
+)
+
+if "%VERBOSE%"=="1" (
+    python3 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)"
+) else (
+    python3 -c "import sys; raise SystemExit(0 if sys.version_info>=(3,12) else 1)" >> "%INSTALL_LOG%" 2>&1
+)
+if not errorlevel 1 (
+    set "PYTHON_EXE=python3"
+    set "PYTHON_ARGS="
+    exit /b 0
+)
+
+exit /b 1
+
+REM ============================================================
+REM Winget availability helper
+REM ============================================================
+
+:ensure_winget
+if "%VERBOSE%"=="1" (
+    where winget.exe
+) else (
+    where winget.exe >> "%INSTALL_LOG%" 2>&1
+)
+if errorlevel 1 (
+    echo Winget was not found. Please install App Installer from the Microsoft Store or install Python 3.12 manually.
+    exit /b 1
+)
 exit /b 0
 
 :clone_and_install
