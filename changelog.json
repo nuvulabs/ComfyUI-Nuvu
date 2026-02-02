@@ -1,5 +1,17 @@
 [
   {
+    "hash": "fd09f6f",
+    "tag": "1.0.60",
+    "date": "2026-02-02T12:51:51-05:00",
+    "message": "Handle transformers 5.0 not being compatible with most ComfyUI packages at this point."
+  },
+  {
+    "hash": "bf16c14",
+    "tag": null,
+    "date": "2026-02-02T12:40:21-05:00",
+    "message": "Update huggingface_hub dependency to version 1.3.0 and separate hf_transfer into its own line in requirements.txt"
+  },
+  {
     "hash": "f37f01a",
     "tag": "1.0.59",
     "date": "2026-02-02T12:30:23-05:00",
@@ -586,17 +598,5 @@
     "tag": "0.0.10",
     "date": "2025-12-20T20:23:17-05:00",
     "message": "Refactor OptimizerPanel.vue and Sidebar.vue for improved button structure and update website URL. Clean up ChangelogModal.vue by removing unnecessary whitespace. Enhance version detection in nuvu_server.py with better error handling and formatting. Remove obsolete JavaScript files and update import paths in nuvu.js to reflect recent changes."
-  },
-  {
-    "hash": "5a6d612",
-    "tag": null,
-    "date": "2025-12-20T19:41:02-05:00",
-    "message": "Update installation scripts and documentation to reflect repository name change from nuvu-Compiled to ComfyUI-Nuvu. Modify relevant paths and messages in linux_install_nuvu_comfyui.sh, windows_install_nuvu_comfyui.bat, and README.md for consistency. Adjust Docker entrypoint script to use the new repository name and ensure proper installation of custom nodes."
-  },
-  {
-    "hash": "e9d64d8",
-    "tag": "0.0.9",
-    "date": "2025-12-19T19:43:54-05:00",
-    "message": "Enhance changelog retrieval in nuvu_server.py by detecting the current git branch before fetching commit history. Update command to prioritize remote tracking branches, improving version detection accuracy. This change streamlines the process of obtaining the latest commit information for better frontend integration."
   }
 ]
