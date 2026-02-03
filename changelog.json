@@ -1,5 +1,17 @@
 [
   {
+    "hash": "f715dda",
+    "tag": "1.0.64",
+    "date": "2026-02-02T21:59:59-05:00",
+    "message": "Update batch file paths for pre_launch.py to use the correct path for auto-fixing the comfyui environment"
+  },
+  {
+    "hash": "12ed55e",
+    "tag": null,
+    "date": "2026-02-02T21:46:02-05:00",
+    "message": "Clean corrupted packages in prestartup so that we can fix ComfyUI environment if broken"
+  },
+  {
     "hash": "4aaf3d5",
     "tag": "1.0.63",
     "date": "2026-02-02T20:59:20-05:00",
@@ -586,17 +598,5 @@
     "tag": "0.0.32",
     "date": "2026-01-07T23:16:42-05:00",
     "message": "correct discord link"
-  },
-  {
-    "hash": "56e9ac7",
-    "tag": null,
-    "date": "2026-01-07T23:10:24-05:00",
-    "message": "Update README with correct branding, update documentation tab, and add Discord link."
-  },
-  {
-    "hash": "78de470",
-    "tag": "0.0.31",
-    "date": "2026-01-07T18:51:15-05:00",
-    "message": "Add optional sound checkbox to workflows tab"
   }
 ]

@@ -701,10 +701,8 @@ def _run_pending_installs(uv_path):
     
     is_embedded = "python_embeded" in sys.executable.lower()
     
-    # Build base python command for pip (add -s for embedded to skip user site-packages)
-    pip_base = [sys.executable]
-    if is_embedded:
-        pip_base.append('-s')
+    # Use uv if available, otherwise pip
+    use_uv = uv_path is not None
     
     for filename in markers:
         marker_path = os.path.join(pending_dir, filename)
@@ -730,7 +728,17 @@ def _run_pending_installs(uv_path):
             # This avoids CUDA version mismatches and broken metadata issues
             if package_names:
                 print(f"[ComfyUI-Nuvu] Uninstalling first: {', '.join(package_names)}", flush=True)
-                uninstall_cmd = pip_base + ['-m', 'pip', 'uninstall', '-y'] + package_names
+                if use_uv:
+                    uninstall_cmd = [uv_path, 'pip', 'uninstall']
+                    if is_embedded:
+                        uninstall_cmd.extend(['--python', sys.executable])
+                    uninstall_cmd.extend(['-y'] + package_names)
+                else:
+                    uninstall_cmd = [sys.executable]
+                    if is_embedded:
+                        uninstall_cmd.append('-s')
+                    uninstall_cmd.extend(['-m', 'pip', 'uninstall', '-y'] + package_names)
+                
                 uninstall_result = subprocess.run(uninstall_cmd, capture_output=True, text=True, timeout=120)
                 if uninstall_result.returncode != 0:
                     # If uninstall fails, try force-deleting from site-packages
@@ -738,8 +746,18 @@ def _run_pending_installs(uv_path):
                         _force_delete_package(pkg)
             
             # Step 2: Install packages
-            # Always use pip in prestartup for reliability
-            cmd = pip_base + ['-m', 'pip', 'install'] + spec_parts
+            # Translate --force-reinstall to --reinstall for uv
+            if use_uv:
+                spec_parts = [p if p != '--force-reinstall' else '--reinstall' for p in spec_parts]
+                cmd = [uv_path, 'pip', 'install']
+                if is_embedded:
+                    cmd.extend(['--python', sys.executable])
+                cmd.extend(spec_parts)
+            else:
+                cmd = [sys.executable]
+                if is_embedded:
+                    cmd.append('-s')
+                cmd.extend(['-m', 'pip', 'install'] + spec_parts)
             
             print(f"[ComfyUI-Nuvu] Installing: {' '.join(cmd)}", flush=True)
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
@@ -773,14 +791,13 @@ def _install_pending_requirements():
     - pre_launch.py failed for some reason
     
     If pre_launch already processed the markers, these will be no-ops.
-    
-    NOTE: We always use pip here instead of uv for reliability.
-    uv is faster but can leave packages in broken states (version=None, missing RECORD)
-    when installations are interrupted. Prestartup runs on every startup and must be
-    rock-solid, so we use pip which handles edge cases more gracefully.
     """
-    # Always use pip in prestartup for reliability (uv can leave packages broken)
-    uv_path = None
+    # FIRST: Clean up any packages with corrupted metadata (version = None)
+    # This must happen before any installs to avoid version comparison errors
+    _cleanup_corrupted_packages()
+    
+    # Use uv if available for faster installs
+    uv_path = _find_uv()
     
     # Handle pending package uninstalls FIRST (before anything loads .pyd files)
     # These are also handled by pre_launch.py, but we run here as fallback
@@ -907,6 +924,62 @@ def _install_package(package_spec: str, description: str) -> bool:
         return False
 
 
+def _cleanup_corrupted_packages():
+    """Find and delete packages with 'None' version (corrupted metadata).
+    
+    These packages have broken metadata that prevents proper version comparison.
+    Force deleting them allows a clean reinstall.
+    """
+    is_embedded = "python_embeded" in sys.executable.lower()
+    
+    pip_base = [sys.executable]
+    if is_embedded:
+        pip_base.append('-s')
+    pip_base.extend(['-m', 'pip'])
+    
+    try:
+        # Run pip list to get all packages
+        cmd = list(pip_base) + ['list', '--format=freeze']
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        
+        if result.returncode != 0:
+            return
+        
+        corrupted = []
+        for line in result.stdout.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            # Format is "package==version" or just "package" if version is missing
+            if '==' in line:
+                pkg, version = line.split('==', 1)
+                if version.lower() == 'none' or not version:
+                    corrupted.append(pkg)
+            elif '==' not in line and '@' not in line:
+                # Package with no version at all
+                corrupted.append(line)
+        
+        # Also check regular pip list format for "None" versions
+        cmd2 = list(pip_base) + ['list']
+        result2 = subprocess.run(cmd2, capture_output=True, text=True, timeout=30)
+        if result2.returncode == 0:
+            for line in result2.stdout.splitlines():
+                parts = line.split()
+                if len(parts) >= 2 and parts[1].lower() == 'none':
+                    pkg = parts[0]
+                    if pkg not in corrupted:
+                        corrupted.append(pkg)
+        
+        if corrupted:
+            print(f"[ComfyUI-Nuvu] Found {len(corrupted)} corrupted package(s): {', '.join(corrupted)}", flush=True)
+            for pkg in corrupted:
+                print(f"[ComfyUI-Nuvu] Force deleting corrupted: {pkg}", flush=True)
+                _force_delete_package(pkg)
+    
+    except Exception as e:
+        logger.debug(f"[ComfyUI-Nuvu] Error checking for corrupted packages: {e}")
+
+
 def _ensure_critical_packages():
     """
     Ensure all critical packages are installed and functional.
@@ -918,6 +991,11 @@ def _ensure_critical_packages():
     Uses pip show to check packages WITHOUT importing them, which avoids loading/locking
     broken module files that would prevent reinstallation.
     """
+    # Clean up any packages with corrupted metadata (version = None)
+    # Also called earlier in _install_pending_requirements(), but run again here
+    # in case new corrupted packages were created during pending installs
+    _cleanup_corrupted_packages()
+    
     for pip_name, package_spec, description in CRITICAL_PACKAGES:
         if not _check_package_installed(pip_name):
             _install_package(package_spec, description)
@@ -972,17 +1050,28 @@ def _patch_batch_files():
 
 def _patch_portable_batch(batch_path):
     """Patch a portable batch file to run pre_launch.py before main.py."""
-    # Marker for latest patch version - includes pre_launch.py
-    marker_latest = "pre_launch.py"
+    # The correct path uses ComfyUI-Nuvu (distributed name)
+    correct_path = 'ComfyUI-Nuvu\\pre_launch.py'
+    # Old path used ComfyUI-Nuvu-Packager (dev repo name) - needs upgrade
+    old_path = 'ComfyUI-Nuvu-Packager\\pre_launch.py'
     
     try:
         with open(batch_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Already patched with pre_launch.py?
-        if marker_latest in content:
+        # Already patched with correct path?
+        if correct_path in content:
             return
         
+        # Check if patched with old path - upgrade it
+        if old_path in content:
+            new_content = content.replace(old_path, correct_path)
+            with open(batch_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print(f"[ComfyUI-Nuvu] Upgraded {os.path.basename(batch_path)} pre_launch.py path", flush=True)
+            return
+        
+        # Not patched at all - add pre_launch.py
         lines = content.splitlines()
         new_lines = []
         
@@ -1000,9 +1089,8 @@ def _patch_portable_batch(batch_path):
                 parts = line.split()
                 if parts:
                     python_exe = parts[0]
-                    # Run pre_launch.py which handles everything: pending installs, critical packages, requirements
-                    # Note: ComfyUI-Nuvu is the distributed name (ComfyUI-Nuvu-Packager is the dev repo)
-                    prelaunch_line = f'{python_exe} -s ComfyUI\\custom_nodes\\ComfyUI-Nuvu\\pre_launch.py'
+                    # Run pre_launch.py which handles everything
+                    prelaunch_line = f'{python_exe} -s ComfyUI\\custom_nodes\\{correct_path}'
                     new_lines.append(prelaunch_line)
             
             new_lines.append(line)
@@ -1042,17 +1130,28 @@ python main.py --port {port} --preview-method auto
 
 def _patch_venv_batch(batch_path):
     """Patch a venv batch file to run pre_launch.py before main.py."""
-    # Marker for latest patch version - includes pre_launch.py
-    marker_latest = "pre_launch.py"
+    # The correct path uses ComfyUI-Nuvu (distributed name)
+    correct_path = 'ComfyUI-Nuvu\\pre_launch.py'
+    # Old path used ComfyUI-Nuvu-Packager (dev repo name) - needs upgrade
+    old_path = 'ComfyUI-Nuvu-Packager\\pre_launch.py'
     
     try:
         with open(batch_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Already patched with pre_launch.py?
-        if marker_latest in content:
+        # Already patched with correct path?
+        if correct_path in content:
             return
         
+        # Check if patched with old path - upgrade it
+        if old_path in content:
+            new_content = content.replace(old_path, correct_path)
+            with open(batch_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print(f"[ComfyUI-Nuvu] Upgraded {os.path.basename(batch_path)} pre_launch.py path", flush=True)
+            return
+        
+        # Not patched at all - add pre_launch.py
         lines = content.splitlines()
         new_lines = []
         
@@ -1066,8 +1165,7 @@ def _patch_venv_batch(batch_path):
             # Find the line that runs main.py
             if 'python' in line.lower() and 'main.py' in line.lower():
                 # Run pre_launch.py which handles everything: pending installs, critical packages, requirements
-                # Note: ComfyUI-Nuvu is the distributed name (ComfyUI-Nuvu-Packager is the dev repo)
-                prelaunch_line = 'python custom_nodes\\ComfyUI-Nuvu\\pre_launch.py'
+                prelaunch_line = f'python custom_nodes\\{correct_path}'
                 new_lines.append(prelaunch_line)
             
             new_lines.append(line)
