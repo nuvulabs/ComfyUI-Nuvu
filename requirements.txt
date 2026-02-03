@@ -4,4 +4,4 @@ hf_xet
 keyring>=24.3.0
 transformers==4.57.6
 
-comfyui-nuvu==1.0.61
+comfyui-nuvu==1.0.62

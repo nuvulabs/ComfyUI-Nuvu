@@ -1,5 +1,137 @@
 [
   {
+    "hash": "942bcea",
+    "tag": "1.0.62",
+    "date": "2026-02-02T20:33:45-05:00",
+    "message": "Finalize ComfyUI Optimizer and ComfyUI stabilization techniques to recover broken installs."
+  },
+  {
+    "hash": "862cc50",
+    "tag": null,
+    "date": "2026-02-02T20:03:43-05:00",
+    "message": "Fix finding the parent folder when installing new torch versions"
+  },
+  {
+    "hash": "7845447",
+    "tag": null,
+    "date": "2026-02-02T19:58:06-05:00",
+    "message": "fix where pre_launch gets the pending installs from"
+  },
+  {
+    "hash": "c33264d",
+    "tag": null,
+    "date": "2026-02-02T19:53:52-05:00",
+    "message": "Ensure uv uses portable python when needed, continued"
+  },
+  {
+    "hash": "ea432df",
+    "tag": null,
+    "date": "2026-02-02T19:52:16-05:00",
+    "message": "Ensure uv uses standalone python"
+  },
+  {
+    "hash": "9ac9458",
+    "tag": null,
+    "date": "2026-02-02T19:49:43-05:00",
+    "message": "Ensure that critical packages reinstall when using uv"
+  },
+  {
+    "hash": "00d0bce",
+    "tag": null,
+    "date": "2026-02-02T19:45:04-05:00",
+    "message": "add uv install to pre_launch in case it isn't caught by prestartup"
+  },
+  {
+    "hash": "730c3d4",
+    "tag": null,
+    "date": "2026-02-02T19:44:18-05:00",
+    "message": "Update pre-launch to use uv if available."
+  },
+  {
+    "hash": "38371f1",
+    "tag": null,
+    "date": "2026-02-02T19:38:00-05:00",
+    "message": "ensure failsafe functionality runs each time ComfyUI is restarted."
+  },
+  {
+    "hash": "8f04614",
+    "tag": null,
+    "date": "2026-02-02T19:31:44-05:00",
+    "message": "Create prelaunch setup so that we can ensure comfy requirements are always reinitialized in case user inadvertantly installs a breaking python package"
+  },
+  {
+    "hash": "c270aa8",
+    "tag": null,
+    "date": "2026-02-02T17:40:41-05:00",
+    "message": "Add pre_launch script to free up packages so they can be cleaned up before comfyui launches."
+  },
+  {
+    "hash": "a9cc193",
+    "tag": null,
+    "date": "2026-02-02T17:33:38-05:00",
+    "message": "Patch a Pillow and transformers  python package check into startup scripts and install if it's broken or missing to fix common broken python environments"
+  },
+  {
+    "hash": "a87f94c",
+    "tag": null,
+    "date": "2026-02-02T17:19:11-05:00",
+    "message": "Add batch file patching to prestartup_script for requirements installation"
+  },
+  {
+    "hash": "220cd1a",
+    "tag": null,
+    "date": "2026-02-02T17:06:50-05:00",
+    "message": "Refactor package deletion logic in prestartup_script and shared modules to improve accuracy in identifying package directories and metadata. Utilize regex for better matching of versioned metadata directories, ensuring more reliable force deletion of packages."
+  },
+  {
+    "hash": "b89c499",
+    "tag": null,
+    "date": "2026-02-02T16:16:24-05:00",
+    "message": "Fix prestartup to uninstall pending installs first, and then install for more reliable installation"
+  },
+  {
+    "hash": "6f842a9",
+    "tag": null,
+    "date": "2026-02-02T16:00:44-05:00",
+    "message": "Enhance package installation reliability by enforcing pip usage over uv in prestartup and installation processes. Implement recovery for broken packages due to missing RECORD files, allowing for force deletion and retry of installations. Update pip command handling to translate flags appropriately between pip and uv."
+  },
+  {
+    "hash": "3020b81",
+    "tag": null,
+    "date": "2026-02-02T15:36:25-05:00",
+    "message": "Repair critical packages that don't allow ComfyUI to restart when installing pytorch"
+  },
+  {
+    "hash": "0184cc9",
+    "tag": null,
+    "date": "2026-02-02T15:29:37-05:00",
+    "message": "Ensure critical packages and package versions are installed during pre-startup"
+  },
+  {
+    "hash": "3593de1",
+    "tag": null,
+    "date": "2026-02-02T15:23:22-05:00",
+    "message": "Ensure pytorch version switcher can handle lock files and try reinstall again on prestartup if files are locked"
+  },
+  {
+    "hash": "43d21c6",
+    "tag": null,
+    "date": "2026-02-02T15:13:40-05:00",
+    "message": "Refactor pip command handling for embedded Python in uv module. Ensure correct placement of --system and --python flags after subcommands for proper execution."
+  },
+  {
+    "hash": "f493a4d",
+    "tag": null,
+    "date": "2026-02-02T15:08:55-05:00",
+    "message": "Remove authentication checks from all ComfyUI Optimizer features, as these should be free."
+  },
+  {
+    "hash": "bf8e619",
+    "tag": null,
+    "date": "2026-02-02T14:24:31-05:00",
+    "message": "Make uv prestartup installation more robust"
+  },
+  {
     "hash": "7d63a07",
     "tag": "1.0.61",
     "date": "2026-02-02T13:00:18-05:00",
@@ -466,137 +598,5 @@
     "tag": "0.0.29",
     "date": "2026-01-07T12:34:32-05:00",
     "message": "Improve workflow card readability"
-  },
-  {
-    "hash": "5e743cc",
-    "tag": "0.0.28",
-    "date": "2026-01-07T09:28:09-05:00",
-    "message": "Auto-handle migration of ComfyUI from comfyanonymous to Comfy-Org git location"
-  },
-  {
-    "hash": "4c6dc12",
-    "tag": "0.0.27",
-    "date": "2026-01-07T09:21:49-05:00",
-    "message": "Update references to point to new ComfyUI Repo location"
-  },
-  {
-    "hash": "bb603bb",
-    "tag": "0.0.26",
-    "date": "2026-01-06T22:17:27-05:00",
-    "message": "Fix bug when installing custom node packages that require models to be downloaded from huggingface"
-  },
-  {
-    "hash": "78757ec",
-    "tag": "0.0.25",
-    "date": "2026-01-05T22:15:22-05:00",
-    "message": "Correct Desktop & Start Menu Icon not showing correctly."
-  },
-  {
-    "hash": "c7b15c8",
-    "tag": "0.0.24",
-    "date": "2026-01-05T21:59:48-05:00",
-    "message": "Fix strange git state"
-  },
-  {
-    "hash": "7265609",
-    "tag": null,
-    "date": "2026-01-05T21:59:26-05:00",
-    "message": "Fix strange git state. No feature updates."
-  },
-  {
-    "hash": "0dd5178",
-    "tag": "0.0.23",
-    "date": "2026-01-05T21:48:38-05:00",
-    "message": "Add desktop shortcuts and icon copying for Nuvu-ComfyUI installation scripts; remove VRAM checks from workflow components"
-  },
-  {
-    "hash": "d58bf2d",
-    "tag": "0.0.22",
-    "date": "2025-12-27T23:54:03-05:00",
-    "message": "Increase reliability of system VRAM check for whether a workflow can be run on a user's machine."
-  },
-  {
-    "hash": "0f6ed82",
-    "tag": null,
-    "date": "2025-12-27T23:43:00-05:00",
-    "message": "Add estimate of if user's hardware can run a workflow that they are installing."
-  },
-  {
-    "hash": "b485600",
-    "tag": null,
-    "date": "2025-12-27T22:00:52-05:00",
-    "message": "Ensure process finishes when downloading multiple models on \"Models\" tab."
-  },
-  {
-    "hash": "d19ff21",
-    "tag": "0.0.21",
-    "date": "2025-12-27T19:51:20-05:00",
-    "message": "Refactor build_cython.py and setup.py to dynamically discover Python files for compilation, excluding __init__.py files. This improves maintainability by automating file management."
-  },
-  {
-    "hash": "4f6cb8b",
-    "tag": "0.0.20",
-    "date": "2025-12-26T20:43:53-05:00",
-    "message": "Add system optimization for better user experience"
-  },
-  {
-    "hash": "48c67a1",
-    "tag": "0.0.18",
-    "date": "2025-12-23T09:57:27-05:00",
-    "message": "REAME syntax corrections, no Nuvu Plugin Chagnes."
-  },
-  {
-    "hash": "9559a8c",
-    "tag": null,
-    "date": "2025-12-23T09:51:46-05:00",
-    "message": "Cleanup model files on failed downloads to avoid corrupted files breaking workflows."
-  },
-  {
-    "hash": "67290b9",
-    "tag": null,
-    "date": "2025-12-21T23:50:12-05:00",
-    "message": "Refactor CSS and JavaScript files for improved structure and readability. Update comfyui-nuvu.css for consistent styling and enhance nuvu.js by cleaning up imports and optimizing code structure."
-  },
-  {
-    "hash": "99f03aa",
-    "tag": "0.0.17",
-    "date": "2025-12-21T12:02:50-05:00",
-    "message": "Improve messaging when user's device is not registered, and allow analyzing a new workflow without having to refresh the page"
-  },
-  {
-    "hash": "9c7cedc",
-    "tag": "0.0.16",
-    "date": "2025-12-21T11:08:09-05:00",
-    "message": "Adjust logo paths to avoid unrendered logos"
-  },
-  {
-    "hash": "db37708",
-    "tag": "0.0.15",
-    "date": "2025-12-21T00:09:35-05:00",
-    "message": "Update .gitignore to exclude log files and enhance GitHub Actions workflow to prevent log files from being uploaded. Clean up potential log files during build process for improved artifact management."
-  },
-  {
-    "hash": "b71d6ab",
-    "tag": "0.0.14",
-    "date": "2025-12-20T23:42:31-05:00",
-    "message": "Merge: Accept incoming changes - restructure to src-frontend"
-  },
-  {
-    "hash": "a712092",
-    "tag": "0.0.13",
-    "date": "2025-12-20T22:39:45-05:00",
-    "message": "Enhance Vite configuration to suppress specific warnings related to import.meta.url and adjust asset file naming for CSS. Update dialog.js to ensure correct base URL handling after bundling, and modify nuvu.js to reflect changes in module structure. Remove obsolete JavaScript files to streamline the codebase."
-  },
-  {
-    "hash": "c9cbc03",
-    "tag": "0.0.12",
-    "date": "2025-12-20T21:46:04-05:00",
-    "message": "Update Vite configuration to improve build output structure and reserved names. Change output directory to 'dist' and adjust library entry points for better organization. Enhance reserved strings and names for ComfyUI integration. Update GitHub Actions workflow to reflect changes in build process and output paths. Modify extension path handling in JavaScript files to ensure compatibility with Vite's ignore feature."
-  },
-  {
-    "hash": "7739b9e",
-    "tag": "0.0.11",
-    "date": "2025-12-20T20:58:47-05:00",
-    "message": "Update README.md to replace logo image with a new design. Enhance changelog retrieval by implementing separate handling for Nuvu and ComfyUI repositories, improving error handling, and adding remote fetching capabilities for commit history. This update streamlines the process of obtaining the latest commit information for both repository types."
   }
 ]

@@ -98,6 +98,76 @@ def _get_requirements_cache_path(repo_path):
     return os.path.join(nuvu_dir, 'installed_requirements.txt')
 
 
+def _get_torch_index_file():
+    """Get the path to the torch index URL file."""
+    comfyui_root = _detect_comfyui_root() or os.path.dirname(os.path.dirname(_script_dir))
+    nuvu_dir = os.path.join(comfyui_root, '.nuvu')
+    os.makedirs(nuvu_dir, exist_ok=True)
+    return os.path.join(nuvu_dir, 'torch_index_url.txt')
+
+
+def get_torch_index_url():
+    """Load saved torch index URL from file."""
+    index_file = _get_torch_index_file()
+    if os.path.isfile(index_file):
+        try:
+            with open(index_file, 'r') as f:
+                url = f.read().strip()
+                if url:
+                    return url
+        except Exception:
+            pass
+    return None
+
+
+def save_torch_index_url(url):
+    """Save torch index URL to file for future use."""
+    if not url:
+        return
+    index_file = _get_torch_index_file()
+    try:
+        os.makedirs(os.path.dirname(index_file), exist_ok=True)
+        with open(index_file, 'w') as f:
+            f.write(url)
+        logger.info(f"[ComfyUI-Nuvu] Saved torch index URL: {url}")
+    except Exception as e:
+        logger.debug(f"[ComfyUI-Nuvu] Could not save torch index URL: {e}")
+
+
+def _detect_and_save_torch_index():
+    """
+    Detect the installed PyTorch CUDA version and save the corresponding index URL.
+    
+    This is useful when:
+    - User manually installed PyTorch
+    - First run after fresh install
+    - Index URL file was deleted
+    
+    Only saves if no index URL is already saved.
+    """
+    # Skip if already have a saved index URL
+    if get_torch_index_url():
+        return
+    
+    try:
+        import torch
+        if hasattr(torch, 'version') and hasattr(torch.version, 'cuda') and torch.version.cuda:
+            # Extract CUDA version like "12.8" from torch
+            cuda_version = torch.version.cuda
+            # Convert to index format like "cu128"
+            cuda_parts = cuda_version.split('.')
+            if len(cuda_parts) >= 2:
+                cuda_label = f"cu{cuda_parts[0]}{cuda_parts[1]}"
+                index_url = f"https://download.pytorch.org/whl/{cuda_label}"
+                save_torch_index_url(index_url)
+                logger.debug(f"[ComfyUI-Nuvu] Detected PyTorch CUDA {cuda_version}, saved index URL")
+    except ImportError:
+        # PyTorch not installed yet
+        pass
+    except Exception as e:
+        logger.debug(f"[ComfyUI-Nuvu] Could not detect PyTorch CUDA version: {e}")
+
+
 def _files_equal(file1, file2):
     """Check if two files are equal"""
     try:
@@ -282,6 +352,12 @@ def _run_requirements_install(name, repo_path, requirements_filename, uv_path):
     
     cmd = _build_install_cmd(uv_path, requirements_path)
     
+    # Add torch index URL if available (ensures torch dependencies come from correct CUDA index)
+    torch_index = get_torch_index_url()
+    if torch_index:
+        cmd.extend(['--extra-index-url', torch_index])
+        logger.debug(f"[ComfyUI-Nuvu] Using torch index: {torch_index}")
+    
     try:
         result = subprocess.run(
             cmd,
@@ -423,6 +499,7 @@ def _force_delete_package(pkg_name):
     Used when pip/uv can't uninstall due to missing RECORD file.
     """
     import site
+    import re
     
     # Get site-packages directories
     site_packages_dirs = site.getsitepackages()
@@ -431,8 +508,8 @@ def _force_delete_package(pkg_name):
         if user_site:
             site_packages_dirs.append(user_site)
     
-    # Normalize package name for directory matching
-    pkg_normalized = pkg_name.lower().replace('-', '_').replace('.', '_')
+    # Normalize package name for directory matching (pip uses underscores internally)
+    pkg_normalized = pkg_name.lower().replace('-', '_')
     
     deleted = False
     for sp_dir in site_packages_dirs:
@@ -441,10 +518,19 @@ def _force_delete_package(pkg_name):
         
         try:
             for item in os.listdir(sp_dir):
-                item_lower = item.lower().replace('-', '_').replace('.', '_')
-                # Match package directory or dist-info/egg-info
-                if (item_lower.startswith(pkg_normalized) or 
-                    item_lower.startswith(f"{pkg_normalized}-")):
+                item_lower = item.lower().replace('-', '_')
+                
+                # Check for exact match (package directory like "torch" or "torchvision")
+                is_exact_match = item_lower == pkg_normalized
+                
+                # Check for metadata directory (like "torch_2.10.0.dist_info" or "torch_2.10.0+cu130.dist_info")
+                # Pattern: {package}_{version}.dist_info or .egg_info
+                # The version starts with a digit, so we check for {pkg}_{digit}
+                is_metadata = bool(re.match(rf'^{re.escape(pkg_normalized)}_\d', item_lower)) and \
+                              ('dist_info' in item_lower or 'dist-info' in item_lower or 
+                               'egg_info' in item_lower or 'egg-info' in item_lower)
+                
+                if is_exact_match or is_metadata:
                     item_path = os.path.join(sp_dir, item)
                     if os.path.isdir(item_path):
                         print(f"[ComfyUI-Nuvu] Force deleting: {item_path}", flush=True)
@@ -474,7 +560,6 @@ def _run_pending_uninstalls(uv_path):
         return
     
     print(f"\n[ComfyUI-Nuvu] Processing {len(markers)} pending uninstall(s)...", flush=True)
-    logger.info(f"[ComfyUI-Nuvu] Found {len(markers)} pending uninstall marker(s)")
     
     for marker_path in markers:
         marker_name = os.path.basename(marker_path).replace('.txt', '')
@@ -488,7 +573,6 @@ def _run_pending_uninstalls(uv_path):
                 continue
             
             print(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall: {', '.join(packages)}", flush=True)
-            logger.info(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall: {', '.join(packages)}")
             
             # Always use pip for uninstalls - it's more lenient about missing RECORD files
             is_embedded = "python_embeded" in sys.executable.lower()
@@ -500,7 +584,6 @@ def _run_pending_uninstalls(uv_path):
             cmd.extend(packages)
             
             print(f"[ComfyUI-Nuvu] Running: {' '.join(cmd)}", flush=True)
-            logger.info(f"[ComfyUI-Nuvu] Running: {' '.join(cmd)}")
             
             result = subprocess.run(
                 cmd,
@@ -512,7 +595,6 @@ def _run_pending_uninstalls(uv_path):
             if result.returncode == 0:
                 for pkg in packages:
                     print(f"[ComfyUI-Nuvu] Uninstalled: {pkg}", flush=True)
-                    logger.info(f"[ComfyUI-Nuvu] Uninstalled: {pkg}")
                 os.remove(marker_path)
             else:
                 # Check if RECORD file error - need force deletion
@@ -536,25 +618,20 @@ def _run_pending_uninstalls(uv_path):
                                 verify_result = subprocess.run(verify_cmd, capture_output=True, text=True, timeout=30)
                                 if verify_result.returncode != 0:
                                     print(f"[ComfyUI-Nuvu] Force deleted: {pkg}", flush=True)
-                                    logger.info(f"[ComfyUI-Nuvu] Force deleted: {pkg}")
                                     continue
                         all_gone = False
                         still_installed.append(pkg)
                     else:
                         print(f"[ComfyUI-Nuvu] Uninstalled: {pkg}", flush=True)
-                        logger.info(f"[ComfyUI-Nuvu] Uninstalled: {pkg}")
                 
                 if all_gone:
                     print(f"[ComfyUI-Nuvu] {marker_name} packages verified removed", flush=True)
-                    logger.info(f"[ComfyUI-Nuvu] {marker_name} packages verified removed")
                     os.remove(marker_path)
                 else:
                     print(f"[ComfyUI-Nuvu] {marker_name} uninstall incomplete, still installed: {', '.join(still_installed)}", flush=True)
-                    logger.warning(f"[ComfyUI-Nuvu] {marker_name} uninstall issue: {result.stderr[:200]}")
         
         except Exception as e:
             print(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall error: {e}", flush=True)
-            logger.warning(f"[ComfyUI-Nuvu] Pending {marker_name} uninstall error: {e}")
 
 
 def _get_pending_installs_dir():
@@ -565,12 +642,50 @@ def _get_pending_installs_dir():
     return nuvu_dir
 
 
+def _extract_package_names(spec_parts):
+    """
+    Extract just the package names from a spec_parts list.
+    
+    Filters out flags (--force-reinstall, --index-url, etc.) and their values,
+    returning only package names/specs like 'torch==2.10.0', 'torchvision'.
+    """
+    packages = []
+    skip_next = False
+    
+    for part in spec_parts:
+        if skip_next:
+            skip_next = False
+            continue
+        
+        if part.startswith('--'):
+            # Check if this flag takes a value
+            if part in ['--index-url', '--extra-index-url', '--find-links', '-f']:
+                skip_next = True
+            continue
+        elif part.startswith('-'):
+            # Short flags like -U, -q
+            continue
+        else:
+            # This is a package name/spec
+            # Extract just the package name (before == or >= etc.)
+            import re
+            pkg_name = re.split(r'[<>=!]', part)[0]
+            if pkg_name:
+                packages.append(pkg_name)
+    
+    return packages
+
+
 def _run_pending_installs(uv_path):
     """Install all packages that were marked for installation on restart.
     
     This handles packages that failed to install due to locked files.
     Marker files are stored in .nuvu/pending_installs/<name>.txt
     Each file contains the full package spec to install.
+    
+    For reliability, we:
+    1. Uninstall the packages first (to avoid CUDA version mismatches, broken metadata)
+    2. Then install fresh
     """
     pending_dir = _get_pending_installs_dir()
     
@@ -583,7 +698,13 @@ def _run_pending_installs(uv_path):
         return
     
     print(f"\n[ComfyUI-Nuvu] Processing {len(markers)} pending install(s)...", flush=True)
-    logger.info(f"[ComfyUI-Nuvu] Found {len(markers)} pending install marker(s)")
+    
+    is_embedded = "python_embeded" in sys.executable.lower()
+    
+    # Build base python command for pip (add -s for embedded to skip user site-packages)
+    pip_base = [sys.executable]
+    if is_embedded:
+        pip_base.append('-s')
     
     for filename in markers:
         marker_path = os.path.join(pending_dir, filename)
@@ -597,65 +718,76 @@ def _run_pending_installs(uv_path):
                 continue
             
             print(f"[ComfyUI-Nuvu] Pending install: {package_spec}", flush=True)
-            logger.info(f"[ComfyUI-Nuvu] Pending install: {package_spec}")
             
             # Split the package spec to handle args like --pre --extra-index-url
-            # e.g., "onnxruntime-gpu --pre --extra-index-url https://..."
             import shlex
             spec_parts = shlex.split(package_spec)
             
-            # Use uv if available, otherwise pip
-            # Note: For special index URLs, we use pip since uv may not support all options
-            is_embedded = "python_embeded" in sys.executable.lower()
-            if '--index-url' in package_spec or '--extra-index-url' in package_spec or '--pre' in package_spec:
-                # Use pip for special cases
-                cmd = [sys.executable, '-m', 'pip', 'install', '-U'] + spec_parts
-            elif uv_path:
-                cmd = [uv_path, 'pip', 'install', '-U']
-                if is_embedded:
-                    cmd.extend(['--system', '--python', sys.executable])
-                cmd += spec_parts
-            else:
-                cmd = [sys.executable, '-m', 'pip', 'install', '-U'] + spec_parts
+            # Extract package names for uninstall step
+            package_names = _extract_package_names(spec_parts)
             
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+            # Step 1: Uninstall packages first to ensure clean state
+            # This avoids CUDA version mismatches and broken metadata issues
+            if package_names:
+                print(f"[ComfyUI-Nuvu] Uninstalling first: {', '.join(package_names)}", flush=True)
+                uninstall_cmd = pip_base + ['-m', 'pip', 'uninstall', '-y'] + package_names
+                uninstall_result = subprocess.run(uninstall_cmd, capture_output=True, text=True, timeout=120)
+                if uninstall_result.returncode != 0:
+                    # If uninstall fails, try force-deleting from site-packages
+                    for pkg in package_names:
+                        _force_delete_package(pkg)
+            
+            # Step 2: Install packages
+            # Always use pip in prestartup for reliability
+            cmd = pip_base + ['-m', 'pip', 'install'] + spec_parts
+            
+            print(f"[ComfyUI-Nuvu] Installing: {' '.join(cmd)}", flush=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
             
             if result.returncode == 0:
                 print(f"[ComfyUI-Nuvu] Successfully installed {package_spec}", flush=True)
-                logger.info(f"[ComfyUI-Nuvu] Successfully installed {package_spec}")
             else:
-                print(f"[ComfyUI-Nuvu] Failed to install {package_spec}: {result.stderr[:200]}", flush=True)
-                logger.warning(f"[ComfyUI-Nuvu] Failed to install {package_spec}: {result.stderr[:200]}")
+                print(f"[ComfyUI-Nuvu] Failed to install {package_spec}: {result.stderr[:500]}", flush=True)
             
             # Remove marker regardless of success (don't retry forever)
             os.remove(marker_path)
             
         except subprocess.TimeoutExpired:
             print(f"[ComfyUI-Nuvu] Pending install timed out: {package_spec}", flush=True)
-            logger.warning(f"[ComfyUI-Nuvu] Pending install timed out: {package_spec}")
             try:
                 os.remove(marker_path)
             except Exception:
                 pass
         except Exception as e:
             print(f"[ComfyUI-Nuvu] Pending install error: {e}", flush=True)
-            logger.warning(f"[ComfyUI-Nuvu] Pending install error: {e}")
 
 
 def _install_pending_requirements():
-    """Install pending requirements for Nuvu, ComfyUI, and custom nodes."""
-    # Find or install uv
-    uv_path = _find_uv()
-    if not uv_path:
-        uv_path = _install_uv()
+    """Install pending requirements for Nuvu, ComfyUI, and custom nodes.
     
-    if uv_path:
-        logger.info("[ComfyUI-Nuvu] Using uv for faster installs")
+    NOTE: Pending installs/uninstalls are primarily handled by pre_launch.py which runs
+    BEFORE main.py (from the batch file). This avoids file lock issues since no
+    packages are loaded yet. However, we also run them here as a fallback in case:
+    - The batch file wasn't patched yet
+    - User runs main.py directly without the batch file
+    - pre_launch.py failed for some reason
+    
+    If pre_launch already processed the markers, these will be no-ops.
+    
+    NOTE: We always use pip here instead of uv for reliability.
+    uv is faster but can leave packages in broken states (version=None, missing RECORD)
+    when installations are interrupted. Prestartup runs on every startup and must be
+    rock-solid, so we use pip which handles edge cases more gracefully.
+    """
+    # Always use pip in prestartup for reliability (uv can leave packages broken)
+    uv_path = None
     
     # Handle pending package uninstalls FIRST (before anything loads .pyd files)
+    # These are also handled by pre_launch.py, but we run here as fallback
     _run_pending_uninstalls(uv_path)
     
     # Handle pending package installs (for packages that failed due to locked files)
+    # May fail here due to file locks, but will create new markers for next restart
     _run_pending_installs(uv_path)
     
     # Install Nuvu requirements
@@ -676,10 +808,272 @@ def _install_pending_requirements():
                 _run_requirements_install(f"Custom Node: {node_name}", node_path, "requirements.txt", uv_path)
 
 
+# =============================================================================
+# Critical Package Verification
+# =============================================================================
+# Packages that must be installed and functional for ComfyUI to start.
+# Format: (pip_name, package_spec, description)
+#   - pip_name: Package name as shown by pip (e.g., "Pillow", "numpy")
+#   - package_spec: Package to install if missing (e.g., "pillow" or "pillow>=10.0.0")
+#   - description: Human-readable name for logging
+
+CRITICAL_PACKAGES = [
+    ("Pillow", "pillow", "Pillow"),
+    # Add more critical packages here as needed:
+    # ("numpy", "numpy", "NumPy"),
+    # ("torch", "torch", "PyTorch"),
+]
+
+
+def _check_package_installed(pip_name: str) -> bool:
+    """
+    Check if a package is installed using pip show (without importing it).
+    
+    This avoids loading/locking module files, which is important for packages
+    that might be in a broken state and need reinstallation.
+    """
+    is_embedded = "python_embeded" in sys.executable.lower()
+    
+    if is_embedded:
+        cmd = [sys.executable, '-s', '-m', 'pip', 'show', pip_name]
+    else:
+        cmd = [sys.executable, '-m', 'pip', 'show', pip_name]
+    
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        # pip show returns 0 if package is found, non-zero if not
+        if result.returncode != 0:
+            return False
+        
+        # Also check that the Location exists and isn't empty
+        # This catches partially uninstalled packages
+        for line in result.stdout.splitlines():
+            if line.startswith('Location:'):
+                location = line.split(':', 1)[1].strip()
+                if not location or not os.path.isdir(location):
+                    return False
+                break
+        
+        return True
+    except Exception:
+        return False
+
+
+def _install_package(package_spec: str, description: str) -> bool:
+    """
+    Force reinstall a package using pip.
+    
+    NOTE: We always use pip here instead of uv for reliability.
+    uv can leave packages in broken states when interrupted.
+    
+    Args:
+        package_spec: Package specification (e.g., "pillow" or "pillow>=10.0.0")
+        description: Human-readable name for logging
+    
+    Returns:
+        True if installation succeeded, False otherwise
+    """
+    print(f"[ComfyUI-Nuvu] {description} is missing or broken, reinstalling...", flush=True)
+    
+    is_embedded = "python_embeded" in sys.executable.lower()
+    
+    # Always use pip in prestartup for reliability
+    if is_embedded:
+        cmd = [sys.executable, '-s', '-m', 'pip', 'install', '--force-reinstall', package_spec]
+    else:
+        cmd = [sys.executable, '-m', 'pip', 'install', '--force-reinstall', package_spec]
+    
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        
+        if result.returncode == 0:
+            print(f"[ComfyUI-Nuvu] {description} reinstalled successfully", flush=True)
+            return True
+        else:
+            print(f"[ComfyUI-Nuvu] {description} reinstall failed: {result.stderr[:200]}", flush=True)
+            return False
+    except Exception as e:
+        print(f"[ComfyUI-Nuvu] {description} reinstall error: {e}", flush=True)
+        return False
+
+
+def _ensure_critical_packages():
+    """
+    Ensure all critical packages are installed and functional.
+    
+    Critical packages are required for ComfyUI to start. If any are missing or broken,
+    they will be force reinstalled. This can happen when package upgrades fail mid-way
+    (e.g., PyTorch upgrade that tries to reinstall dependencies but fails due to locked files).
+    
+    Uses pip show to check packages WITHOUT importing them, which avoids loading/locking
+    broken module files that would prevent reinstallation.
+    """
+    for pip_name, package_spec, description in CRITICAL_PACKAGES:
+        if not _check_package_installed(pip_name):
+            _install_package(package_spec, description)
+
+
+def _patch_batch_files():
+    """
+    Patch ComfyUI batch files to install requirements.txt before starting.
+    
+    This ensures that if packages are broken/missing (e.g., after a failed PyTorch upgrade),
+    they get reinstalled BEFORE main.py tries to import them.
+    
+    This runs once on first prestartup and modifies the batch files in-place.
+    """
+    is_embedded = "python_embeded" in sys.executable.lower()
+    
+    # Find ComfyUI root directory
+    # prestartup runs from custom_nodes/ComfyUI-Nuvu-Packager/
+    packager_dir = os.path.dirname(os.path.abspath(__file__))
+    custom_nodes_dir = os.path.dirname(packager_dir)
+    comfyui_dir = os.path.dirname(custom_nodes_dir)
+    
+    if is_embedded:
+        # Portable install: batch file is in parent of ComfyUI folder
+        # Structure: portable_root/ComfyUI/custom_nodes/...
+        portable_root = os.path.dirname(comfyui_dir)
+        
+        # Look for common portable batch file names
+        batch_candidates = [
+            'run_nvidia_gpu.bat',
+            'run_nvidia_gpu_fast_fp16_accumulation.bat',
+            'run_cpu.bat', 
+            'run.bat',
+        ]
+        
+        for batch_name in batch_candidates:
+            batch_path = os.path.join(portable_root, batch_name)
+            if os.path.isfile(batch_path):
+                _patch_portable_batch(batch_path)
+    else:
+        # Venv install: batch file is in ComfyUI folder
+        batch_path = os.path.join(comfyui_dir, 'run_comfy.bat')
+        if os.path.isfile(batch_path):
+            _patch_venv_batch(batch_path)
+
+
+def _patch_portable_batch(batch_path):
+    """Patch a portable batch file to run pre_launch.py before main.py."""
+    # Marker for latest patch version - includes pre_launch.py
+    marker_latest = "pre_launch.py"
+    
+    try:
+        with open(batch_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Already patched with pre_launch.py?
+        if marker_latest in content:
+            return
+        
+        lines = content.splitlines()
+        new_lines = []
+        
+        for line in lines:
+            # Skip old patch lines (any previous force-reinstall or requirements install lines we added)
+            if '--force-reinstall pillow' in line.lower():
+                continue
+            if 'pip install -r' in line.lower() and 'requirements.txt' in line.lower():
+                continue
+            
+            # Find the line that runs main.py
+            if 'python' in line.lower() and 'main.py' in line.lower():
+                # Extract the python executable path from this line
+                # e.g., ".\python_embeded\python.exe -s ComfyUI\main.py ..."
+                parts = line.split()
+                if parts:
+                    python_exe = parts[0]
+                    # Run pre_launch.py which handles everything: pending installs, critical packages, requirements
+                    prelaunch_line = f'{python_exe} -s ComfyUI\\custom_nodes\\ComfyUI-Nuvu-Packager\\pre_launch.py'
+                    new_lines.append(prelaunch_line)
+            
+            new_lines.append(line)
+        
+        new_content = '\n'.join(new_lines)
+        
+        # Only write if changed
+        if new_content != content:
+            with open(batch_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print(f"[ComfyUI-Nuvu] Patched {os.path.basename(batch_path)} to run pre_launch.py on startup", flush=True)
+    
+    except Exception as e:
+        # Don't fail prestartup if patching fails
+        print(f"[ComfyUI-Nuvu] Could not patch {batch_path}: {e}", flush=True)
+
+
+def _patch_venv_batch(batch_path):
+    """Patch a venv batch file to run pre_launch.py before main.py."""
+    # Marker for latest patch version - includes pre_launch.py
+    marker_latest = "pre_launch.py"
+    
+    try:
+        with open(batch_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Already patched with pre_launch.py?
+        if marker_latest in content:
+            return
+        
+        lines = content.splitlines()
+        new_lines = []
+        
+        for line in lines:
+            # Skip old patch lines (any previous force-reinstall or requirements install lines we added)
+            if '--force-reinstall pillow' in line.lower():
+                continue
+            if 'pip install -r' in line.lower() and 'requirements.txt' in line.lower():
+                continue
+            
+            # Find the line that runs main.py
+            if 'python' in line.lower() and 'main.py' in line.lower():
+                # Run pre_launch.py which handles everything: pending installs, critical packages, requirements
+                prelaunch_line = 'python custom_nodes\\ComfyUI-Nuvu-Packager\\pre_launch.py'
+                new_lines.append(prelaunch_line)
+            
+            new_lines.append(line)
+        
+        new_content = '\n'.join(new_lines)
+        
+        # Only write if changed
+        if new_content != content:
+            with open(batch_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            print(f"[ComfyUI-Nuvu] Patched {os.path.basename(batch_path)} to run pre_launch.py on startup", flush=True)
+    
+    except Exception as e:
+        # Don't fail prestartup if patching fails
+        print(f"[ComfyUI-Nuvu] Could not patch {batch_path}: {e}", flush=True)
+
+
 # Run on module load (prestartup phase)
 try:
+    # Install uv if not present (used by pre_launch.py for faster installs)
+    _install_uv()
+    
+    # Patch batch files to install requirements before main.py (runs once)
+    _patch_batch_files()
+    
+    # Detect and save torch index URL if not already saved
+    # This captures the CUDA version from the installed PyTorch
+    _detect_and_save_torch_index()
+    
     # Install any pending requirements
     _install_pending_requirements()
+    
+    # Ensure critical packages are installed and working
+    _ensure_critical_packages()
     
     # Clean up orphaned dist-info directories after install
     _cleanup_orphaned_dist_info()
