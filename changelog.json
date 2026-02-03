@@ -1,5 +1,17 @@
 [
   {
+    "hash": "5de4cad",
+    "tag": "1.0.67",
+    "date": "2026-02-03T12:06:43-05:00",
+    "message": "Fix huggingface_hub being detected on system when using comfyui portable with manager."
+  },
+  {
+    "hash": "eb5a293",
+    "tag": null,
+    "date": "2026-02-03T11:21:49-05:00",
+    "message": "Patch Comfy Manager installing the wrong huggingface_hub version, which crashes ComfyUI on startup"
+  },
+  {
     "hash": "f907622",
     "tag": "1.0.66",
     "date": "2026-02-02T22:17:09-05:00",
@@ -586,17 +598,5 @@
     "tag": "1.0.3",
     "date": "2026-01-08T22:33:36-05:00",
     "message": "Fix version update in github workflow"
-  },
-  {
-    "hash": "f32972f",
-    "tag": null,
-    "date": "2026-01-08T22:26:54-05:00",
-    "message": "Change Registry name from Nuvu to ComfyUI-Nuvu"
-  },
-  {
-    "hash": "ed0c6a0",
-    "tag": "1.0.1",
-    "date": "2026-01-08T22:21:55-05:00",
-    "message": "Avoid popping new browser tab when running with --auto-launch cli arg"
   }
 ]

@@ -834,11 +834,19 @@ def _install_pending_requirements():
 #   - package_spec: Package to install if missing (e.g., "pillow" or "pillow>=10.0.0")
 #   - description: Human-readable name for logging
 
+# CRITICAL_PACKAGES: packages that must be installed for ComfyUI to start
+# Format: (pip_name, package_spec, description, force_version)
+# - pip_name: name to check with pip show
+# - package_spec: what to install (can include version constraints)
+# - description: for logging
+# - force_version: if True, always reinstall to ensure version constraint (for <, >, != specs)
 CRITICAL_PACKAGES = [
-    ("Pillow", "pillow", "Pillow"),
+    ("Pillow", "pillow", "Pillow", False),
+    # huggingface_hub>=1.0 breaks some ComfyUI workflows, pin to <1.0
+    ("huggingface_hub", "huggingface_hub<1.0", "HuggingFace Hub", True),
     # Add more critical packages here as needed:
-    # ("numpy", "numpy", "NumPy"),
-    # ("torch", "torch", "PyTorch"),
+    # ("numpy", "numpy", "NumPy", False),
+    # ("torch", "torch", "PyTorch", False),
 ]
 
 
@@ -980,6 +988,161 @@ def _cleanup_corrupted_packages():
         logger.debug(f"[ComfyUI-Nuvu] Error checking for corrupted packages: {e}")
 
 
+def _get_installed_version(pip_name: str) -> str:
+    """Get the installed version of a package using importlib.metadata.
+    
+    This uses importlib.metadata.version() which reflects what Python will actually
+    import at runtime (including user site-packages if -s flag is not used).
+    This is more accurate than pip show for detecting version conflicts.
+    """
+    try:
+        import importlib.metadata
+        return importlib.metadata.version(pip_name)
+    except importlib.metadata.PackageNotFoundError:
+        return ""
+    except Exception:
+        return ""
+
+
+def _version_satisfies_constraint(installed_version: str, constraint: str) -> bool:
+    """Check if installed version satisfies a version constraint like '<1.0' or '>=0.34.0'."""
+    if not installed_version:
+        return False
+    
+    try:
+        # Parse the constraint
+        import re
+        match = re.match(r'^([<>=!]+)(.+)$', constraint)
+        if not match:
+            return True  # No constraint, any version is fine
+        
+        op, required = match.groups()
+        
+        # Parse versions into tuples for comparison
+        def parse_version(v):
+            # Handle versions like "1.2.3" or "0.34.0"
+            parts = []
+            for part in v.split('.'):
+                # Extract numeric prefix
+                num_match = re.match(r'^(\d+)', part)
+                if num_match:
+                    parts.append(int(num_match.group(1)))
+                else:
+                    parts.append(0)
+            return tuple(parts)
+        
+        installed = parse_version(installed_version)
+        required_v = parse_version(required)
+        
+        if op == '<':
+            return installed < required_v
+        elif op == '<=':
+            return installed <= required_v
+        elif op == '>':
+            return installed > required_v
+        elif op == '>=':
+            return installed >= required_v
+        elif op == '==':
+            return installed == required_v
+        elif op == '!=':
+            return installed != required_v
+        else:
+            return True
+    except Exception:
+        return False  # If we can't parse, assume it doesn't satisfy
+
+
+def _uninstall_package(pip_name: str) -> bool:
+    """
+    Uninstall a package from both embedded AND user site-packages.
+    
+    This is aggressive because:
+    1. It uninstalls from embedded site-packages (with -s flag)
+    2. It also uninstalls from user site-packages (without -s flag)
+    3. Falls back to force deletion if pip fails
+    
+    This handles the case where ComfyUI-Manager restarts without the -s flag,
+    causing Python to see packages from user site-packages.
+    
+    Returns True if uninstall succeeded, False otherwise.
+    """
+    is_embedded = "python_embeded" in sys.executable.lower()
+    
+    if is_embedded:
+        # First uninstall from embedded site-packages
+        cmd1 = [sys.executable, '-s', '-m', 'pip', 'uninstall', '-y', pip_name]
+        try:
+            subprocess.run(cmd1, capture_output=True, text=True, timeout=60)
+        except Exception:
+            pass
+        
+        # Also uninstall from user site-packages (this handles the case where
+        # ComfyUI-Manager restarts without -s flag and Python sees user packages)
+        cmd2 = [sys.executable, '-m', 'pip', 'uninstall', '-y', pip_name]
+        try:
+            result = subprocess.run(cmd2, capture_output=True, text=True, timeout=60)
+            if result.returncode != 0:
+                # pip failed, force delete from both locations
+                _force_delete_package(pip_name)
+        except Exception:
+            _force_delete_package(pip_name)
+    else:
+        # Non-embedded Python - just uninstall normally
+        cmd = [sys.executable, '-m', 'pip', 'uninstall', '-y', pip_name]
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            if result.returncode != 0:
+                _force_delete_package(pip_name)
+        except Exception:
+            _force_delete_package(pip_name)
+    
+    return True
+
+
+def _has_conflicting_versions(pip_name: str) -> bool:
+    """
+    Check if a package has multiple dist-info directories (conflicting versions).
+    
+    This can happen when pip/uv fails to fully remove an old version during upgrade,
+    leaving multiple .dist-info directories. pip show might report one version,
+    but Python could import code from another version's actual module files.
+    
+    Returns True if multiple dist-info directories exist, False otherwise.
+    """
+    import site
+    import re
+    
+    # Normalize package name (pip uses underscores internally)
+    normalized_name = pip_name.replace('-', '_').lower()
+    
+    # Get site-packages directories
+    site_packages_dirs = site.getsitepackages()
+    if hasattr(site, 'getusersitepackages'):
+        user_site = site.getusersitepackages()
+        if user_site:
+            site_packages_dirs.append(user_site)
+    
+    total_dist_infos = 0
+    
+    for sp_dir in site_packages_dirs:
+        if not sp_dir or not os.path.isdir(sp_dir):
+            continue
+        
+        try:
+            for item in os.listdir(sp_dir):
+                # Match package_name-version.dist-info
+                if item.endswith('.dist-info'):
+                    # Extract package name from dist-info (format: name-version.dist-info)
+                    dist_name = item.rsplit('-', 1)[0] if '-' in item else item[:-10]
+                    dist_name_normalized = dist_name.replace('-', '_').lower()
+                    if dist_name_normalized == normalized_name:
+                        total_dist_infos += 1
+        except Exception:
+            continue
+    
+    return total_dist_infos > 1
+
+
 def _ensure_critical_packages():
     """
     Ensure all critical packages are installed and functional.
@@ -990,14 +1153,51 @@ def _ensure_critical_packages():
     
     Uses pip show to check packages WITHOUT importing them, which avoids loading/locking
     broken module files that would prevent reinstallation.
+    
+    For packages with version constraints (force_version=True), check if the installed
+    version satisfies the constraint before reinstalling. To handle cases where multiple
+    conflicting versions exist (pip sees one version but Python imports another), we
+    explicitly uninstall before reinstalling.
     """
+    print(f"[ComfyUI-Nuvu] Checking {len(CRITICAL_PACKAGES)} critical packages...", flush=True)
+    
     # Clean up any packages with corrupted metadata (version = None)
     # Also called earlier in _install_pending_requirements(), but run again here
     # in case new corrupted packages were created during pending installs
     _cleanup_corrupted_packages()
     
-    for pip_name, package_spec, description in CRITICAL_PACKAGES:
-        if not _check_package_installed(pip_name):
+    for pip_name, package_spec, description, force_version in CRITICAL_PACKAGES:
+        if force_version:
+            # Check if installed version satisfies the constraint
+            # Extract constraint from package_spec (e.g., "huggingface_hub<1.0" -> "<1.0")
+            import re
+            match = re.search(r'([<>=!]+.+)$', package_spec)
+            if match:
+                constraint = match.group(1)
+                installed_version = _get_installed_version(pip_name)
+                has_conflicts = _has_conflicting_versions(pip_name)
+                print(f"[ComfyUI-Nuvu] Checking {pip_name}: installed={installed_version}, constraint={constraint}, conflicts={has_conflicts}", flush=True)
+                
+                if has_conflicts:
+                    # Multiple dist-info directories exist - pip might report one version
+                    # but Python could import another. Force clean reinstall.
+                    print(f"[ComfyUI-Nuvu] {pip_name} has conflicting versions, will uninstall and reinstall", flush=True)
+                    _uninstall_package(pip_name)
+                    _install_package(package_spec, description)
+                    continue
+                
+                if installed_version and _version_satisfies_constraint(installed_version, constraint):
+                    # Already installed with correct version and no conflicts
+                    print(f"[ComfyUI-Nuvu] {pip_name} version OK", flush=True)
+                    continue
+                    
+                print(f"[ComfyUI-Nuvu] {pip_name} version mismatch, will uninstall and reinstall", flush=True)
+                # Explicitly uninstall first to remove ALL conflicting versions
+                # This handles cases where pip sees one version but Python imports another
+                _uninstall_package(pip_name)
+            # Version doesn't satisfy constraint or not installed
+            _install_package(package_spec, description)
+        elif not _check_package_installed(pip_name):
             _install_package(package_spec, description)
 
 

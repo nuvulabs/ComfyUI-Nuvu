@@ -1,12 +1,12 @@
-![Nuvu-logo](docs/images/NodeWhiteBack.png)
+[![Nuvu-logo](docs/images/NodeWhiteBack.png)](https://nuvulabs.ai)
 
-> **Usage License:** Nuvu Labs grants you a limited license to run the Nuvu plugin inside ComfyUI for its intended functionality in commercial or non-commercial workflows. Any other commercial use—including copying, modifying, sublicensing, or redistributing this code or derivative works—requires prior written consent from Nuvu Labs.
+> **Usage License:** [Nuvu Labs](https://nuvulabs.ai) grants you a limited license to run the Nuvu plugin inside ComfyUI for its intended functionality in commercial or non-commercial workflows. Any other commercial use—including copying, modifying, sublicensing, or redistributing this code or derivative works—requires prior written consent from Nuvu Labs.
 
-### **Nuvu makes private AI generation in ComfyUI effortless — built for film and VFX artists who demand privacy, polish, and more time to create. A plug-in right in ComfyUI, which makes the newest, professional-level, workflows a click away.**
+### **[Nuvu](https://nuvulabs.ai) makes private AI generation in ComfyUI effortless — built for film and VFX artists who demand privacy, polish, and more time to create. A plug-in right in ComfyUI, which makes the newest, professional-level, workflows a click away.**
 
 ## About Nuvu Labs
 
-Nuvu Labs is an agency that excels at implementing, scaling, and finetuning AI pipelines in the film and VFX industries. We focus on security and data because your content is your backbone, and uploading your content to any cloud AI service risks your content becoming training material in the future.
+[Nuvu Labs](https://nuvulabs.ai) is an agency that excels at implementing, scaling, and finetuning AI pipelines in the film and VFX industries. We focus on security and data because your content is your backbone, and uploading your content to any cloud AI service risks your content becoming training material in the future.
 
 ## Table of Contents
 
@@ -56,11 +56,11 @@ This is the workflow that was downloaded. It contains a Z-Image-Turbo subgraph w
 Here is the searchable subgraph. Search for it as you would any other node, and connect it into your favorite image-to-video workflow or anywhere else you'd like.
 ![alt text](docs/images/z-image-subgraph.png)
 
-Nuvu has created an extremely efficient pipeline for getting workflows into your hands quickly, so when a new model is released, Nuvu is committed to delivering the capability to you quickly and seamlessly.
+[Nuvu](https://nuvulabs.ai) has created an extremely efficient pipeline for getting workflows into your hands quickly, so when a new model is released, Nuvu is committed to delivering the capability to you quickly and seamlessly.
 
 ## Installing Nuvu
 
-Nuvu Labs offers a variety of ways to install the Nuvu Plug-in into ComfyUI for optimal convenience.
+[Nuvu Labs](https://nuvulabs.ai) offers a variety of ways to install the Nuvu Plug-in into ComfyUI for optimal convenience.
 
 ### Auto-Installers
 
@@ -109,17 +109,17 @@ After restarting, you should see the Nuvu button in your toolbar.
 
 Use our referral code to sign up for RunPod if you don't already have an account! [https://runpod.io?ref=ffbuz4zw](https://runpod.io?ref=ffbuz4zw)
 
-Nuvu Labs provides a RunPod template to quickly deploy ComfyUI from anywhere, even if you don't own a GPU yourself. You can find it [at this link](https://console.runpod.io/deploy?template=0lhzij38ow&ref=ffbuz4zw)
+[Nuvu Labs](https://nuvulabs.ai) provides a RunPod template to quickly deploy ComfyUI from anywhere, even if you don't own a GPU yourself. You can find it [at this link](https://console.runpod.io/deploy?template=0lhzij38ow&ref=ffbuz4zw)
 
 When you click on the link and have a valid account created, you'll be prompted to start a pod.
 ![RunPod select pod](docs/images/nuvu-storage-runpod-pods.png)
 
-Nuvu Labs recommends setting up Network storage of 500gb minimum, preferably up to 1TB or more to handle the large size of the models. This will allow you to keep all your work and you won't have to restart all over again each time you start a new pod.
+[Nuvu Labs](https://nuvulabs.ai) recommends setting up Network storage of 500gb minimum, preferably up to 1TB or more to handle the large size of the models. This will allow you to keep all your work and you won't have to restart all over again each time you start a new pod.
 
 Select your network storage, and CUDA Versions as shown below. CUDA 12.8 or 12.9 are required becasue of blackwell architecture support for RTX 50xx series.
 ![Pod Storage and Cuda Settings](docs/images/PodStorageCuda.png)
 
-Then select a GPU from the list below. For most production work, Nuvu Labs recommends an RTX 5090 at minimum. RTX 5090 is an excellent balance of speed and value.
+Then select a GPU from the list below. For most production work, [Nuvu Labs](https://nuvulabs.ai) recommends an RTX 5090 at minimum. RTX 5090 is an excellent balance of speed and value.
 
 Once you've selected your GPU, and confirm that the ComfyUI-Nuvu template is selected, click "Deploy On-Demand"
 ![Confirm Template and click deploy](docs/images/ConfirmTemplate.png)
@@ -226,13 +226,13 @@ Ever had trouble installing SageAttention or Triton, or what about upgrading PyT
 Manage the devices that Nuvu is registered on, the huggingface token for downloading models, and the Extra Model Paths where models are downloaded and loaded from.
 
 ### How Can We Help?
-Do you work in a studio or just need help on a passion project? Nuvu has the experts to get you to the finish line more efficiently than ever before. Submit an inquiry on this tab to get in touch with us.
+Do you work in a studio or just need help on a passion project? [Nuvu](https://nuvulabs.ai) has the experts to get you to the finish line more efficiently than ever before. Submit an inquiry on this tab to get in touch with us, or visit our [contact page](https://nuvulabs.ai/contact).
 
 ### Support
-If you're having issues with your account or any Nuvu functionality, submit an issue here.
+If you're having issues with your account or any Nuvu functionality, submit an issue here or through the Nuvu Plugin in ComfyUI.
 
 ### Documentation
-Learn all there is to know about Nuvu Labs.
+Learn all there is to know about [Nuvu Labs](https://nuvulabs.ai).
 
 ### Logout
 Log out of Nuvu.

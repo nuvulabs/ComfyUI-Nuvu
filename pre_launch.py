@@ -525,9 +525,10 @@ def install_critical_packages():
     # - pillow: Image processing, breaks ComfyUI startup if corrupted
     # - transformers: HuggingFace, version comparison fails if numpy metadata is broken
     # - numpy: Core dependency, metadata often corrupted during torch upgrades
+    # - huggingface_hub: Must be <1.0, higher versions break some ComfyUI workflows
     print("[Nuvu Pre-Launch] Ensuring critical packages...", flush=True)
     
-    critical_packages = ['pillow', 'numpy', 'transformers==4.57.6']
+    critical_packages = ['pillow', 'numpy', 'transformers==4.57.6', 'huggingface_hub<1.0']
     
     if is_uv:
         cmd = list(pip_base) + ['install']
