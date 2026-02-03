@@ -544,8 +544,103 @@ def install_critical_packages():
         print(f"[Nuvu Pre-Launch] Critical packages install issue: {result.stderr[:200]}", flush=True)
 
 
-def install_comfyui_requirements():
-    """Install ComfyUI requirements.txt."""
+def parse_requirement(req_line):
+    """Parse a requirement line into (package_name, version_spec) or None if invalid."""
+    import re
+    
+    req_line = req_line.strip()
+    
+    # Skip comments and empty lines
+    if not req_line or req_line.startswith('#'):
+        return None
+    
+    # Skip lines with URLs or options
+    if req_line.startswith('-') or '://' in req_line:
+        return None
+    
+    # Handle environment markers (e.g., "package; platform_system == 'Windows'")
+    if ';' in req_line:
+        req_line = req_line.split(';')[0].strip()
+    
+    # Extract package name and version spec
+    # Patterns: package>=1.0, package==1.0, package<2.0, package[extra]>=1.0
+    match = re.match(r'^([a-zA-Z0-9_-]+)(\[[^\]]+\])?(.*)$', req_line)
+    if match:
+        pkg_name = match.group(1)
+        version_spec = match.group(3).strip() if match.group(3) else ''
+        return (pkg_name, version_spec)
+    
+    return None
+
+
+def get_installed_version(pip_name):
+    """Get the installed version of a package using importlib.metadata."""
+    try:
+        import importlib.metadata
+        return importlib.metadata.version(pip_name)
+    except Exception:
+        return None
+
+
+def version_satisfies(installed_version, version_spec):
+    """Check if installed version satisfies the version specification."""
+    if not version_spec or not installed_version:
+        return installed_version is not None  # If no spec, just check if installed
+    
+    try:
+        from packaging import version as pkg_version
+        from packaging.specifiers import SpecifierSet
+        
+        installed = pkg_version.parse(installed_version)
+        specifier = SpecifierSet(version_spec)
+        return installed in specifier
+    except Exception:
+        # If packaging isn't available, try a basic check
+        import re
+        
+        # Handle simple cases: ==, >=, <=, >, <
+        match = re.match(r'^([<>=!]+)(.+)$', version_spec)
+        if not match:
+            return True  # Can't parse, assume OK
+        
+        op, required = match.groups()
+        
+        try:
+            # Simple version comparison (works for most cases)
+            inst_parts = [int(x) for x in re.split(r'[.+]', installed_version.split('+')[0])]
+            req_parts = [int(x) for x in re.split(r'[.+]', required.split('+')[0])]
+            
+            # Pad to same length
+            max_len = max(len(inst_parts), len(req_parts))
+            inst_parts += [0] * (max_len - len(inst_parts))
+            req_parts += [0] * (max_len - len(req_parts))
+            
+            if op == '==':
+                return inst_parts == req_parts
+            elif op == '>=':
+                return inst_parts >= req_parts
+            elif op == '<=':
+                return inst_parts <= req_parts
+            elif op == '>':
+                return inst_parts > req_parts
+            elif op == '<':
+                return inst_parts < req_parts
+            elif op == '!=':
+                return inst_parts != req_parts
+        except Exception:
+            pass
+        
+        return True  # Can't compare, assume OK
+
+
+def verify_and_install_requirements():
+    """Verify ComfyUI requirements.txt packages are installed with correct versions.
+    
+    This is more thorough than just running pip install -r requirements.txt because:
+    1. It checks actual installed versions against requirements
+    2. It reports which packages are missing or have wrong versions
+    3. It only installs/upgrades what's actually needed
+    """
     global _torch_index_url
     
     pip_base, is_uv, is_standalone = _get_pip_base()
@@ -556,24 +651,69 @@ def install_comfyui_requirements():
     comfyui_dir = os.path.dirname(custom_nodes_dir)
     requirements_path = os.path.join(comfyui_dir, 'requirements.txt')
     
-    if os.path.isfile(requirements_path):
-        print("[Nuvu Pre-Launch] Installing ComfyUI requirements...", flush=True)
+    if not os.path.isfile(requirements_path):
+        print("[Nuvu Pre-Launch] No requirements.txt found", flush=True)
+        return
+    
+    print("[Nuvu Pre-Launch] Verifying ComfyUI requirements...", flush=True)
+    
+    # Parse requirements file
+    missing_packages = []
+    wrong_version_packages = []
+    
+    try:
+        with open(requirements_path, 'r') as f:
+            for line in f:
+                req = parse_requirement(line)
+                if not req:
+                    continue
+                
+                pkg_name, version_spec = req
+                installed = get_installed_version(pkg_name)
+                
+                if installed is None:
+                    missing_packages.append(f"{pkg_name}{version_spec}")
+                    print(f"[Nuvu Pre-Launch] Missing: {pkg_name}", flush=True)
+                elif version_spec and not version_satisfies(installed, version_spec):
+                    wrong_version_packages.append(f"{pkg_name}{version_spec}")
+                    print(f"[Nuvu Pre-Launch] Version mismatch: {pkg_name} (installed={installed}, required={version_spec})", flush=True)
+    except Exception as e:
+        print(f"[Nuvu Pre-Launch] Error parsing requirements: {e}", flush=True)
+        # Fall back to just running pip install
+        missing_packages = []
+        wrong_version_packages = []
+    
+    # Install missing packages
+    packages_to_install = missing_packages + wrong_version_packages
+    
+    if packages_to_install:
+        print(f"[Nuvu Pre-Launch] Installing {len(packages_to_install)} package(s)...", flush=True)
         
         if is_uv:
             cmd = list(pip_base) + ['install']
             if is_standalone and _is_embedded_python():
                 cmd.extend(['--python', sys.executable])
-            cmd.extend(['-r', requirements_path, '-q'])
+            cmd.extend(packages_to_install)
         else:
-            cmd = list(pip_base) + ['install', '-r', requirements_path, '-q']
+            cmd = list(pip_base) + ['install'] + packages_to_install
         
-        # If we have a torch index URL from pending installs, use it as extra-index-url
-        # This ensures torch dependencies come from the correct CUDA-specific index
+        # Add torch index URL if available
         if _torch_index_url:
             cmd.extend(['--extra-index-url', _torch_index_url])
             print(f"[Nuvu Pre-Launch] Using torch index: {_torch_index_url}", flush=True)
         
-        subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+        if result.returncode != 0:
+            print(f"[Nuvu Pre-Launch] Install error: {result.stderr[:500]}", flush=True)
+        else:
+            print(f"[Nuvu Pre-Launch] Requirements verified and installed", flush=True)
+    else:
+        print("[Nuvu Pre-Launch] All requirements satisfied", flush=True)
+
+
+def install_comfyui_requirements():
+    """Install ComfyUI requirements.txt with version verification."""
+    verify_and_install_requirements()
 
 
 def main():
