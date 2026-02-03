@@ -960,7 +960,13 @@ def _patch_batch_files():
     else:
         # Venv install: batch file is in ComfyUI folder
         batch_path = os.path.join(comfyui_dir, 'run_comfy.bat')
+        venv_path = os.path.join(comfyui_dir, 'venv')
+        
         if os.path.isfile(batch_path):
+            _patch_venv_batch(batch_path)
+        elif os.path.isdir(venv_path):
+            # Create run_comfy.bat if it doesn't exist but venv does
+            _create_venv_batch(batch_path)
             _patch_venv_batch(batch_path)
 
 
@@ -995,7 +1001,8 @@ def _patch_portable_batch(batch_path):
                 if parts:
                     python_exe = parts[0]
                     # Run pre_launch.py which handles everything: pending installs, critical packages, requirements
-                    prelaunch_line = f'{python_exe} -s ComfyUI\\custom_nodes\\ComfyUI-Nuvu-Packager\\pre_launch.py'
+                    # Note: ComfyUI-Nuvu is the distributed name (ComfyUI-Nuvu-Packager is the dev repo)
+                    prelaunch_line = f'{python_exe} -s ComfyUI\\custom_nodes\\ComfyUI-Nuvu\\pre_launch.py'
                     new_lines.append(prelaunch_line)
             
             new_lines.append(line)
@@ -1011,6 +1018,26 @@ def _patch_portable_batch(batch_path):
     except Exception as e:
         # Don't fail prestartup if patching fails
         print(f"[ComfyUI-Nuvu] Could not patch {batch_path}: {e}", flush=True)
+
+
+def _create_venv_batch(batch_path):
+    """Create a run_comfy.bat for venv installs if it doesn't exist."""
+    try:
+        # Default port - can be overridden by user later
+        port = 8188
+        
+        content = f"""@echo off
+setlocal EnableExtensions
+cd /d "%~dp0"
+call "%~dp0venv\\Scripts\\activate.bat"
+python main.py --port {port} --preview-method auto
+"""
+        with open(batch_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print(f"[ComfyUI-Nuvu] Created {os.path.basename(batch_path)}", flush=True)
+    
+    except Exception as e:
+        print(f"[ComfyUI-Nuvu] Could not create {batch_path}: {e}", flush=True)
 
 
 def _patch_venv_batch(batch_path):
@@ -1039,7 +1066,8 @@ def _patch_venv_batch(batch_path):
             # Find the line that runs main.py
             if 'python' in line.lower() and 'main.py' in line.lower():
                 # Run pre_launch.py which handles everything: pending installs, critical packages, requirements
-                prelaunch_line = 'python custom_nodes\\ComfyUI-Nuvu-Packager\\pre_launch.py'
+                # Note: ComfyUI-Nuvu is the distributed name (ComfyUI-Nuvu-Packager is the dev repo)
+                prelaunch_line = 'python custom_nodes\\ComfyUI-Nuvu\\pre_launch.py'
                 new_lines.append(prelaunch_line)
             
             new_lines.append(line)

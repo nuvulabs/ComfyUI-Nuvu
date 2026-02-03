@@ -1,5 +1,17 @@
 [
   {
+    "hash": "4aaf3d5",
+    "tag": "1.0.63",
+    "date": "2026-02-02T20:59:20-05:00",
+    "message": "Create run_comfy.bat if it doe not exist for venv installs that were installed purely through manager"
+  },
+  {
+    "hash": "35138d5",
+    "tag": null,
+    "date": "2026-02-02T20:54:26-05:00",
+    "message": "Correct .bat file patch path for pre_launch.py"
+  },
+  {
     "hash": "942bcea",
     "tag": "1.0.62",
     "date": "2026-02-02T20:33:45-05:00",
@@ -586,17 +598,5 @@
     "tag": "0.0.31",
     "date": "2026-01-07T18:51:15-05:00",
     "message": "Add optional sound checkbox to workflows tab"
-  },
-  {
-    "hash": "45b4ff3",
-    "tag": "0.0.30",
-    "date": "2026-01-07T15:29:27-05:00",
-    "message": "Add 'Skip updates' option for installed custom nodes in Install Missing. Install missing no longer in beta."
-  },
-  {
-    "hash": "91879d2",
-    "tag": "0.0.29",
-    "date": "2026-01-07T12:34:32-05:00",
-    "message": "Improve workflow card readability"
   }
 ]
