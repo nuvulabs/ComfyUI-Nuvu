@@ -1,5 +1,11 @@
 [
   {
+    "hash": "ed4ea61",
+    "tag": "1.0.69",
+    "date": "2026-02-03T22:48:28-05:00",
+    "message": "Fix Comfy Portable updater to handle initial detached head state"
+  },
+  {
     "hash": "06f1c8c",
     "tag": "1.0.68",
     "date": "2026-02-03T14:45:26-05:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.6",
     "date": "2026-01-08T23:36:37-05:00",
     "message": "Update README Documentation"
-  },
-  {
-    "hash": "0fe9ec5",
-    "tag": "1.0.5",
-    "date": "2026-01-08T22:55:25-05:00",
-    "message": "tag push doesn't work, need to trigger a dispatch github action"
   }
 ]
