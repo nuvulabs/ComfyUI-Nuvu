@@ -1,5 +1,7 @@
 [![Nuvu-logo](docs/images/NodeWhiteBack.png)](https://nuvulabs.ai)
 
+# Nuvu - Private AI Generation for ComfyUI
+
 > **Usage License:** [Nuvu Labs](https://nuvulabs.ai) grants you a limited license to run the Nuvu plugin inside ComfyUI for its intended functionality in commercial or non-commercial workflows. Any other commercial use—including copying, modifying, sublicensing, or redistributing this code or derivative works—requires prior written consent from Nuvu Labs.
 
 ### **[Nuvu](https://nuvulabs.ai) makes private AI generation in ComfyUI effortless — built for film and VFX artists who demand privacy, polish, and more time to create. A plug-in right in ComfyUI, which makes the newest, professional-level, workflows a click away.**
@@ -8,34 +10,16 @@
 
 [Nuvu Labs](https://nuvulabs.ai) is an agency that excels at implementing, scaling, and finetuning AI pipelines in the film and VFX industries. We focus on security and data because your content is your backbone, and uploading your content to any cloud AI service risks your content becoming training material in the future.
 
-## Table of Contents
+## Quick Links to Official Documentation
 
-- [The Nuvu Advantage](#the-nuvu-advantage)
-- [Installing Nuvu](#installing-nuvu)
-  - [Auto-Installers](#auto-installers)
-    - [Windows Install](#windows-install)
-    - [Linux Install](#linux-install)
-  - [Comfy Manager](#comfy-manager)
-  - [RunPod Template](#runpod-template)
-  - [Docker](#docker)
-- [Create an Account](#create-an-account)
-  - [Free Features](#free-features)
-  - [Paid Features](#paid-features)
-  - [How to create a free account](#how-to-create-a-free-account)
-  - [How to subscribe to Nuvu Premium](#how-to-subscribe-to-nuvu-premium)
-- [Using Nuvu](#using-nuvu)
-  - [Workflow Installer](#workflow-installer)
-    - [Subgraphs](#subgraphs)
-  - [Install Missing](#install-missing)
-  - [Model Installer](#model-installer)
-  - [ComfyUI Optimizer](#comfyui-optimizer)
-  - [User Configuration](#user-configuration)
-  - [How Can We Help?](#how-can-we-help)
-  - [Support](#support)
-  - [Documentation](#documentation)
-  - [Logout](#logout)
-  - [Restart ComfyUI](#restart-comfyui)
-  - [Refresh Page](#refresh-page)
+For complete guides, tutorials, and feature documentation, visit our documentation site (external): **[docs.nuvulabs.ai](https://docs.nuvulabs.ai)**
+
+- [The Nuvu Advantage](https://docs.nuvulabs.ai/the-nuvu-advantage)
+- [Installing Nuvu](https://docs.nuvulabs.ai/installation)
+- [Create an Account](https://docs.nuvulabs.ai/account/create-account)
+- [Subscribe to Premium](https://docs.nuvulabs.ai/account/subscribe)
+- [All Features](https://docs.nuvulabs.ai/features)
+- [Getting Support](https://docs.nuvulabs.ai/support)
 
 ## The Nuvu Advantage
 
@@ -60,81 +44,57 @@ Here is the searchable subgraph. Search for it as you would any other node, and 
 
 ## Installing Nuvu
 
-[Nuvu Labs](https://nuvulabs.ai) offers a variety of ways to install the Nuvu Plug-in into ComfyUI for optimal convenience.
+[Nuvu Labs](https://nuvulabs.ai) offers a variety of ways to install the Nuvu Plug-in into ComfyUI for optimal convenience. For detailed installation guides with screenshots, visit [docs.nuvulabs.ai/installation](https://docs.nuvulabs.ai/installation).
 
 ### Auto-Installers
 
-Download the applicable script for your system, which can be found [at this link](https://github.com/Nuvulabs/ComfyUI-Nuvu/releases).
+Download the applicable script for your system from the [Nuvu releases page](https://github.com/Nuvulabs/ComfyUI-Nuvu/releases).
 
 #### Windows Install
 
-Install git through the instructions found on the github website here: [GitHub Git install instructions](https://github.com/git-guides/install-git)
+1. Install git through the instructions found on the GitHub website: [GitHub Git install instructions](https://github.com/git-guides/install-git)
+2. Place the `.bat` file in the folder where you want to install ComfyUI-Nuvu
+3. Double-click the `.bat` file to start installation
+4. Inside the ComfyUI folder, double-click `run_comfy.bat` to launch
+5. Navigate to [http://localhost:8188](http://localhost:8188) in your browser
 
-Place the .bat file in the folder location on windows that you want to install ComfyUI-Nuvu in. Double click on the .bat file, and it will start to install ComfyUI with Nuvu.
-![alt text](docs/images/batFileInstall.png)
-
-Inside the ComfyUI Folder, you will find a file called "run_comfy.bat". Double click this file to launch ComfyUI. Wait until the terminal stops producing text and then go to the next step.
-![alt text](docs/images/batRunComfy.png)
-
-You will also find a shortcut on your desktop, and a link in your start menu
-![alt text](docs/images/desktop-start-menu.png)
-
-Your default browser should pop open when ComfyUI starts. You can slo navigate to [localhost:8188](localhost:8188) or [127.0.0.1:8188](127.0.0.1:8188) in your web browser of choice (Firefox or Google Chrome recommended).
+[Full Windows installation guide](https://docs.nuvulabs.ai/installation/windows)
 
 #### Linux Install
-Place the .sh file in the folder location that you want to install ComfyUI-Nuvu in. Open a shell and run:
 
-```./linux_install_nuvu_comfy.sh```
+1. Place the `.sh` file in the folder where you want to install ComfyUI-Nuvu
+2. Open a terminal and run: `./linux_install_nuvu_comfy.sh`
+3. Inside the ComfyUI folder, run `run_comfy.sh` to launch
+4. Navigate to [http://localhost:8188](http://localhost:8188) in your browser
 
-This will clone ComfyUI into your current folder. Inside the ComfyUI Folder, you will find a file called "run_comfy.sh". Double click this file or open a shell and run it to launch ComfyUI. Wait until the terminal stops producing text and then go to the next step. You should also see a Nuvu-ComfyUI icon on your desktop, which you can use to launch Nuvu.
-
-Navigate to [localhost:8188](localhost:8188) or [127.0.0.1:8188](127.0.0.1:8188) in your web browser of choice (Firefox or Google Chrome recommended).
+[Full Linux installation guide](https://docs.nuvulabs.ai/installation/linux)
 
 ### Comfy Manager
 
-Install and open the [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
-![Open Comfy Manager](docs/images/ComfyManagerOpen.png)
+If you already have ComfyUI installed:
 
+1. Install and open [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)
+2. Search for "Nuvu" and click **Install**
+3. Click **Restart** after installation completes
+4. Refresh your browser — you should see the Nuvu button in your toolbar
 
-Search for "Nuvu" and click the ComfyUI-Nuvu "Install" button.
-![Comfy Manager Nuvu Search](docs/images/ComfyManagerNuvu.png)
-
-Click "Restart" after the install completes, and then refresh your browser after ComfyUI comes back online.
-![Restart from Comfy Manager](docs/images/RestartComfyManager.png)
-
-After restarting, you should see the Nuvu button in your toolbar.
-![Nuvu Button After Manager Install](docs/images/NuvuButtonManagerInstall.png)
+[Full Comfy Manager installation guide](https://docs.nuvulabs.ai/installation/comfy-manager)
 
 ### RunPod Template
 
-Use our referral code to sign up for RunPod if you don't already have an account! [https://runpod.io?ref=ffbuz4zw](https://runpod.io?ref=ffbuz4zw)
+Deploy ComfyUI with Nuvu in the cloud instantly:
 
-[Nuvu Labs](https://nuvulabs.ai) provides a RunPod template to quickly deploy ComfyUI from anywhere, even if you don't own a GPU yourself. You can find it [at this link](https://console.runpod.io/deploy?template=0lhzij38ow&ref=ffbuz4zw)
+1. Sign up for RunPod: [https://runpod.io?ref=ffbuz4zw](https://runpod.io?ref=ffbuz4zw)
+2. Deploy the Nuvu template: [Deploy on RunPod](https://console.runpod.io/deploy?template=0lhzij38ow&ref=ffbuz4zw)
+3. Set up network storage (500GB+ recommended)
+4. Select CUDA 12.8 or 12.9 and your preferred GPU
+5. Click **Deploy On-Demand**
 
-When you click on the link and have a valid account created, you'll be prompted to start a pod.
-![RunPod select pod](docs/images/nuvu-storage-runpod-pods.png)
-
-[Nuvu Labs](https://nuvulabs.ai) recommends setting up Network storage of 500gb minimum, preferably up to 1TB or more to handle the large size of the models. This will allow you to keep all your work and you won't have to restart all over again each time you start a new pod.
-
-Select your network storage, and CUDA Versions as shown below. CUDA 12.8 or 12.9 are required becasue of blackwell architecture support for RTX 50xx series.
-![Pod Storage and Cuda Settings](docs/images/PodStorageCuda.png)
-
-Then select a GPU from the list below. For most production work, [Nuvu Labs](https://nuvulabs.ai) recommends an RTX 5090 at minimum. RTX 5090 is an excellent balance of speed and value.
-
-Once you've selected your GPU, and confirm that the ComfyUI-Nuvu template is selected, click "Deploy On-Demand"
-![Confirm Template and click deploy](docs/images/ConfirmTemplate.png)
-
-If this is your first time launching ComfyUI on your network storage or if you do not plan to use a network storage, expect about 20mins of first time setup.
-
-Go to the logs of your RunPod pod, and wait until you see the circled message in the container logs. That tells you that ComfyUI is ready.
-![Look for comfyui browser address in logs](docs/images/podStartup.png)
-
-Click "Connect", and then click "ComfyUI" to open ComfyUI. A JupyterLab session is also provided, where you can view the pod's filesystem.
-![alt text](docs/images/podComfyUIStart.png)
+[Full RunPod installation guide](https://docs.nuvulabs.ai/installation/runpod)
 
 ### Docker
-The docker command to run the ComfyUI-Nuvu container is:
-```
+
+```bash
 docker run -d \
   --name comfy-nuvu \
   --gpus all \
@@ -144,101 +104,20 @@ docker run -d \
   docker.io/nuvulabs/comfyui-nuvu:latest
 ```
 
-## Create an Account
+[Full Docker installation guide](https://docs.nuvulabs.ai/installation/docker)
 
-### Free Features
-  - PyTorch Version Switcher
-  - Sage Attention Installer
-  - Windows Triton Installer
-  - Slow Depth & Pose Map Fix
-  - Cuda Toolkit Installer
-  - Windows Build Tools Installer
-  - Launch Shell with Build Tools Activated
+## Next Steps
 
-### Paid Features
- - Auto-Install 100+ top-quality curated and subgraphed workflows
- - 400+ workflows in the roadmap
- - Subgraphs published straight into your library to use as nodes
- - Model Auto-Installer
- - Install All Missing Models & Custom Nodes for a workflow
+After installing Nuvu:
 
-### How to create a free account
+1. **[Create an Account](https://docs.nuvulabs.ai/account/create-account)** — Sign up for free
+2. **[Subscribe to Premium](https://docs.nuvulabs.ai/account/subscribe)** — Unlock 100+ workflows
+3. **[Explore Features](https://docs.nuvulabs.ai/features)** — Workflow Installer, Subgraphs, Model Installer, and more
 
-Once you have Nuvu installed into ComfyUI, click on the Nuvu button at the top of ComfyUI.
+## Support
 
-![alt text](docs/images/NuvuButton.png)
-
-Click the "Continue with Login" button on the dialog that pops up. All authentication is handled by Auth0 for optimal user security. The only personal data that Nuvu Labs stores are name and email address for account handling.
-
-![alt text](docs/images/NuvuLogin.png)
-
-Authenticate the Auth0 form with either email/password, github, or google.
-
-![alt text](docs/images/NuvuLoginForm.png)
-
-Once you've completed log-in, you should be re-directed back to ComfyUI, where you will see the Nuvu Dashboard appear.
-
-![alt text](docs/images/NuvuDashboard.png)
-
-### How to subscribe to Nuvu Premium
-
-To purchase a license to access over 100 premium workflows and subgraphs, click the "Purchase License" button on the left side.
-
-![alt text](docs/images/PurchaseLicense.png)
-
-That will bring you to our Nuvu Account Dashboard, where you can Upgrade your account to the paid version.
-
-![alt text](docs/images/UpgradeNuvuPremium.png)
-
-All purchases are handled securely through Stripe. Nuvu does not store any of your financial information, all financial transactions run through Stripe.
-
-![alt text](docs/images/SubscribeButton.png)
-
-After subscribing, head back to ComfyUI, refresh your browser, and you should see your account upgraded to "Premium Subscription" on the left side.
-
-![alt text](docs/images/PremiumSubscription.png)
-
-## Using Nuvu
-
-### Workflow Installer
-![Workflow Installer Quick View](docs/images/WorkflowInstaller.png)
-
-Choose from over 100 optimized workflows to install directly into you ComfyUI environment. No need to worry about installing custom nodes or models, everything will install for you.
-
-#### Subgraphs
-![Subgraph Example](docs/images/SubgraphExample.png)
-
-When a workflow is installed, its subgraphs are also added to your library. Search for them like any other custom node, and chain them together for maximum productivity.
-
-### Install Missing
-
-![Install Missing Example](docs/images/InstallMissingExample.png)
-
-Allow users to open any workflow in ComfyUI and Nuvu will attempt to find all custom nodes and models needed for that workflow, and install them for you. No more searching through the manager or scouring huggingface to find the correct model. It is the user's responsiblity to verify all of the files and custom nodes are compatible with their environment. Nuvu does not guarantee stability through the Install Missing feature.
-
-### Model Installer
-Choose from ~2000 models to install directly into your ComfyUI environment.
-
-### ComfyUI Optimizer
-Ever had trouble installing SageAttention or Triton, or what about upgrading PyTorch? The ComfyUI Optimizer gives you this ability and more with just a few clicks.
-
-### User Configuration
-Manage the devices that Nuvu is registered on, the huggingface token for downloading models, and the Extra Model Paths where models are downloaded and loaded from.
-
-### How Can We Help?
-Do you work in a studio or just need help on a passion project? [Nuvu](https://nuvulabs.ai) has the experts to get you to the finish line more efficiently than ever before. Submit an inquiry on this tab to get in touch with us, or visit our [contact page](https://nuvulabs.ai/contact).
-
-### Support
-If you're having issues with your account or any Nuvu functionality, submit an issue here or through the Nuvu Plugin in ComfyUI.
-
-### Documentation
-Learn all there is to know about [Nuvu Labs](https://nuvulabs.ai).
-
-### Logout
-Log out of Nuvu.
-
-### Restart ComfyUI
-Restart the ComfyUI server. Useful if a workflow is frozen or you need to dump VRAM quickly.
-
-### Refresh Page
-Refresh the browser tab.
+- **[Documentation](https://docs.nuvulabs.ai)** — Complete guides and tutorials
+- **[Getting Support](https://docs.nuvulabs.ai/support)** — Contact our team
+- **[How Can We Help?](https://docs.nuvulabs.ai/support/how-can-we-help)** — Professional services and consulting
+- **[GitHub Issues](https://github.com/nuvulabs/ComfyUI-nuvu/issues)** — Report bugs
+- **[Discord](https://discord.gg/vdW97AtTAu)** — Community support
