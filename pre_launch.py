@@ -528,7 +528,7 @@ def install_critical_packages():
     # - huggingface_hub: Must be <1.0, higher versions break some ComfyUI workflows
     print("[Nuvu Pre-Launch] Ensuring critical packages...", flush=True)
     
-    critical_packages = ['pillow', 'numpy', 'transformers==4.57.6', 'huggingface_hub<1.0']
+    critical_packages = ['pillow', 'numpy', 'transformers==4.57.6', 'huggingface_hub<1.0', 'diffusers>=0.33.0']
     
     if is_uv:
         cmd = list(pip_base) + ['install']

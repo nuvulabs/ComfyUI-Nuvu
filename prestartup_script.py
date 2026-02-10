@@ -855,6 +855,8 @@ CRITICAL_PACKAGES = [
     ("Pillow", "pillow", "Pillow", False),
     # huggingface_hub>=1.0 breaks some ComfyUI workflows, pin to <1.0
     ("huggingface_hub", "huggingface_hub<1.0", "HuggingFace Hub", True),
+    # diffusers>=0.33.0 required for newer model support
+    ("diffusers", "diffusers>=0.33.0", "Diffusers", True),
     # Add more critical packages here as needed:
     # ("numpy", "numpy", "NumPy", False),
     # ("torch", "torch", "PyTorch", False),
