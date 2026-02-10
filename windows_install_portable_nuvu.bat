@@ -199,6 +199,22 @@ call :clone_and_install "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNo
 call :clone_and_install "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
 call :clone_and_install "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git"
 
+echo.
+echo === Installing ML dependencies ===
+call :pkg_install_portable "transformers==4.57.6"
+if errorlevel 1 (
+    echo [WARNING] Failed to install Transformers.
+)
+
+call :pkg_install_portable "diffusers>=0.33.0"
+if errorlevel 1 (
+    echo [WARNING] Failed to install Diffusers.
+)
+
+call :pkg_install_portable "huggingface_hub<1.0"
+if errorlevel 1 (
+    echo [WARNING] Failed to install HuggingFace Hub.
+)
 
 cd /d "%ROOT_DIR%"
 

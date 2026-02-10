@@ -200,6 +200,12 @@ if [ "$COMFYUI_INSTALLED" = true ]; then
   clone_and_install_node "RES4LYF" "https://github.com/ClownsharkBatwing/RES4LYF.git"
   clone_and_install_node "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.git"
   clone_and_install_node "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
+  
+  # Ensure correct ML dependency versions (override any weird versions from custom nodes)
+  log "Installing ML dependencies"
+  pkg_install "$VENV_PIP" "transformers==4.57.6"
+  pkg_install "$VENV_PIP" "diffusers>=0.33.0"
+  pkg_install "$VENV_PIP" "huggingface_hub<1.0"
 else
   log "ComfyUI not found, performing full installation..."
   
@@ -240,6 +246,12 @@ else
   clone_and_install_node "RES4LYF" "https://github.com/ClownsharkBatwing/RES4LYF.git"
   clone_and_install_node "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.git"
   clone_and_install_node "comfyui_controlnet_aux" "https://github.com/Fannovel16/comfyui_controlnet_aux.git"
+
+  # Ensure correct ML dependency versions (override any weird versions from custom nodes)
+  log "Installing ML dependencies"
+  pkg_install "$VENV_PIP" "transformers==4.57.6"
+  pkg_install "$VENV_PIP" "diffusers>=0.33.0"
+  pkg_install "$VENV_PIP" "huggingface_hub<1.0"
 
   # Install JupyterLab using python3.12
   log "Installing JupyterLab"

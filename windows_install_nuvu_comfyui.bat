@@ -229,6 +229,26 @@ call :clone_and_install "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/Comfy
 cd /d "%COMFY_DIR%"
 
 echo.
+echo === Installing ML dependencies ===
+call :pkg_install "transformers==4.57.6"
+if errorlevel 1 (
+    echo Failed to install Transformers.
+    exit /b 1
+)
+
+call :pkg_install "diffusers>=0.33.0"
+if errorlevel 1 (
+    echo Failed to install Diffusers.
+    exit /b 1
+)
+
+call :pkg_install "huggingface_hub<1.0"
+if errorlevel 1 (
+    echo Failed to install HuggingFace Hub.
+    exit /b 1
+)
+
+echo.
 echo === Creating helper launcher: %RUN_SCRIPT_NAME% ===
 > "%COMFY_DIR%\%RUN_SCRIPT_NAME%" (
     echo @echo off

@@ -327,6 +327,11 @@ clone_and_install "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.gi
 
 cd "$COMFY_DIR"
 
+log "Installing ML dependencies"
+pkg_install "transformers==4.57.6"
+pkg_install "diffusers>=0.33.0"
+pkg_install "huggingface_hub<1.0"
+
 log "Creating helper launcher: $RUN_SCRIPT_NAME"
 cat > "$RUN_SCRIPT_NAME" <<'EOF'
 #!/usr/bin/env bash
