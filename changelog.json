@@ -1,5 +1,11 @@
 [
   {
+    "hash": "e7e25c6",
+    "tag": "1.0.73",
+    "date": "2026-02-12T10:45:16-05:00",
+    "message": "Switch linux keyring to default to python package for simplicity when installing through ComfyUI Manager"
+  },
+  {
     "hash": "3b65f60",
     "tag": "1.0.72",
     "date": "2026-02-10T12:43:11-05:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.10",
     "date": "2026-01-11T17:28:02-05:00",
     "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
-  },
-  {
-    "hash": "c68e8ef",
-    "tag": "1.0.9",
-    "date": "2026-01-10T16:47:09-05:00",
-    "message": "Fix prestartup script not being included in github build"
   }
 ]
