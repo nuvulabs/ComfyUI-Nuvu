@@ -1,5 +1,41 @@
 [
   {
+    "hash": "5ecbde1",
+    "tag": "1.0.82",
+    "date": "2026-04-20T09:58:09-04:00",
+    "message": "Resolve python not found by build script"
+  },
+  {
+    "hash": "9fbbc51",
+    "tag": "1.0.81",
+    "date": "2026-04-20T09:54:18-04:00",
+    "message": "transition to adjusting text with python instead of sed in github build"
+  },
+  {
+    "hash": "989e35c",
+    "tag": "1.0.79",
+    "date": "2026-04-20T09:52:03-04:00",
+    "message": "Fix issue with aarch64 build failing"
+  },
+  {
+    "hash": "91d9d7a",
+    "tag": "1.0.78",
+    "date": "2026-04-20T09:47:06-04:00",
+    "message": "Resolve an issue with building the aarch64 pypi packages"
+  },
+  {
+    "hash": "296de78",
+    "tag": null,
+    "date": "2026-04-20T09:44:36-04:00",
+    "message": "Support MacOS (ARM64)"
+  },
+  {
+    "hash": "ce1e920",
+    "tag": "1.0.77",
+    "date": "2026-04-20T09:38:37-04:00",
+    "message": "Support aarch64 (beta), need to identify a way to thoroughly test."
+  },
+  {
     "hash": "f3aa4b5",
     "tag": "1.0.75",
     "date": "2026-04-20T09:29:41-04:00",
@@ -562,41 +598,5 @@
     "tag": null,
     "date": "2026-01-12T08:38:56-05:00",
     "message": "update login dialog link to go straight to demo"
-  },
-  {
-    "hash": "b5b96c3",
-    "tag": "1.0.16",
-    "date": "2026-01-12T08:18:41-05:00",
-    "message": "Add logging that nuvu prestartup was successful"
-  },
-  {
-    "hash": "f3c05c2",
-    "tag": "1.0.15",
-    "date": "2026-01-12T08:09:48-05:00",
-    "message": "More robust update handling when a locked file absolutely cannot be cleared"
-  },
-  {
-    "hash": "afc160e",
-    "tag": "1.0.14",
-    "date": "2026-01-12T07:50:49-05:00",
-    "message": "Fix update flow when updating comfy or nuvu"
-  },
-  {
-    "hash": "15f4c5b",
-    "tag": null,
-    "date": "2026-01-11T23:00:35-05:00",
-    "message": "Improve Comfy Manager Description"
-  },
-  {
-    "hash": "4e0d75a",
-    "tag": "1.0.13",
-    "date": "2026-01-11T22:49:43-05:00",
-    "message": "Refactor prestartup script to focus solely on installing uv, removing the handling of Nuvu requirements."
-  },
-  {
-    "hash": "0883c57",
-    "tag": null,
-    "date": "2026-01-11T22:49:08-05:00",
-    "message": "Fix prestartup to only handle uv for fast custom node install. do not try to handle nuvu requirements at all."
   }
 ]
