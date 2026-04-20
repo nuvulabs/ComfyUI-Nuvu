@@ -1,5 +1,29 @@
 [
   {
+    "hash": "be81b92",
+    "tag": "1.0.74",
+    "date": "2026-04-20T07:05:49-04:00",
+    "message": "File Cleanup+Refactor"
+  },
+  {
+    "hash": "ffa1453",
+    "tag": null,
+    "date": "2026-04-20T07:04:05-04:00",
+    "message": "Fix searching with new paginated workflow page"
+  },
+  {
+    "hash": "59d7408",
+    "tag": null,
+    "date": "2026-04-20T06:59:51-04:00",
+    "message": "Paginate workflow searching and restore original workflows from cache for more optimized experience"
+  },
+  {
+    "hash": "756b40d",
+    "tag": null,
+    "date": "2026-04-20T06:32:00-04:00",
+    "message": "Optimize workflow loading since we have added a bunch of loading became inefficient"
+  },
+  {
     "hash": "e7e25c6",
     "tag": "1.0.73",
     "date": "2026-02-12T10:45:16-05:00",
@@ -574,29 +598,5 @@
     "tag": null,
     "date": "2026-01-11T22:42:32-05:00",
     "message": "Fix prestartup package lock."
-  },
-  {
-    "hash": "1ee47f4",
-    "tag": "1.0.12",
-    "date": "2026-01-11T22:38:26-05:00",
-    "message": "More robust Nuvu updating. Eliminates package lock issues."
-  },
-  {
-    "hash": "f162ac9",
-    "tag": null,
-    "date": "2026-01-11T22:24:10-05:00",
-    "message": "Fix package lock issue when updating Nuvu"
-  },
-  {
-    "hash": "1030c01",
-    "tag": "1.0.11",
-    "date": "2026-01-11T17:40:34-05:00",
-    "message": "Update Comfy Registry description to include SageAttention and Triton installers for enhanced clarity on features."
-  },
-  {
-    "hash": "e63a77c",
-    "tag": "1.0.10",
-    "date": "2026-01-11T17:28:02-05:00",
-    "message": "Enhance LoginForm with external logo link and website reference. Add hover effects for logo and visit link."
   }
 ]
