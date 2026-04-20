@@ -1,5 +1,11 @@
 [
   {
+    "hash": "f3aa4b5",
+    "tag": "1.0.75",
+    "date": "2026-04-20T09:29:41-04:00",
+    "message": "Fix workflow caching with new paginated loading for more responsive UI."
+  },
+  {
     "hash": "be81b92",
     "tag": "1.0.74",
     "date": "2026-04-20T07:05:49-04:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2026-01-11T22:49:08-05:00",
     "message": "Fix prestartup to only handle uv for fast custom node install. do not try to handle nuvu requirements at all."
-  },
-  {
-    "hash": "bf7e136",
-    "tag": null,
-    "date": "2026-01-11T22:42:32-05:00",
-    "message": "Fix prestartup package lock."
   }
 ]
