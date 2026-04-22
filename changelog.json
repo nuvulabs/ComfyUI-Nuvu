@@ -1,5 +1,11 @@
 [
   {
+    "hash": "15a6ac7",
+    "tag": "1.0.83",
+    "date": "2026-04-22T09:04:05-04:00",
+    "message": "Handle auto-loading new workflows in the background if the user has workflows cached already."
+  },
+  {
     "hash": "5ecbde1",
     "tag": "1.0.82",
     "date": "2026-04-20T09:58:09-04:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2026-01-12T08:40:08-05:00",
     "message": "update bottom login dialog link to go straight to demo"
-  },
-  {
-    "hash": "46df8a8",
-    "tag": null,
-    "date": "2026-01-12T08:38:56-05:00",
-    "message": "update login dialog link to go straight to demo"
   }
 ]
