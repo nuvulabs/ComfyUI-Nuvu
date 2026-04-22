@@ -1,5 +1,11 @@
 [
   {
+    "hash": "65afade",
+    "tag": "1.0.84",
+    "date": "2026-04-22T09:59:06-04:00",
+    "message": "Fix an issue where workflows were refreshing too often, triggering too many request errors."
+  },
+  {
     "hash": "15a6ac7",
     "tag": "1.0.83",
     "date": "2026-04-22T09:04:05-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.17",
     "date": "2026-01-12T08:42:02-05:00",
     "message": "change text from gray to white"
-  },
-  {
-    "hash": "dd3abf7",
-    "tag": null,
-    "date": "2026-01-12T08:40:08-05:00",
-    "message": "update bottom login dialog link to go straight to demo"
   }
 ]
