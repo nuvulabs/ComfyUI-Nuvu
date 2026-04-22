@@ -1,5 +1,11 @@
 [
   {
+    "hash": "ecb2d72",
+    "tag": "1.0.87",
+    "date": "2026-04-22T16:22:46-04:00",
+    "message": "Fix a bug regarding workflows"
+  },
+  {
     "hash": "f28f747",
     "tag": "1.0.86",
     "date": "2026-04-22T13:34:09-04:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2026-01-13T20:46:57-05:00",
     "message": "Fix portable installer sageattention and triton"
-  },
-  {
-    "hash": "e055932",
-    "tag": null,
-    "date": "2026-01-12T19:58:24-05:00",
-    "message": "Add better SEO for discovering Nuvu through Manager"
   }
 ]
