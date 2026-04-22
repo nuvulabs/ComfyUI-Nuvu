@@ -1,5 +1,11 @@
 [
   {
+    "hash": "6320760",
+    "tag": "1.0.85",
+    "date": "2026-04-22T12:19:17-04:00",
+    "message": "Batch workflow media requests to eliminate timeout errors when loading"
+  },
+  {
     "hash": "65afade",
     "tag": "1.0.84",
     "date": "2026-04-22T09:59:06-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.18",
     "date": "2026-01-12T11:35:07-05:00",
     "message": "Update Comfy Registry Message for better searchability"
-  },
-  {
-    "hash": "b073782",
-    "tag": "1.0.17",
-    "date": "2026-01-12T08:42:02-05:00",
-    "message": "change text from gray to white"
   }
 ]
