@@ -1,5 +1,11 @@
 [
   {
+    "hash": "f28f747",
+    "tag": "1.0.86",
+    "date": "2026-04-22T13:34:09-04:00",
+    "message": "Simplify media refresh, and make new workflows available instantly."
+  },
+  {
     "hash": "6320760",
     "tag": "1.0.85",
     "date": "2026-04-22T12:19:17-04:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2026-01-12T19:58:24-05:00",
     "message": "Add better SEO for discovering Nuvu through Manager"
-  },
-  {
-    "hash": "4e207cc",
-    "tag": "1.0.18",
-    "date": "2026-01-12T11:35:07-05:00",
-    "message": "Update Comfy Registry Message for better searchability"
   }
 ]
