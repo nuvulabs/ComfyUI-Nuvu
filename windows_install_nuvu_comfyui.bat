@@ -184,12 +184,22 @@ if "%USE_UV%"=="1" (
 )
 
 echo.
-echo === Installing PyTorch 2.9.1 stack, this will take up to 10 minutes ===
-call :pkg_install torch==2.9.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130
+echo === Installing PyTorch 2.11.0 stack, this will take up to 10 minutes ===
+REM Pin torch, torchvision, and torchaudio together (unpinned torchaudio can resolve to a newer ABI and break native extensions).
+call :pkg_install torch==2.11.0+cu130 torchvision==0.26.0+cu130 torchaudio==2.11.0+cu130 --index-url https://download.pytorch.org/whl/cu130
 if errorlevel 1 (
-    echo Failed to install PyTorch 2.9.1 stack.
+    echo Failed to install PyTorch 2.11.0 stack.
     exit /b 1
 )
+
+echo.
+echo === Saving PyTorch pins for later pip installs ===
+set "TORCH_CONSTRAINTS=%COMFY_DIR%\nuvu_torch_constraints.txt"
+python -m pip freeze > "%TEMP%\nuvu_pip_freeze.txt"
+type nul > "%TORCH_CONSTRAINTS%"
+findstr /b /c:"torch==" "%TEMP%\nuvu_pip_freeze.txt" >> "%TORCH_CONSTRAINTS%" 2>nul
+findstr /b /c:"torchvision==" "%TEMP%\nuvu_pip_freeze.txt" >> "%TORCH_CONSTRAINTS%" 2>nul
+findstr /b /c:"torchaudio==" "%TEMP%\nuvu_pip_freeze.txt" >> "%TORCH_CONSTRAINTS%" 2>nul
 
 echo.
 echo === Installing core ComfyUI dependencies ===
@@ -229,22 +239,27 @@ call :clone_and_install "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/Comfy
 cd /d "%COMFY_DIR%"
 
 echo.
-echo === Installing ML dependencies ===
-call :pkg_install "transformers==4.57.6"
-if errorlevel 1 (
-    echo Failed to install Transformers.
-    exit /b 1
+echo === Installing critical ML packages (force reinstall) ===
+REM Mirrors pre_launch.py::install_critical_packages so prelaunch does not need to
+REM reinstall these on first ComfyUI startup. Uses --force-reinstall (pip) /
+REM --reinstall (uv) to write fresh dist-info metadata even if pip thinks the
+REM packages are already satisfied. No torch constraints applied here because
+REM none of these conflict with the pinned torch stack.
+if "%USE_UV%"=="1" (
+    if "%VERBOSE%"=="1" (
+        "%UV_EXE%" pip install --reinstall pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0"
+    ) else (
+        "%UV_EXE%" pip install --reinstall --quiet pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0" >> "%INSTALL_LOG%" 2>&1
+    )
+) else (
+    if "%VERBOSE%"=="1" (
+        python -m pip install --force-reinstall --no-warn-script-location pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0"
+    ) else (
+        python -m pip install --force-reinstall -q --no-warn-script-location pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0" >> "%INSTALL_LOG%" 2>&1
+    )
 )
-
-call :pkg_install "diffusers>=0.33.0"
 if errorlevel 1 (
-    echo Failed to install Diffusers.
-    exit /b 1
-)
-
-call :pkg_install "huggingface_hub<1.0"
-if errorlevel 1 (
-    echo Failed to install HuggingFace Hub.
+    echo Failed to install critical ML packages.
     exit /b 1
 )
 
@@ -393,17 +408,35 @@ REM ============================================================
 :pkg_install
 REM Install packages using uv (if available) or pip
 REM Usage: call :pkg_install package1 package2 --extra-args
+set "TORCH_C_PATH="
+if defined TORCH_CONSTRAINTS if exist "%TORCH_CONSTRAINTS%" for %%F in ("%TORCH_CONSTRAINTS%") do if %%~zF gtr 0 set "TORCH_C_PATH=%%~fF"
 if "%VERBOSE%"=="1" (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install %*
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install -c "!TORCH_C_PATH!" %*
+        ) else (
+            "%UV_EXE%" pip install %*
+        )
     ) else (
-        python -m pip install --no-warn-script-location %*
+        if defined TORCH_C_PATH (
+            python -m pip install --no-warn-script-location -c "!TORCH_C_PATH!" %*
+        ) else (
+            python -m pip install --no-warn-script-location %*
+        )
     )
 ) else (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install --quiet %* >> "%INSTALL_LOG%" 2>&1
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install --quiet -c "!TORCH_C_PATH!" %* >> "%INSTALL_LOG%" 2>&1
+        ) else (
+            "%UV_EXE%" pip install --quiet %* >> "%INSTALL_LOG%" 2>&1
+        )
     ) else (
-        python -m pip install -q --no-warn-script-location %* >> "%INSTALL_LOG%" 2>&1
+        if defined TORCH_C_PATH (
+            python -m pip install -q --no-warn-script-location -c "!TORCH_C_PATH!" %* >> "%INSTALL_LOG%" 2>&1
+        ) else (
+            python -m pip install -q --no-warn-script-location %* >> "%INSTALL_LOG%" 2>&1
+        )
     )
 )
 exit /b %errorlevel%
@@ -412,18 +445,36 @@ exit /b %errorlevel%
 REM Install from requirements file using uv (if available) or pip
 REM Usage: call :pkg_install_req requirements.txt [--extra-args]
 set "REQ_FILE=%~1"
+set "TORCH_C_PATH="
+if defined TORCH_CONSTRAINTS if exist "%TORCH_CONSTRAINTS%" for %%F in ("%TORCH_CONSTRAINTS%") do if %%~zF gtr 0 set "TORCH_C_PATH=%%~fF"
 shift
 if "%VERBOSE%"=="1" (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install -r "%REQ_FILE%" %1 %2 %3 %4 %5
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install -c "!TORCH_C_PATH!" -r "%REQ_FILE%" %1 %2 %3 %4 %5
+        ) else (
+            "%UV_EXE%" pip install -r "%REQ_FILE%" %1 %2 %3 %4 %5
+        )
     ) else (
-        python -m pip install --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5
+        if defined TORCH_C_PATH (
+            python -m pip install --no-warn-script-location -c "!TORCH_C_PATH!" -r "%REQ_FILE%" %1 %2 %3 %4 %5
+        ) else (
+            python -m pip install --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5
+        )
     )
 ) else (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install --quiet -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install --quiet -c "!TORCH_C_PATH!" -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+        ) else (
+            "%UV_EXE%" pip install --quiet -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+        )
     ) else (
-        python -m pip install -q --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+        if defined TORCH_C_PATH (
+            python -m pip install -q --no-warn-script-location -c "!TORCH_C_PATH!" -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+        ) else (
+            python -m pip install -q --no-warn-script-location -r "%REQ_FILE%" %1 %2 %3 %4 %5 >> "%INSTALL_LOG%" 2>&1
+        )
     )
 )
 exit /b %errorlevel%

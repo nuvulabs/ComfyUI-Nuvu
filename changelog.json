@@ -1,5 +1,11 @@
 [
   {
+    "hash": "5c8b22c",
+    "tag": "1.0.88",
+    "date": "2026-05-04T21:33:37-04:00",
+    "message": "Fix startup scripts, also fix an issue where devices weren't registered, but the UI was also not showing that the device isn't registered. Better messaging when workflows fail to install."
+  },
+  {
     "hash": "ecb2d72",
     "tag": "1.0.87",
     "date": "2026-04-22T16:22:46-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.20",
     "date": "2026-01-13T20:50:51-05:00",
     "message": "Further clarity in Comfy Manager description"
-  },
-  {
-    "hash": "88439ea",
-    "tag": null,
-    "date": "2026-01-13T20:46:57-05:00",
-    "message": "Fix portable installer sageattention and triton"
   }
 ]

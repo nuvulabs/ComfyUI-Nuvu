@@ -2,9 +2,11 @@
 setlocal EnableExtensions EnableDelayedExpansion
 
 set "ROOT_DIR=%~dp0"
+cd /d "%ROOT_DIR%"
+set "EXTRACT_DIR=ComfyUI_windows_portable"
+set "PORTABLE_DIR=%ROOT_DIR%%EXTRACT_DIR%"
 set "URL=https://github.com/Comfy-Org/ComfyUI/releases/latest/download/ComfyUI_windows_portable_nvidia.7z"
 set "ARCHIVE_NAME=ComfyUI_windows_portable_nvidia.7z"
-set "EXTRACT_DIR=ComfyUI_windows_portable"
 set "NUVU_REPO=https://github.com/nuvulabs/ComfyUI-Nuvu.git"
 
 REM Ensure common Windows paths are available for tooling
@@ -44,8 +46,9 @@ if errorlevel 1 (
     exit /b 1
 )
 
-if exist "%EXTRACT_DIR%" (
-    echo Folder "%EXTRACT_DIR%" already exists.
+if exist "%PORTABLE_DIR%" (
+    echo Portable folder already exists:
+    echo %PORTABLE_DIR%
     echo Skipping download and extraction to prevent overwriting.
 ) else (
     if not exist "%ARCHIVE_NAME%" (
@@ -107,7 +110,7 @@ echo   Installing Custom Nodes
 echo ========================================================
 echo.
 
-set "CUSTOM_NODES_DIR=%EXTRACT_DIR%\ComfyUI\custom_nodes"
+set "CUSTOM_NODES_DIR=%PORTABLE_DIR%\ComfyUI\custom_nodes"
 if not exist "%CUSTOM_NODES_DIR%" (
     echo [ERROR] Custom nodes directory not found at:
     echo %CUSTOM_NODES_DIR%
@@ -118,7 +121,7 @@ if not exist "%CUSTOM_NODES_DIR%" (
 )
 
 REM Define Python executable path for the helper function
-set "PYTHON_EXE=%ROOT_DIR%%EXTRACT_DIR%\python_embeded\python.exe"
+set "PYTHON_EXE=%PORTABLE_DIR%\python_embeded\python.exe"
 
 if not exist "%PYTHON_EXE%" (
     echo [ERROR] Python embedded not found at:
@@ -126,6 +129,16 @@ if not exist "%PYTHON_EXE%" (
     pause
     exit /b 1
 )
+
+REM Portable ComfyUI ships a matched torch/torchvision/torchaudio set. Record pins so
+REM custom node requirements cannot pull a newer torchaudio wheel (ABI mismatch with bundled torch).
+set "TORCH_CONSTRAINTS=%PORTABLE_DIR%\nuvu_torch_constraints.txt"
+echo Recording bundled PyTorch packages for safe dependency installs...
+"%PYTHON_EXE%" -s -m pip freeze > "%TEMP%\nuvu_portable_freeze.txt"
+type nul > "%TORCH_CONSTRAINTS%"
+findstr /b /c:"torch==" "%TEMP%\nuvu_portable_freeze.txt" >> "%TORCH_CONSTRAINTS%" 2>nul
+findstr /b /c:"torchvision==" "%TEMP%\nuvu_portable_freeze.txt" >> "%TORCH_CONSTRAINTS%" 2>nul
+findstr /b /c:"torchaudio==" "%TEMP%\nuvu_portable_freeze.txt" >> "%TORCH_CONSTRAINTS%" 2>nul
 
 echo.
 echo === Installing uv (fast package installer) ===
@@ -200,30 +213,39 @@ call :clone_and_install "comfyui_controlnet_aux" "https://github.com/Fannovel16/
 call :clone_and_install "ComfyUI-Impact-Pack" "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git"
 
 echo.
-echo === Installing ML dependencies ===
-call :pkg_install_portable "transformers==4.57.6"
-if errorlevel 1 (
-    echo [WARNING] Failed to install Transformers.
+echo === Installing critical ML packages (force reinstall) ===
+REM Mirrors pre_launch.py::install_critical_packages so prelaunch does not need to
+REM reinstall these on first ComfyUI startup. Uses --force-reinstall (pip) /
+REM --reinstall (uv) to write fresh dist-info metadata even if pip thinks the
+REM packages are already satisfied. No torch constraints applied here because
+REM none of these conflict with the bundled torch stack.
+if "%USE_UV%"=="1" (
+    if "%VERBOSE%"=="1" (
+        "%UV_EXE%" pip install --python "%PYTHON_EXE%" --reinstall pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0"
+    ) else (
+        "%UV_EXE%" pip install --python "%PYTHON_EXE%" --reinstall --quiet pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0" 2>nul
+    )
+) else (
+    if "%VERBOSE%"=="1" (
+        "%PYTHON_EXE%" -s -m pip install --force-reinstall --no-warn-script-location pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0"
+    ) else (
+        "%PYTHON_EXE%" -s -m pip install --force-reinstall -q --no-warn-script-location pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0" 2>nul
+    )
 )
-
-call :pkg_install_portable "diffusers>=0.33.0"
 if errorlevel 1 (
-    echo [WARNING] Failed to install Diffusers.
-)
-
-call :pkg_install_portable "huggingface_hub<1.0"
-if errorlevel 1 (
-    echo [WARNING] Failed to install HuggingFace Hub.
+    echo [WARNING] Failed to install critical ML packages.
 )
 
 cd /d "%ROOT_DIR%"
 
-set "PORTABLE_DIR=%ROOT_DIR%%EXTRACT_DIR%"
 set "RUN_SCRIPT=%PORTABLE_DIR%\run_nvidia_gpu.bat"
 
 echo.
 echo === Updating launcher with Nuvu options ===
 > "%RUN_SCRIPT%" (
+    echo @echo off
+    echo setlocal EnableExtensions
+    echo cd /d "%%~dp0"
     echo .\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --use-sage-attention --preview-method auto --auto-launch
     echo pause
 )
@@ -359,17 +381,35 @@ REM ============================================================
 :pkg_install_portable
 REM Install packages using uv (if available) or pip
 REM Usage: call :pkg_install_portable package1 package2 --extra-args
+set "TORCH_C_PATH="
+if defined TORCH_CONSTRAINTS if exist "%TORCH_CONSTRAINTS%" for %%F in ("%TORCH_CONSTRAINTS%") do if %%~zF gtr 0 set "TORCH_C_PATH=%%~fF"
 if "%VERBOSE%"=="1" (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install --python "%PYTHON_EXE%" %*
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" -c "!TORCH_C_PATH!" %*
+        ) else (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" %*
+        )
     ) else (
-        "%PYTHON_EXE%" -s -m pip install --no-warn-script-location %*
+        if defined TORCH_C_PATH (
+            "%PYTHON_EXE%" -s -m pip install --no-warn-script-location -c "!TORCH_C_PATH!" %*
+        ) else (
+            "%PYTHON_EXE%" -s -m pip install --no-warn-script-location %*
+        )
     )
 ) else (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet %*
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet -c "!TORCH_C_PATH!" %*
+        ) else (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet %*
+        )
     ) else (
-        "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location %*
+        if defined TORCH_C_PATH (
+            "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -c "!TORCH_C_PATH!" %*
+        ) else (
+            "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location %*
+        )
     )
 )
 exit /b %errorlevel%
@@ -378,17 +418,35 @@ exit /b %errorlevel%
 REM Install from requirements file using uv (if available) or pip
 REM Usage: call :pkg_install_req_portable requirements.txt
 set "REQ_FILE=%~1"
+set "TORCH_C_PATH="
+if defined TORCH_CONSTRAINTS if exist "%TORCH_CONSTRAINTS%" for %%F in ("%TORCH_CONSTRAINTS%") do if %%~zF gtr 0 set "TORCH_C_PATH=%%~fF"
 if "%VERBOSE%"=="1" (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install --python "%PYTHON_EXE%" -r "%REQ_FILE%"
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" -c "!TORCH_C_PATH!" -r "%REQ_FILE%"
+        ) else (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" -r "%REQ_FILE%"
+        )
     ) else (
-        "%PYTHON_EXE%" -s -m pip install --no-warn-script-location -r "%REQ_FILE%"
+        if defined TORCH_C_PATH (
+            "%PYTHON_EXE%" -s -m pip install --no-warn-script-location -c "!TORCH_C_PATH!" -r "%REQ_FILE%"
+        ) else (
+            "%PYTHON_EXE%" -s -m pip install --no-warn-script-location -r "%REQ_FILE%"
+        )
     )
 ) else (
     if "%USE_UV%"=="1" (
-        "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet -r "%REQ_FILE%"
+        if defined TORCH_C_PATH (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet -c "!TORCH_C_PATH!" -r "%REQ_FILE%"
+        ) else (
+            "%UV_EXE%" pip install --python "%PYTHON_EXE%" --quiet -r "%REQ_FILE%"
+        )
     ) else (
-        "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r "%REQ_FILE%"
+        if defined TORCH_C_PATH (
+            "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -c "!TORCH_C_PATH!" -r "%REQ_FILE%"
+        ) else (
+            "%PYTHON_EXE%" -s -m pip install -q --no-warn-script-location -r "%REQ_FILE%"
+        )
     )
 )
 exit /b %errorlevel%

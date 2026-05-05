@@ -1261,6 +1261,33 @@ def _patch_batch_files():
             _patch_venv_batch(batch_path)
 
 
+def _ensure_portable_batch_root_cd(content: str) -> tuple[str, bool]:
+    """Ensure the batch file cds to its own directory so relative paths work from any cwd."""
+    import re
+    if re.search(r'^\s*cd\s+/d.*%~dp0', content, re.I | re.MULTILINE):
+        return content, False
+    lines = content.splitlines()
+    new_lines: list[str] = []
+    inserted = False
+    for i, line in enumerate(lines):
+        new_lines.append(line)
+        if inserted:
+            continue
+        if line.strip().lower() == '@echo off':
+            next_line = lines[i + 1] if i + 1 < len(lines) else ''
+            if re.match(r'^\s*cd\s+/d.*%~dp0', next_line, re.I):
+                inserted = True
+            else:
+                new_lines.append('cd /d "%~dp0"')
+                inserted = True
+    if not inserted:
+        new_lines = ['cd /d "%~dp0"', ''] + lines
+    result = '\n'.join(new_lines)
+    if content.endswith('\n') and not result.endswith('\n'):
+        result += '\n'
+    return result, True
+
+
 def _patch_portable_batch(batch_path):
     """Patch a portable batch file to run pre_launch.py before main.py."""
     # The correct path uses ComfyUI-Nuvu (distributed name)
@@ -1271,9 +1298,18 @@ def _patch_portable_batch(batch_path):
     try:
         with open(batch_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
+        content, cwd_fixed = _ensure_portable_batch_root_cd(content)
+
         # Already patched with correct path?
         if correct_path in content:
+            if cwd_fixed:
+                with open(batch_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                print(
+                    f"[ComfyUI-Nuvu] Anchored {os.path.basename(batch_path)} to script directory (%~dp0)",
+                    flush=True,
+                )
             return
         
         # Check if patched with old path - upgrade it

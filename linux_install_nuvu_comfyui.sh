@@ -72,6 +72,7 @@ ensure_cmd() {
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMFY_DIR="$SCRIPT_DIR/ComfyUI"
+TORCH_CONSTRAINTS="$COMFY_DIR/nuvu_torch_constraints.txt"
 RUN_SCRIPT_NAME="run_comfy.sh"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 nuvu_COMPILED_REPO="https://github.com/nuvulabs/ComfyUI-Nuvu.git"
@@ -83,35 +84,43 @@ USE_UV=0
 
 # Package installation helper - uses uv if available, falls back to pip
 pkg_install() {
+  local -a torch_c=()
+  if [ -n "${TORCH_CONSTRAINTS:-}" ] && [ -s "$TORCH_CONSTRAINTS" ]; then
+    torch_c=(-c "$TORCH_CONSTRAINTS")
+  fi
   if [ "$VERBOSE" -eq 1 ]; then
     if [ "$USE_UV" -eq 1 ]; then
-      "$UV_EXE" pip install "$@"
+      "$UV_EXE" pip install "${torch_c[@]}" "$@"
     else
-      python -m pip install "$@"
+      python -m pip install "${torch_c[@]}" "$@"
     fi
   else
     if [ "$USE_UV" -eq 1 ]; then
-      "$UV_EXE" pip install --quiet "$@" >> "$INSTALL_LOG" 2>&1
+      "$UV_EXE" pip install --quiet "${torch_c[@]}" "$@" >> "$INSTALL_LOG" 2>&1
     else
-      python -m pip install -q "$@" >> "$INSTALL_LOG" 2>&1
+      python -m pip install -q "${torch_c[@]}" "$@" >> "$INSTALL_LOG" 2>&1
     fi
   fi
 }
 
 pkg_install_req() {
   local req_file="$1"
+  local -a torch_c=()
+  if [ -n "${TORCH_CONSTRAINTS:-}" ] && [ -s "$TORCH_CONSTRAINTS" ]; then
+    torch_c=(-c "$TORCH_CONSTRAINTS")
+  fi
   shift
   if [ "$VERBOSE" -eq 1 ]; then
     if [ "$USE_UV" -eq 1 ]; then
-      "$UV_EXE" pip install -r "$req_file" "$@"
+      "$UV_EXE" pip install "${torch_c[@]}" -r "$req_file" "$@"
     else
-      python -m pip install -r "$req_file" "$@"
+      python -m pip install "${torch_c[@]}" -r "$req_file" "$@"
     fi
   else
     if [ "$USE_UV" -eq 1 ]; then
-      "$UV_EXE" pip install --quiet -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+      "$UV_EXE" pip install --quiet "${torch_c[@]}" -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
     else
-      python -m pip install -q -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
+      python -m pip install -q "${torch_c[@]}" -r "$req_file" "$@" >> "$INSTALL_LOG" 2>&1
     fi
   fi
 }
@@ -303,8 +312,12 @@ fi
 log "Installing keyring helpers"
 pkg_install keyrings.alt
 
-log "Installing PyTorch 2.9.1 stack"
-pkg_install torch==2.9.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu130
+log "Installing PyTorch 2.11.0 stack"
+# Pin torch, torchvision, and torchaudio together (unpinned torchaudio can resolve to a newer ABI).
+pkg_install torch==2.11.0+cu130 torchvision==0.26.0+cu130 torchaudio==2.11.0+cu130 --index-url https://download.pytorch.org/whl/cu130
+
+log "Saving PyTorch pins for dependency installs"
+python -m pip freeze | grep -E '^(torch|torchvision|torchaudio)==' > "$TORCH_CONSTRAINTS" || true
 
 log "Installing core ComfyUI dependencies"
 pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu130
@@ -327,10 +340,25 @@ clone_and_install "ComfyUI-KJNodes" "https://github.com/kijai/ComfyUI-KJNodes.gi
 
 cd "$COMFY_DIR"
 
-log "Installing ML dependencies"
-pkg_install "transformers==4.57.6"
-pkg_install "diffusers>=0.33.0"
-pkg_install "huggingface_hub<1.0"
+log "Installing critical ML packages (force reinstall)"
+# Mirrors pre_launch.py::install_critical_packages so prelaunch does not need to
+# reinstall these on first ComfyUI startup. Uses --force-reinstall (pip) /
+# --reinstall (uv) to write fresh dist-info metadata even if pip thinks the
+# packages are already satisfied. No torch constraints applied here because
+# none of these conflict with the pinned torch stack.
+if [ "$USE_UV" -eq 1 ]; then
+  if [ "$VERBOSE" -eq 1 ]; then
+    "$UV_EXE" pip install --reinstall pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0"
+  else
+    "$UV_EXE" pip install --reinstall --quiet pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0" >> "$INSTALL_LOG" 2>&1
+  fi
+else
+  if [ "$VERBOSE" -eq 1 ]; then
+    python -m pip install --force-reinstall pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0"
+  else
+    python -m pip install --force-reinstall -q pillow numpy "transformers==4.57.6" "huggingface_hub<1.0" "diffusers>=0.33.0" >> "$INSTALL_LOG" 2>&1
+  fi
+fi
 
 log "Creating helper launcher: $RUN_SCRIPT_NAME"
 cat > "$RUN_SCRIPT_NAME" <<'EOF'
