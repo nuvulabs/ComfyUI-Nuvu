@@ -863,6 +863,29 @@ CRITICAL_PACKAGES = [
 ]
 
 
+def _check_pillow_functional() -> bool:
+    """Verify Pillow has the runtime modules ComfyUI imports at startup.
+
+    Metadata checks alone are not enough: on Windows/Python 3.13 embedded
+    installs we have observed `pip show Pillow` succeeding while the PIL
+    package directory is missing pure-Python modules such as ImageDraw.
+    ComfyUI's main.py path includes `from PIL import Image, ImageDraw,
+    ImageFont`, so we check exactly those modules here using
+    importlib.util.find_spec to avoid loading them (which would lock files
+    we may need to overwrite during a repair).
+    """
+    try:
+        import importlib.util
+        required_modules = ("PIL.Image", "PIL.ImageDraw", "PIL.ImageFont")
+        for module_name in required_modules:
+            spec = importlib.util.find_spec(module_name)
+            if spec is None or not spec.origin or not os.path.exists(spec.origin):
+                return False
+        return True
+    except Exception:
+        return False
+
+
 def _check_package_installed(pip_name: str) -> bool:
     """
     Check if a package is installed using pip show (without importing it).
@@ -1210,8 +1233,48 @@ def _ensure_critical_packages():
                 _uninstall_package(pip_name)
             # Version doesn't satisfy constraint or not installed
             _install_package(package_spec, description)
-        elif not _check_package_installed(pip_name):
-            _install_package(package_spec, description)
+        else:
+            # Non-versioned critical package. Metadata check alone is not
+            # sufficient for Pillow: the package can be present in metadata
+            # while PIL.ImageDraw is missing from the package directory,
+            # which crashes ComfyUI's main.py import chain. For Pillow we
+            # also verify the runtime modules ComfyUI actually imports.
+            metadata_ok = _check_package_installed(pip_name)
+            functional_ok = True
+            if pip_name.lower() == "pillow":
+                functional_ok = _check_pillow_functional()
+                if metadata_ok and not functional_ok:
+                    print(
+                        "[ComfyUI-Nuvu] Pillow metadata found, but PIL.ImageDraw is not importable; repairing Pillow.",
+                        flush=True,
+                    )
+
+            if not metadata_ok or not functional_ok:
+                _install_package(package_spec, description)
+                # Post-install verification for Pillow: if the partial-install
+                # state persists, retry once with --no-cache-dir which has
+                # been observed to fix it on Windows embedded Python.
+                if pip_name.lower() == "pillow" and not _check_pillow_functional():
+                    print(
+                        "[ComfyUI-Nuvu] Pillow reinstall completed but PIL.ImageDraw still not importable; "
+                        "retrying with --no-cache-dir.",
+                        flush=True,
+                    )
+                    is_embedded = "python_embeded" in sys.executable.lower()
+                    retry_cmd = [sys.executable]
+                    if is_embedded:
+                        retry_cmd.append('-s')
+                    retry_cmd.extend(['-m', 'pip', 'install', '--force-reinstall', '--no-cache-dir', package_spec])
+                    try:
+                        subprocess.run(retry_cmd, capture_output=True, text=True, timeout=180)
+                    except Exception as exc:
+                        print(f"[ComfyUI-Nuvu] Pillow retry error: {exc}", flush=True)
+                    if not _check_pillow_functional():
+                        print(
+                            "[ComfyUI-Nuvu] Pillow still broken after retry; ComfyUI startup will likely fail with "
+                            "ImportError on PIL.ImageDraw.",
+                            flush=True,
+                        )
 
 
 def _patch_batch_files():

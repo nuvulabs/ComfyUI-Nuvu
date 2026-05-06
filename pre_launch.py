@@ -514,34 +514,121 @@ def cleanup_corrupted_packages():
         print(f"[Nuvu Pre-Launch] Error checking for corrupted packages: {e}", flush=True)
 
 
+def _pillow_import_ok():
+    """Check Pillow's runtime modules, not just its package metadata.
+
+    On Windows/Python 3.13 embedded, `uv pip install --reinstall pillow` has
+    been observed to leave the PIL package directory present but missing the
+    pure-Python modules ComfyUI imports (Image, ImageDraw, ImageFont).
+    Metadata-only checks like `pip show Pillow` cannot detect that state, so
+    we run the actual import check ComfyUI will perform.
+    """
+    try:
+        import importlib.util
+        for mod in ("PIL.Image", "PIL.ImageDraw", "PIL.ImageFont"):
+            spec = importlib.util.find_spec(mod)
+            if spec is None or not spec.origin or not os.path.exists(spec.origin):
+                return False
+        return True
+    except Exception:
+        return False
+
+
+def _critical_package_ok(pkg_spec):
+    """Check whether a critical package is healthy enough to skip reinstall.
+
+    Accepts a pip-style spec like 'pillow', 'numpy', 'transformers==4.57.6',
+    'huggingface_hub<1.0', or 'diffusers>=0.33.0'. Returns True if the
+    installed version satisfies the constraint AND, for Pillow, the runtime
+    modules import successfully.
+    """
+    import re
+    match = re.match(r'^([A-Za-z0-9_.\-]+)(.*)$', pkg_spec.strip())
+    if not match:
+        return False
+    pkg_name = match.group(1)
+    version_spec = match.group(2).strip()
+
+    installed = get_installed_version(pkg_name)
+    if installed is None:
+        return False
+    if version_spec and not version_satisfies(installed, version_spec):
+        return False
+
+    # Pillow needs an additional runtime-module check because metadata can
+    # report an installed version while PIL.ImageDraw/Image/ImageFont are
+    # missing from the package directory.
+    if pkg_name.lower() == 'pillow' and not _pillow_import_ok():
+        return False
+
+    return True
+
+
 def install_critical_packages():
-    """Force reinstall critical packages that may be broken."""
+    """Reinstall critical packages only when they are missing or broken.
+
+    Unconditional `--reinstall` of these on every launch was observed to
+    leave Pillow in a partial state on Windows/Python 3.13 embedded
+    installs (PIL package present, ImageDraw missing). We now check first
+    and only reinstall the specific packages that fail their checks.
+    """
     # First, clean up any packages with corrupted metadata (version = None)
     cleanup_corrupted_packages()
-    
-    pip_base, is_uv, is_standalone = _get_pip_base()
-    
+
+    print("[Nuvu Pre-Launch] Ensuring critical packages...", flush=True)
+
     # Force reinstall packages that commonly get corrupted metadata after PyTorch upgrades
     # - pillow: Image processing, breaks ComfyUI startup if corrupted
     # - transformers: HuggingFace, version comparison fails if numpy metadata is broken
     # - numpy: Core dependency, metadata often corrupted during torch upgrades
     # - huggingface_hub: Must be <1.0, higher versions break some ComfyUI workflows
-    print("[Nuvu Pre-Launch] Ensuring critical packages...", flush=True)
-    
     critical_packages = ['pillow', 'numpy', 'transformers==4.57.6', 'huggingface_hub<1.0', 'diffusers>=0.33.0']
-    
+
+    needs_install = [p for p in critical_packages if not _critical_package_ok(p)]
+
+    if not needs_install:
+        print("[Nuvu Pre-Launch] Critical packages OK", flush=True)
+        return
+
+    print(f"[Nuvu Pre-Launch] Repairing {len(needs_install)} critical package(s): {', '.join(needs_install)}", flush=True)
+
+    pip_base, is_uv, is_standalone = _get_pip_base()
+
     if is_uv:
         cmd = list(pip_base) + ['install']
         if is_standalone and _is_embedded_python():
             cmd.extend(['--python', sys.executable])
-        cmd.extend(['--reinstall'] + critical_packages + ['-q'])
+        cmd.extend(['--reinstall'] + needs_install + ['-q'])
     else:
-        cmd = list(pip_base) + ['install', '--force-reinstall'] + critical_packages + ['-q']
-    
+        cmd = list(pip_base) + ['install', '--force-reinstall'] + needs_install + ['-q']
+
     print(f"[Nuvu Pre-Launch] Running: {' '.join(cmd)}", flush=True)
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
     if result.returncode != 0:
         print(f"[Nuvu Pre-Launch] Critical packages install issue: {result.stderr[:200]}", flush=True)
+        return
+
+    # Post-install verification: if Pillow was repaired, confirm the runtime
+    # modules are now importable. This catches the partial-install state
+    # before ComfyUI's main.py reaches `from PIL import ImageDraw`.
+    if 'pillow' in needs_install and not _pillow_import_ok():
+        print(
+            "[Nuvu Pre-Launch] Pillow reinstall completed but PIL.ImageDraw is still not importable; "
+            "retrying with pip --force-reinstall --no-cache",
+            flush=True,
+        )
+        is_embedded = _is_embedded_python()
+        retry_cmd = [sys.executable]
+        if is_embedded:
+            retry_cmd.append('-s')
+        retry_cmd.extend(['-m', 'pip', 'install', '--force-reinstall', '--no-cache-dir', 'pillow'])
+        retry = subprocess.run(retry_cmd, capture_output=True, text=True, timeout=300)
+        if retry.returncode != 0:
+            print(f"[Nuvu Pre-Launch] Pillow retry failed: {retry.stderr[:200]}", flush=True)
+        elif not _pillow_import_ok():
+            print("[Nuvu Pre-Launch] Pillow still broken after retry; ComfyUI startup will likely fail", flush=True)
+        else:
+            print("[Nuvu Pre-Launch] Pillow runtime modules OK after retry", flush=True)
 
 
 def parse_requirement(req_line):
