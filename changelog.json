@@ -1,5 +1,11 @@
 [
   {
+    "hash": "b1ed74e",
+    "tag": "1.0.90",
+    "date": "2026-08-09T18:47:12-04:00",
+    "message": "Add bandwidth-controlled model downloads via aria2 + Optimizer UI"
+  },
+  {
     "hash": "a5ef355",
     "tag": "1.0.89",
     "date": "2026-05-06T06:03:33-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.22",
     "date": "2026-01-14T16:52:16-05:00",
     "message": "Display actual subgraph names on failed install Use uv with python portable not just venv Display correct number of installed models when less than all of the models fail to download."
-  },
-  {
-    "hash": "9c1584c",
-    "tag": "1.0.21",
-    "date": "2026-01-13T23:56:21-05:00",
-    "message": "Bump default installed torch version to 2.9.1 cu13.0 for Comfy Speed Boosts and memory management. Ensure huggingface token persists with Comfy Portable"
   }
 ]

@@ -196,3 +196,6 @@ web-dist/
 .npm
 package-lock.json
 
+
+# aria2 runtime binary cache (downloaded on demand)
+.bin/
