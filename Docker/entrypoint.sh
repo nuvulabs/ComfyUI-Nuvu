@@ -62,7 +62,6 @@ TORCH_INDEX_URL=${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
 nuvu_REPO=${nuvu_REPO:-https://github.com/nuvulabs/ComfyUI-Nuvu.git}
 nuvu_BRANCH=${nuvu_BRANCH:-}
 MANAGER_REPO=${MANAGER_REPO:-https://github.com/Comfy-Org/ComfyUI-Manager.git}
-SAGE_REPO=${SAGE_REPO:-https://github.com/thu-ml/SageAttention.git}
 PYTHON_DEFAULT_BIN=${PYTHON_DEFAULT_BIN:-python3.12}
 
 export LICENSE_SERVER_URL LICENSE_KEY
@@ -235,9 +234,6 @@ else
   log "Installing keyring helpers"
   pkg_install "$VENV_PIP" keyrings.alt
 
-  log "Installing SageAttention"
-  pkg_install "$VENV_PIP" sageattention --no-build-isolation
-
   # Install all custom nodes (each checked individually)
   ensure_manager_node
   ensure_nuvu_node
@@ -362,23 +358,39 @@ else
   echo "SHUTDOWN_CHECK_TIME not set, GPU shutdown monitoring disabled"
 fi
 
-# Start ComfyUI in background (without exec so shell stays as PID 1)
-"$VENV_PY" "$APP_DIR/main.py" --use-sage-attention --listen --port 8188 --preview-method auto "$@" &
-COMFYUI_PID=$!
+# ComfyUI launch args shared by the primary (--use-ck-attention) and fallback attempts.
+# --enable-cors-header: required for access via the RunPod HTTP proxy. The console opens the
+#   ComfyUI tab as a cross-site navigation (console.runpod.io -> *.proxy.runpod.net), and
+#   ComfyUI's default origin-only middleware 403s any cross-site request. This flag swaps in the
+#   permissive CORS middleware instead (see ComfyUI server.py create_cors_middleware).
+COMFY_ARGS=(--listen --port 8188 --enable-cors-header '*' --preview-method auto "$@")
 
-# Function to handle cleanup
+# Cleanup kills whichever ComfyUI attempt is currently running.
 cleanup() {
     echo "Shutting down..."
-    kill $COMFYUI_PID 2>/dev/null || true
+    kill "$COMFYUI_PID" 2>/dev/null || true
     exit 0
 }
-
 trap cleanup SIGTERM SIGINT
 
-# Wait for ComfyUI, but keep container alive if it's killed
-wait $COMFYUI_PID || {
-    echo "ComfyUI process ended. Container will stay alive for JupyterLab."
+# Start ComfyUI in background (without exec so shell stays as PID 1).
+# --use-ck-attention is preferred, but not every ComfyUI build/GPU supports it; if ComfyUI exits
+# non-zero with it, transparently relaunch once WITHOUT the flag.
+echo "Starting ComfyUI with --use-ck-attention"
+"$VENV_PY" "$APP_DIR/main.py" --use-ck-attention "${COMFY_ARGS[@]}" &
+COMFYUI_PID=$!
+if wait "$COMFYUI_PID"; then rc=0; else rc=$?; fi
+
+if [ "$rc" -ne 0 ]; then
+    echo "ComfyUI exited (code $rc) with --use-ck-attention; retrying without it..."
+    "$VENV_PY" "$APP_DIR/main.py" "${COMFY_ARGS[@]}" &
+    COMFYUI_PID=$!
+    if wait "$COMFYUI_PID"; then rc=0; else rc=$?; fi
+fi
+
+if [ "$rc" -ne 0 ]; then
+    echo "ComfyUI process ended (code $rc). Container will stay alive for JupyterLab."
     # Keep container running for JupyterLab
     while true; do sleep 3600; done
-}
+fi
 

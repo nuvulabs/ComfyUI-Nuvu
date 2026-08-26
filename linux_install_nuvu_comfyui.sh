@@ -73,6 +73,7 @@ ensure_cmd() {
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 COMFY_DIR="$SCRIPT_DIR/ComfyUI"
 TORCH_CONSTRAINTS="$COMFY_DIR/nuvu_torch_constraints.txt"
+PIP_CONSTRAINTS_FILE="$COMFY_DIR/nuvu_pip_constraints.txt"
 RUN_SCRIPT_NAME="run_comfy.sh"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 nuvu_COMPILED_REPO="https://github.com/nuvulabs/ComfyUI-Nuvu.git"
@@ -322,9 +323,6 @@ python -m pip freeze | grep -E '^(torch|torchvision|torchaudio)==' > "$TORCH_CON
 log "Installing core ComfyUI dependencies"
 pkg_install_req requirements.txt --extra-index-url https://download.pytorch.org/whl/cu130
 
-log "Installing SageAttention 2.2.0"
-pkg_install sageattention --no-build-isolation
-
 log "Installing additional custom nodes"
 mkdir -p "$COMFY_DIR/custom_nodes"
 cd "$COMFY_DIR/custom_nodes"
@@ -360,14 +358,35 @@ else
   fi
 fi
 
+# Persist a pip/uv constraints file OUTSIDE any pip-managed metadata so it survives and can be
+# referenced at launch time. transformers pins huggingface_hub<1.0, but ComfyUI-Manager's
+# prestartup dependency restore re-installs unpinned node requirements on first launch and drags
+# huggingface_hub up to 1.x AFTER install -> transformers fails to import. Exporting this as a
+# constraint in the launcher means every pip/uv call at runtime (including Manager's) is blocked
+# from resolving huggingface_hub>=1.0.
+log "Writing pip constraints: $PIP_CONSTRAINTS_FILE"
+printf 'huggingface_hub<1.0\n' > "$PIP_CONSTRAINTS_FILE"
+
 log "Creating helper launcher: $RUN_SCRIPT_NAME"
 cat > "$RUN_SCRIPT_NAME" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 export PYTHON_KEYRING_BACKEND=keyrings.alt.file.PlaintextKeyring
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Prevent ComfyUI-Manager's prestartup (and any runtime pip/uv install) from pulling
+# huggingface_hub>=1.0, which breaks transformers. See nuvu_pip_constraints.txt.
+if [ -f "$SCRIPT_DIR/nuvu_pip_constraints.txt" ]; then
+  export PIP_CONSTRAINT="$SCRIPT_DIR/nuvu_pip_constraints.txt"
+  export UV_CONSTRAINT="$SCRIPT_DIR/nuvu_pip_constraints.txt"
+fi
 source "$SCRIPT_DIR/venv/bin/activate"
-python "$SCRIPT_DIR/main.py" --use-sage-attention --preview-method auto --auto-launch
+# --use-ck-attention is preferred; if ComfyUI exits non-zero with it, relaunch once without it.
+if python "$SCRIPT_DIR/main.py" --use-ck-attention --preview-method auto --auto-launch; then
+  :
+else
+  echo "ComfyUI exited with --use-ck-attention; retrying without it..."
+  python "$SCRIPT_DIR/main.py" --preview-method auto --auto-launch
+fi
 EOF
 
 chmod +x "$RUN_SCRIPT_NAME"

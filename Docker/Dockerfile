@@ -49,5 +49,18 @@ RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/ent
 #COPY full/subgraphs /usr/local/bin/subgraphs
 #COPY full/workflows /usr/local/bin/workflows
 
+# Global pip/uv constraint, baked into the IMAGE (not the ComfyUI repo, which is cloned into
+# /workspace at runtime). transformers pins huggingface_hub<1.0, but several bundled custom
+# nodes list huggingface_hub unpinned, so on first boot ComfyUI-Manager's prestartup dependency
+# restore pip-installs them and the resolver drags huggingface_hub up to 1.x AFTER the entrypoint
+# pin has run -> transformers fails to import -> ComfyUI crashes (a restart "fixes" it because
+# Manager's first-run routines don't repeat). Both env vars are inherited by every child process
+# (entrypoint installs, Manager's make_pip_cmd via pip OR uv, node install scripts, runtime
+# installs), so huggingface_hub>=1.0 can never be resolved in the first place. The constraints
+# file lives at /etc so it survives the runtime clone of ComfyUI into /workspace.
+RUN printf 'huggingface_hub<1.0\n' > /etc/nuvu-pip-constraints.txt
+ENV PIP_CONSTRAINT=/etc/nuvu-pip-constraints.txt \
+    UV_CONSTRAINT=/etc/nuvu-pip-constraints.txt
+
 EXPOSE 8188 8888
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

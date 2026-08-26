@@ -192,13 +192,6 @@ if errorlevel 1 (
     echo [WARNING] Failed to install Triton.
 )
 
-echo.
-echo === Installing SageAttention ===
-call :pkg_install_portable https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post4/sageattention-2.2.0+cu130torch2.9.0andhigher.post4-cp39-abi3-win_amd64.whl
-if errorlevel 1 (
-    echo [WARNING] Failed to install SageAttention wheel.
-)
-
 cd /d "%CUSTOM_NODES_DIR%"
 
 echo.
@@ -241,12 +234,23 @@ cd /d "%ROOT_DIR%"
 set "RUN_SCRIPT=%PORTABLE_DIR%\run_nvidia_gpu.bat"
 
 echo.
+echo === Writing pip constraints: nuvu_pip_constraints.txt ===
+REM transformers pins huggingface_hub^<1.0, but ComfyUI-Manager's prestartup re-installs unpinned
+REM node requirements on first launch and drags huggingface_hub up to 1.x -^> transformers fails
+REM to import. The launcher below exports this as a pip/uv constraint so no runtime install can
+REM pull huggingface_hub^>=1.0. Kept at the portable-dir level, OUTSIDE the ComfyUI subdir.
+(echo huggingface_hub^<1.0)> "%PORTABLE_DIR%\nuvu_pip_constraints.txt"
+
+echo.
 echo === Updating launcher with Nuvu options ===
 > "%RUN_SCRIPT%" (
     echo @echo off
     echo setlocal EnableExtensions
     echo cd /d "%%~dp0"
-    echo .\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --use-sage-attention --preview-method auto --auto-launch
+    echo if exist "%%~dp0nuvu_pip_constraints.txt" set "PIP_CONSTRAINT=%%~dp0nuvu_pip_constraints.txt"
+    echo if exist "%%~dp0nuvu_pip_constraints.txt" set "UV_CONSTRAINT=%%~dp0nuvu_pip_constraints.txt"
+    echo .\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --use-ck-attention --preview-method auto --auto-launch
+    echo if errorlevel 1 .\python_embeded\python.exe -s ComfyUI\main.py --windows-standalone-build --preview-method auto --auto-launch
     echo pause
 )
 

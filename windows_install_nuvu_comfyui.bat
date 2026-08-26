@@ -215,12 +215,6 @@ if errorlevel 1 (
     exit /b 1
 )
 
-call :pkg_install https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post4/sageattention-2.2.0+cu130torch2.9.0andhigher.post4-cp39-abi3-win_amd64.whl
-if errorlevel 1 (
-    echo Failed to install SageAttention wheel.
-    exit /b 1
-)
-
 cd /d "%COMFY_DIR%"
 if not exist "custom_nodes" mkdir "custom_nodes"
 cd /d "%COMFY_DIR%\custom_nodes"
@@ -264,13 +258,24 @@ if errorlevel 1 (
 )
 
 echo.
+echo === Writing pip constraints: nuvu_pip_constraints.txt ===
+REM transformers pins huggingface_hub^<1.0, but ComfyUI-Manager's prestartup re-installs unpinned
+REM node requirements on first launch and drags huggingface_hub up to 1.x -^> transformers fails
+REM to import. The launcher below exports this as a pip/uv constraint so no runtime install can
+REM pull huggingface_hub^>=1.0.
+(echo huggingface_hub^<1.0)> "%COMFY_DIR%\nuvu_pip_constraints.txt"
+
+echo.
 echo === Creating helper launcher: %RUN_SCRIPT_NAME% ===
 > "%COMFY_DIR%\%RUN_SCRIPT_NAME%" (
     echo @echo off
     echo setlocal EnableExtensions
     echo cd /d "%%~dp0"
+    echo if exist "%%~dp0nuvu_pip_constraints.txt" set "PIP_CONSTRAINT=%%~dp0nuvu_pip_constraints.txt"
+    echo if exist "%%~dp0nuvu_pip_constraints.txt" set "UV_CONSTRAINT=%%~dp0nuvu_pip_constraints.txt"
     echo call "%%~dp0venv\Scripts\activate.bat"
-    echo python main.py --port %COMFY_PORT% --use-sage-attention --preview-method auto --auto-launch
+    echo python main.py --port %COMFY_PORT% --use-ck-attention --preview-method auto --auto-launch
+    echo if errorlevel 1 python main.py --port %COMFY_PORT% --preview-method auto --auto-launch
 )
 if errorlevel 1 (
     echo Failed to create "%RUN_SCRIPT_NAME%".

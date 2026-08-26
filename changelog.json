@@ -1,5 +1,11 @@
 [
   {
+    "hash": "42b826b",
+    "tag": "1.0.91",
+    "date": "2026-08-26T17:45:25-04:00",
+    "message": "Add Comfy Kitchen attention; drop SageAttention default"
+  },
+  {
     "hash": "b1ed74e",
     "tag": "1.0.90",
     "date": "2026-08-09T18:47:12-04:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2026-01-15T15:16:16-05:00",
     "message": "More robust update methodology for both ComfyUI manual/portable and Nuvu"
-  },
-  {
-    "hash": "8e2c6f6",
-    "tag": "1.0.22",
-    "date": "2026-01-14T16:52:16-05:00",
-    "message": "Display actual subgraph names on failed install Use uv with python portable not just venv Display correct number of installed models when less than all of the models fail to download."
   }
 ]
