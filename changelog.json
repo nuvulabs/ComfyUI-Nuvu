@@ -1,5 +1,11 @@
 [
   {
+    "hash": "a1bcbcb",
+    "tag": "1.0.93",
+    "date": "2026-08-27T11:49:17-04:00",
+    "message": "Gate device anchor to RunPod only (prevent PC device-unification)"
+  },
+  {
     "hash": "951e617",
     "tag": "1.0.92",
     "date": "2026-08-26T18:03:41-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.24",
     "date": "2026-01-16T07:12:57-05:00",
     "message": "Fix broken package installer for manual comfy install"
-  },
-  {
-    "hash": "82d12ea",
-    "tag": "1.0.23",
-    "date": "2026-01-15T16:21:48-05:00",
-    "message": "More robust portable and manual install updater Handle file locks when custom nodes, ComfyUI, and Nuvu use conpiled python packages Allow switching Nuvu and ComfyUI version through the interface"
   }
 ]
