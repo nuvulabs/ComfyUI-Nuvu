@@ -564,6 +564,27 @@ def _critical_package_ok(pkg_spec):
     return True
 
 
+def _repair_safe_spec(pkg_spec):
+    """Pin an unversioned critical-package spec to the installed version.
+
+    Force-reinstalling a bare name (e.g. "numpy" or "pillow") pulls the LATEST
+    release from PyPI. In a curated ComfyUI portable that can install a build
+    whose native ABI mismatches the rest of the stack -- e.g. a numpy major bump
+    (1.x <-> 2.x) that torch/opencv were not built against, or a newer Pillow
+    whose bundled codec DLLs clash with torchvision/onnxruntime -- producing hard
+    `access violation` crashes. A *repair* must restore the SAME version, so we
+    pin bare specs to whatever is installed. Genuinely-missing packages (no
+    installed version) are left unversioned so pip/uv can resolve them fresh.
+    """
+    import re
+    if re.search(r'[<>=!~]', pkg_spec):  # already constrained -> respect verbatim
+        return pkg_spec
+    installed = get_installed_version(pkg_spec)
+    if installed:
+        return f"{pkg_spec}=={installed}"
+    return pkg_spec
+
+
 def install_critical_packages():
     """Reinstall critical packages only when they are missing or broken.
 
@@ -594,19 +615,44 @@ def install_critical_packages():
 
     pip_base, is_uv, is_standalone = _get_pip_base()
 
-    if is_uv:
-        cmd = list(pip_base) + ['install']
-        if is_standalone and _is_embedded_python():
-            cmd.extend(['--python', sys.executable])
-        cmd.extend(['--reinstall'] + needs_install + ['-q'])
-    else:
-        cmd = list(pip_base) + ['install', '--force-reinstall'] + needs_install + ['-q']
+    # Pin unversioned specs to the installed version and never pull deps: a
+    # repair must restore the existing build, not upgrade numpy/pillow to a
+    # release whose native ABI clashes with the rest of the portable.
+    safe_specs = [_repair_safe_spec(p) for p in needs_install]
 
+    def _build_cmd(only_binary):
+        if is_uv:
+            c = list(pip_base) + ['install']
+            if is_standalone and _is_embedded_python():
+                c.extend(['--python', sys.executable])
+            c.append('--reinstall')
+        else:
+            c = list(pip_base) + ['install', '--force-reinstall']
+        c.append('--no-deps')
+        if only_binary:
+            # Two-token form is accepted by both pip and uv.
+            c.extend(['--only-binary', ':all:'])
+        return c + safe_specs + ['-q']
+
+    cmd = _build_cmd(only_binary=True)
     print(f"[Nuvu Pre-Launch] Running: {' '.join(cmd)}", flush=True)
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
     if result.returncode != 0:
-        print(f"[Nuvu Pre-Launch] Critical packages install issue: {result.stderr[:200]}", flush=True)
-        return
+        # A pinned version may lack a prebuilt wheel on this platform; retry once
+        # allowing an sdist (still --no-deps, still pinned) before giving up.
+        err = (result.stderr or '').lower()
+        wheel_missing = (
+            'no matching distribution' in err
+            or 'could not find' in err
+            or 'no solution' in err
+        )
+        if wheel_missing:
+            cmd = _build_cmd(only_binary=False)
+            print(f"[Nuvu Pre-Launch] Wheel-only install failed; retrying with sdist allowed: {' '.join(cmd)}", flush=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        if result.returncode != 0:
+            print(f"[Nuvu Pre-Launch] Critical packages install issue: {result.stderr[:200]}", flush=True)
+            return
 
     # Post-install verification: if Pillow was repaired, confirm the runtime
     # modules are now importable. This catches the partial-install state
@@ -618,10 +664,13 @@ def install_critical_packages():
             flush=True,
         )
         is_embedded = _is_embedded_python()
+        # Pin to the installed version and keep --no-deps so this last-ditch
+        # retry can't upgrade Pillow or disturb siblings.
+        retry_spec = _repair_safe_spec('pillow')
         retry_cmd = [sys.executable]
         if is_embedded:
             retry_cmd.append('-s')
-        retry_cmd.extend(['-m', 'pip', 'install', '--force-reinstall', '--no-cache-dir', 'pillow'])
+        retry_cmd.extend(['-m', 'pip', 'install', '--force-reinstall', '--no-deps', '--no-cache-dir', retry_spec])
         retry = subprocess.run(retry_cmd, capture_output=True, text=True, timeout=300)
         if retry.returncode != 0:
             print(f"[Nuvu Pre-Launch] Pillow retry failed: {retry.stderr[:200]}", flush=True)

@@ -851,6 +851,12 @@ def _install_pending_requirements():
 # - package_spec: what to install (can include version constraints)
 # - description: for logging
 # - force_version: if True, always reinstall to ensure version constraint (for <, >, != specs)
+#
+# NOTE: An unversioned package_spec (e.g. "pillow") is intentionally safe to
+# leave bare: _install_package pins repairs to the version already installed
+# (see _make_repair_safe_spec), so a repair restores the existing build rather
+# than upgrading to latest-on-PyPI. Do NOT "fix" this by hardcoding a version
+# here unless you want every machine forced onto that exact build.
 CRITICAL_PACKAGES = [
     ("Pillow", "pillow", "Pillow", False),
     # huggingface_hub>=1.0 breaks some ComfyUI workflows, pin to <1.0
@@ -925,47 +931,94 @@ def _check_package_installed(pip_name: str) -> bool:
         return False
 
 
+def _make_repair_safe_spec(package_spec: str) -> str:
+    """Pin an unversioned repair spec to the currently-installed version.
+
+    Force-reinstalling a bare name (e.g. "pillow") pulls the LATEST release from
+    PyPI. In a curated ComfyUI portable that newer build's bundled native
+    libraries (libjpeg/zlib/libpng inside the compiled .pyd) can clash at the DLL
+    level with other already-loaded native extensions (opencv, torchvision,
+    onnxruntime), producing hard `access violation` crashes in image/decode
+    worker threads. A *repair* must restore the SAME version, not silently
+    upgrade it, so we pin an unversioned spec to whatever is installed. If the
+    package is genuinely missing (no installed version) we leave it unversioned
+    so pip can install it fresh.
+    """
+    import re
+    # Already carries a version/constraint operator -> respect it verbatim.
+    if re.search(r'[<>=!~]', package_spec):
+        return package_spec
+    installed = _get_installed_version(package_spec)
+    if installed:
+        return f"{package_spec}=={installed}"
+    return package_spec
+
+
 def _install_package(package_spec: str, description: str) -> bool:
     """
-    Force reinstall a package using pip.
-    
+    Reinstall a critical package as safely as possible.
+
     NOTE: We always use pip here instead of uv for reliability.
     uv can leave packages in broken states when interrupted.
-    
+
+    Hardened to prevent a "repair" from corrupting the native environment
+    (the cause of post-update `access violation` crashes on customer machines):
+      * pinned version  : unversioned specs are pinned to the installed version
+                          (via _make_repair_safe_spec) so a repair restores the
+                          existing build instead of upgrading to latest-on-PyPI.
+      * --no-deps       : a single-package repair must never touch or upgrade
+                          sibling packages (numpy, torch, huggingface_hub, ...);
+                          without this, `--force-reinstall diffusers` could drag
+                          huggingface_hub back above the pinned <1.0, etc.
+      * --only-binary   : install a prebuilt wheel matching this platform, never
+                          compile from source. Falls back to allowing an sdist
+                          only when no wheel exists for the pinned version.
+
     Args:
         package_spec: Package specification (e.g., "pillow" or "pillow>=10.0.0")
         description: Human-readable name for logging
-    
+
     Returns:
         True if installation succeeded, False otherwise
     """
-    print(f"[ComfyUI-Nuvu] {description} is missing or broken, reinstalling...", flush=True)
-    
+    safe_spec = _make_repair_safe_spec(package_spec)
+    print(f"[ComfyUI-Nuvu] {description} is missing or broken, reinstalling ({safe_spec})...", flush=True)
+
     is_embedded = "python_embeded" in sys.executable.lower()
-    
-    # Always use pip in prestartup for reliability
+    base = [sys.executable]
     if is_embedded:
-        cmd = [sys.executable, '-s', '-m', 'pip', 'install', '--force-reinstall', package_spec]
-    else:
-        cmd = [sys.executable, '-m', 'pip', 'install', '--force-reinstall', package_spec]
-    
-    try:
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-        
+        base.append('-s')
+    base += ['-m', 'pip', 'install', '--force-reinstall', '--no-deps']
+
+    # Prefer a prebuilt wheel; only fall back to allowing an sdist if no wheel
+    # exists for the pinned version (rare for the critical packages we manage).
+    attempts = [base + ['--only-binary=:all:', safe_spec], base + [safe_spec]]
+
+    last_err = ""
+    for cmd in attempts:
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        except Exception as e:
+            last_err = str(e)
+            print(f"[ComfyUI-Nuvu] {description} reinstall error: {e}", flush=True)
+            continue
+
         if result.returncode == 0:
             print(f"[ComfyUI-Nuvu] {description} reinstalled successfully", flush=True)
             return True
-        else:
-            print(f"[ComfyUI-Nuvu] {description} reinstall failed: {result.stderr[:200]}", flush=True)
-            return False
-    except Exception as e:
-        print(f"[ComfyUI-Nuvu] {description} reinstall error: {e}", flush=True)
-        return False
+
+        last_err = (result.stderr or "")[:200]
+        # Retry without --only-binary ONLY when the failure was a missing wheel;
+        # any other error won't be fixed by allowing an sdist, so stop early.
+        wheel_missing = (
+            'no matching distribution' in last_err.lower()
+            or 'could not find a version' in last_err.lower()
+        )
+        if '--only-binary=:all:' in cmd and not wheel_missing:
+            break
+
+    print(f"[ComfyUI-Nuvu] {description} reinstall failed: {last_err}", flush=True)
+    return False
 
 
 def _cleanup_corrupted_packages():
@@ -1261,10 +1314,13 @@ def _ensure_critical_packages():
                         flush=True,
                     )
                     is_embedded = "python_embeded" in sys.executable.lower()
+                    # Pin to the installed version and keep --no-deps so this
+                    # last-ditch retry can't upgrade Pillow or disturb siblings.
+                    retry_spec = _make_repair_safe_spec(package_spec)
                     retry_cmd = [sys.executable]
                     if is_embedded:
                         retry_cmd.append('-s')
-                    retry_cmd.extend(['-m', 'pip', 'install', '--force-reinstall', '--no-cache-dir', package_spec])
+                    retry_cmd.extend(['-m', 'pip', 'install', '--force-reinstall', '--no-deps', '--no-cache-dir', retry_spec])
                     try:
                         subprocess.run(retry_cmd, capture_output=True, text=True, timeout=180)
                     except Exception as exc:

@@ -1,5 +1,11 @@
 [
   {
+    "hash": "655f14c",
+    "tag": "1.0.94",
+    "date": "2026-09-11T09:46:52-04:00",
+    "message": "Harden critical-package repair to prevent post-update access-violation crashes"
+  },
+  {
     "hash": "a1bcbcb",
     "tag": "1.0.93",
     "date": "2026-08-27T11:49:17-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.25",
     "date": "2026-01-16T16:03:22-05:00",
     "message": "Add workflow changelog"
-  },
-  {
-    "hash": "8d662b6",
-    "tag": "1.0.24",
-    "date": "2026-01-16T07:12:57-05:00",
-    "message": "Fix broken package installer for manual comfy install"
   }
 ]
