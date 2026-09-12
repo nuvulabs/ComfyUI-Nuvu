@@ -1,5 +1,11 @@
 [
   {
+    "hash": "62a4726",
+    "tag": "1.0.95",
+    "date": "2026-09-11T20:32:04-04:00",
+    "message": "Add background crash diagnostics to self-identify native access-violation crashes"
+  },
+  {
     "hash": "655f14c",
     "tag": "1.0.94",
     "date": "2026-09-11T09:46:52-04:00",
@@ -592,11 +598,5 @@
     "tag": null,
     "date": "2026-01-16T17:44:17-05:00",
     "message": "Correct Nuvu versioning search to clear a log error"
-  },
-  {
-    "hash": "a397fd3",
-    "tag": "1.0.25",
-    "date": "2026-01-16T16:03:22-05:00",
-    "message": "Add workflow changelog"
   }
 ]

@@ -1708,8 +1708,319 @@ def _verify_comfyui_requirements():
         print(f"[ComfyUI-Nuvu] Requirements install exception: {e}", flush=True)
 
 
+# =============================================================================
+# Background crash diagnostics
+# =============================================================================
+# ComfyUI can die with a native `access violation` (a C-extension segfault)
+# that Python cannot catch and that leaves only a bare ThreadPoolExecutor
+# worker stack -- not enough to identify the guilty DLL. These helpers arm two
+# automatic, zero-interaction capture channels on every startup so the NEXT
+# crash names itself, even on a remote customer machine:
+#
+#   1. Windows Error Reporting (WER) LocalDumps -> writes a minidump for
+#      python.exe when it crashes. The minidump carries the module list and the
+#      faulting address, which pins the exact faulting DLL/.pyd.
+#   2. faulthandler(all_threads=True) -> dumps every thread's Python stack to a
+#      file on a fatal error (more than the single victim thread we normally
+#      see).
+#
+# On the following startup we parse any new minidump and log a plain-text
+# "Faulting module: X" line so support can read the cause straight from the
+# console/log without opening Event Viewer or shipping a .dmp.
+#
+# Everything here is best-effort: any failure is swallowed so diagnostics can
+# never break startup.
+
+_NUVU_FAULTHANDLER_FILE = None  # keep a reference so the fault log isn't GC'd
+
+# Windows exception codes worth naming in the report.
+_NUVU_EXCEPTION_NAMES = {
+    0xC0000005: "ACCESS_VIOLATION",
+    0xC00000FD: "STACK_OVERFLOW",
+    0xC000001D: "ILLEGAL_INSTRUCTION",
+    0xC0000094: "INTEGER_DIVIDE_BY_ZERO",
+    0xC0000096: "PRIVILEGED_INSTRUCTION",
+    0x80000003: "BREAKPOINT",
+    0xC0000374: "HEAP_CORRUPTION",
+}
+
+
+def _nuvu_diag_dirs():
+    """Return (diag_dir, dump_dir), creating them. Falls back to the node dir."""
+    root = _detect_comfyui_root() or os.path.dirname(os.path.dirname(_script_dir))
+    diag_dir = os.path.join(root, '.nuvu', 'diagnostics')
+    dump_dir = os.path.join(diag_dir, 'crashdumps')
+    os.makedirs(dump_dir, exist_ok=True)
+    return diag_dir, dump_dir
+
+
+def _wer_crashdumps_dir():
+    """The default WER LocalDumps folder (%LOCALAPPDATA%\\CrashDumps).
+
+    This is the proven, default location WER writes minidumps to; we point our
+    LocalDumps registration here and also harvest it, so we find the dump
+    regardless of how WER is otherwise configured.
+    """
+    base = os.environ.get('LOCALAPPDATA') or os.path.join(
+        os.path.expanduser('~'), 'AppData', 'Local')
+    d = os.path.join(base, 'CrashDumps')
+    try:
+        os.makedirs(d, exist_ok=True)
+    except Exception:
+        pass
+    return d
+
+
+def _parse_minidump_faulting_module(path):
+    """Extract the faulting module + exception info from a Windows minidump.
+
+    Minimal, dependency-free reader of the (stable) MINIDUMP format: locate the
+    exception stream (faulting address) and the module list, then find the
+    module whose image range contains that address. Returns a dict or None.
+    """
+    try:
+        if os.path.getsize(path) > 512 * 1024 * 1024:
+            return None  # unexpected for a mini dump; refuse to slurp huge files
+        with open(path, 'rb') as f:
+            data = f.read()
+    except Exception:
+        return None
+
+    import struct
+    if len(data) < 32 or data[:4] != b'MDMP':
+        return None
+
+    STREAM_MODULE_LIST = 4
+    STREAM_EXCEPTION = 6
+    MODULE_SIZE = 108  # sizeof(MINIDUMP_MODULE)
+
+    try:
+        num_streams, dir_rva = struct.unpack_from('<II', data, 8)
+    except Exception:
+        return None
+
+    exc_code = exc_addr = faulting_tid = module_list_rva = None
+    for i in range(num_streams):
+        off = dir_rva + i * 12
+        if off + 12 > len(data):
+            break
+        try:
+            stream_type, _size, rva = struct.unpack_from('<III', data, off)
+        except Exception:
+            continue
+        if stream_type == STREAM_EXCEPTION and rva + 40 <= len(data):
+            # MINIDUMP_EXCEPTION_STREAM: ThreadId(4) __align(4) then MINIDUMP_EXCEPTION
+            faulting_tid = struct.unpack_from('<I', data, rva)[0]
+            exc_off = rva + 8
+            exc_code = struct.unpack_from('<I', data, exc_off)[0]          # ExceptionCode
+            exc_addr = struct.unpack_from('<Q', data, exc_off + 16)[0]     # ExceptionAddress
+        elif stream_type == STREAM_MODULE_LIST:
+            module_list_rva = rva
+
+    if exc_addr is None or module_list_rva is None or module_list_rva + 4 > len(data):
+        return {
+            'exception_code': exc_code,
+            'exception_address': exc_addr,
+            'faulting_module': None,
+            'thread_id': faulting_tid,
+        }
+
+    faulting_module = None
+    try:
+        num_modules = struct.unpack_from('<I', data, module_list_rva)[0]
+        base_off = module_list_rva + 4
+        for m in range(num_modules):
+            moff = base_off + m * MODULE_SIZE
+            if moff + MODULE_SIZE > len(data):
+                break
+            base_of_image = struct.unpack_from('<Q', data, moff)[0]
+            size_of_image = struct.unpack_from('<I', data, moff + 8)[0]
+            name_rva = struct.unpack_from('<I', data, moff + 20)[0]  # ModuleNameRva
+            if base_of_image <= exc_addr < base_of_image + size_of_image:
+                if name_rva + 4 <= len(data):
+                    slen = struct.unpack_from('<I', data, name_rva)[0]
+                    raw = data[name_rva + 4: name_rva + 4 + slen]
+                    name = raw.decode('utf-16-le', errors='replace')
+                    faulting_module = os.path.basename(name)
+                break
+    except Exception:
+        pass
+
+    return {
+        'exception_code': exc_code,
+        'exception_address': exc_addr,
+        'faulting_module': faulting_module,
+        'thread_id': faulting_tid,
+    }
+
+
+def _harvest_crash_dumps(diag_dir, scan_dirs):
+    """Parse any new python*.dmp across scan_dirs and log the faulting module."""
+    try:
+        import glob
+        import time
+        processed_path = os.path.join(diag_dir, 'processed_dumps.txt')
+        try:
+            with open(processed_path, 'r', encoding='utf-8') as f:
+                processed = set(line.strip() for line in f if line.strip())
+        except Exception:
+            processed = set()
+
+        # Scan every candidate location (our own folder + the default WER
+        # CrashDumps folder). Match python*.dmp so we catch python.exe,
+        # python3.13.exe, etc. Ignore dumps older than 14 days so we don't
+        # replay ancient history, and dedupe by file name.
+        cutoff = time.time() - 14 * 86400
+        found = {}
+        for d in scan_dirs:
+            if not d:
+                continue
+            for path in glob.glob(os.path.join(d, 'python*.dmp')):
+                name = os.path.basename(path)
+                if name in processed or name in found:
+                    continue
+                try:
+                    if os.path.getmtime(path) < cutoff:
+                        continue
+                except Exception:
+                    continue
+                found[name] = path
+        new_dumps = [found[n] for n in sorted(found)]
+        if not new_dumps:
+            return
+
+        report_path = os.path.join(diag_dir, 'crash_report.log')
+        for dump in new_dumps:
+            name = os.path.basename(dump)
+            info = _parse_minidump_faulting_module(dump)
+            ts = time.strftime('%Y-%m-%d %H:%M:%S')
+            if info:
+                code = info.get('exception_code')
+                code_name = _NUVU_EXCEPTION_NAMES.get(code, 'UNKNOWN') if code else 'UNKNOWN'
+                module = info.get('faulting_module') or '<unresolved>'
+                addr = info.get('exception_address')
+                addr_s = f"0x{addr:016X}" if isinstance(addr, int) else 'n/a'
+                code_s = f"0x{code:08X}" if isinstance(code, int) else 'n/a'
+                line = (f"{ts}  CRASH  dump={name}  faulting_module={module}  "
+                        f"exception={code_name} ({code_s})  address={addr_s}  "
+                        f"thread_id={info.get('thread_id')}")
+            else:
+                line = f"{ts}  CRASH  dump={name}  (minidump present but could not be parsed)"
+
+            # Prominent console line (lands in comfy.log) + persistent report file.
+            print(f"[ComfyUI-Nuvu][CRASH] {line}", flush=True)
+            try:
+                with open(report_path, 'a', encoding='utf-8') as f:
+                    f.write(line + '\n')
+            except Exception:
+                pass
+            processed.add(name)
+
+        try:
+            with open(processed_path, 'w', encoding='utf-8') as f:
+                f.write('\n'.join(sorted(processed)) + '\n')
+        except Exception:
+            pass
+    except Exception as e:
+        logger.debug(f"[ComfyUI-Nuvu] Crash-dump harvest skipped: {e}")
+
+
+def _preserve_previous_faulthandler(diag_dir):
+    """If the last session left a faulthandler dump, keep it as a timestamped
+    artifact and announce it, before we truncate the live log."""
+    try:
+        import time
+        live = os.path.join(diag_dir, 'faulthandler.log')
+        if os.path.exists(live) and os.path.getsize(live) > 0:
+            stamp = time.strftime('%Y%m%d_%H%M%S')
+            kept = os.path.join(diag_dir, f'faulthandler_{stamp}.log')
+            try:
+                shutil.copy(live, kept)
+                print(f"[ComfyUI-Nuvu][CRASH] Previous session left an all-threads "
+                      f"fault dump: {kept}", flush=True)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+
+def _arm_faulthandler(diag_dir):
+    """Enable faulthandler dumping ALL threads to a persistent file.
+
+    Note: whichever code calls faulthandler.enable() last wins, so if ComfyUI
+    later re-enables it to stderr this file may not receive the dump. WER (the
+    minidump) is the authoritative channel for the faulting module; this is an
+    additional readable, Python-side capture when it survives.
+    """
+    global _NUVU_FAULTHANDLER_FILE
+    try:
+        import faulthandler
+        log_path = os.path.join(diag_dir, 'faulthandler.log')
+        _NUVU_FAULTHANDLER_FILE = open(log_path, 'w', encoding='utf-8')
+        faulthandler.enable(file=_NUVU_FAULTHANDLER_FILE, all_threads=True)
+    except Exception as e:
+        logger.debug(f"[ComfyUI-Nuvu] faulthandler arm skipped: {e}")
+
+
+def _register_wer_localdumps():
+    """Register per-user WER LocalDumps for python.exe (Windows only).
+
+    Writes HKCU keys (no admin needed) so Windows writes a mini minidump for
+    python.exe on an unhandled crash, into the default %LOCALAPPDATA%\\CrashDumps
+    folder (the proven default location, which we also harvest). Best-effort and
+    reversible; delete
+    HKCU\\Software\\Microsoft\\Windows\\Windows Error Reporting\\LocalDumps\\python.exe
+    to turn it off. DumpType 1 (mini) keeps dumps small even though ComfyUI holds
+    large models in RAM, while still carrying the module list + thread stacks
+    needed to identify the faulting DLL.
+    """
+    if platform.system() != 'Windows':
+        return
+    try:
+        import winreg
+        key_path = (r"Software\Microsoft\Windows\Windows Error Reporting"
+                    r"\LocalDumps\python.exe")
+        with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, key_path, 0,
+                                winreg.KEY_SET_VALUE) as key:
+            winreg.SetValueEx(key, "DumpFolder", 0, winreg.REG_EXPAND_SZ,
+                              r"%LOCALAPPDATA%\CrashDumps")
+            winreg.SetValueEx(key, "DumpType", 0, winreg.REG_DWORD, 1)   # 1 = mini dump
+            winreg.SetValueEx(key, "DumpCount", 0, winreg.REG_DWORD, 10)
+    except Exception as e:
+        logger.debug(f"[ComfyUI-Nuvu] WER LocalDumps registration skipped: {e}")
+
+
+def setup_crash_diagnostics():
+    """Arm background crash capture and harvest any crash from the prior run.
+
+    Order matters: harvest/preserve the previous session's artifacts BEFORE we
+    truncate or re-arm, then arm the capture channels for this session.
+    """
+    try:
+        diag_dir, dump_dir = _nuvu_diag_dirs()
+    except Exception as e:
+        logger.debug(f"[ComfyUI-Nuvu] Crash diagnostics disabled (no dir): {e}")
+        return
+
+    # 1. Report anything the previous session left behind. Scan our own dump
+    #    folder plus the default WER CrashDumps folder so we find the dump
+    #    wherever WER wrote it.
+    scan_dirs = [dump_dir, _wer_crashdumps_dir()]
+    _harvest_crash_dumps(diag_dir, scan_dirs)
+    _preserve_previous_faulthandler(diag_dir)
+
+    # 2. Arm capture for this session.
+    _register_wer_localdumps()
+    _arm_faulthandler(diag_dir)
+
+
 # Run on module load (prestartup phase)
 try:
+    # Arm background crash diagnostics FIRST so any later native crash
+    # (e.g. an access violation in a worker thread) is captured automatically,
+    # and report any crash the previous session left behind.
+    setup_crash_diagnostics()
+
     # Install uv if not present (used by pre_launch.py for faster installs)
     _install_uv()
     
