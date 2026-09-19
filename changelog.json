@@ -1,5 +1,11 @@
 [
   {
+    "hash": "2680287",
+    "tag": "1.0.97",
+    "date": "2026-09-19T12:27:56-04:00",
+    "message": "security: stop holding the OAuth signing secret; unobfuscate the client JS"
+  },
+  {
     "hash": "e177021",
     "tag": "1.0.96",
     "date": "2026-09-19T11:57:49-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.27",
     "date": "2026-01-17T12:11:11-05:00",
     "message": "Fix version retrieval for Nuvu Updater"
-  },
-  {
-    "hash": "6401610",
-    "tag": "1.0.26",
-    "date": "2026-01-17T11:05:50-05:00",
-    "message": "Change default workflow sort to Newest. Show model links to subscribed users in model downloader."
   }
 ]
