@@ -1,5 +1,11 @@
 [
   {
+    "hash": "6f1ad95",
+    "tag": "v1.0.99",
+    "date": "2026-10-20T16:16:34-04:00",
+    "message": "Fix MCP session relay to capture user email so install tools work"
+  },
+  {
     "hash": "a74ca75",
     "tag": "v1.0.98",
     "date": "2026-10-20T14:33:29-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.29",
     "date": "2026-01-19T10:30:14-05:00",
     "message": "Fix poor authentication handling, make it clearer when user is logged in vs not logged in."
-  },
-  {
-    "hash": "fe887ae",
-    "tag": "1.0.28",
-    "date": "2026-01-17T23:46:07-05:00",
-    "message": "Make sure workflow install message shows in all cases. Make workflow card height remain consistent even when there aren't enough cards to fill the container."
   }
 ]
