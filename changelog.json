@@ -1,5 +1,11 @@
 [
   {
+    "hash": "a6be577",
+    "tag": "v1.1.0",
+    "date": "2026-10-20T17:14:28-04:00",
+    "message": "Add Install-Missing MCP tools (analyze_missing / install_missing)"
+  },
+  {
     "hash": "6f1ad95",
     "tag": "v1.0.99",
     "date": "2026-10-20T16:16:34-04:00",
@@ -592,11 +598,5 @@
     "tag": "1.0.30",
     "date": "2026-01-19T12:46:21-05:00",
     "message": "Fix workflow media  expiring and not rehydrating."
-  },
-  {
-    "hash": "5a83d02",
-    "tag": "1.0.29",
-    "date": "2026-01-19T10:30:14-05:00",
-    "message": "Fix poor authentication handling, make it clearer when user is logged in vs not logged in."
   }
 ]
