@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "comfyui-nuvu"
-version = "1.0.97"
+version = "1.0.98"
 description = "www.nuvulabs.ai | Install missing models & custom nodes, production ready VFX & film subgraphs and workflows for secure offline generation, and dependency installations including SageAttention and Triton."
 readme = "README.md"
 license = {text = "Proprietary"}
@@ -28,7 +28,11 @@ dependencies = [
     "hf_xet",
     "keyring>=24.3.0",
     "keyrings.alt>=5.0.0",
+    "mcp>=2.0.0",
 ]
+
+[project.scripts]
+comfyui-nuvu-mcp = "comfyui_nuvu.nuvu_mcp:main"
 
 [project.urls]
 Homepage = "https://github.com/nuvulabs/ComfyUI-Nuvu"
